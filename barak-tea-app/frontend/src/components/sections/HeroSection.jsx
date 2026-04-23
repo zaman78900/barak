@@ -152,11 +152,12 @@ export default function HeroSection() {
 
       {/* Content */}
       <motion.div
-        className="relative z-10 max-w-4xl mx-auto px-4 text-center"
+        className="relative z-10 max-w-4xl mx-auto px-4 text-center pt-32 md:pt-40"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
+
         {/* Overline */}
         <motion.div variants={itemVariants} className="mb-4 md:mb-6">
           <span className="text-xs md:text-sm font-bold text-barak-cream uppercase tracking-widest">

@@ -113,7 +113,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-barak-bg text-barak-cream pb-24 overflow-hidden" style={{ paddingTop: '80px' }}>
+    <div className="min-h-screen bg-barak-bg text-barak-cream pb-24 overflow-hidden pt-28 md:pt-32">
       
       <div className="max-w-7xl mx-auto px-4 lg:px-8 pt-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png';
+
 
 /* ─── Confetti canvas hook ────────────────────────────────────────── */
 function useConfetti(canvasRef) {
@@ -171,8 +173,8 @@ export default function Confirmation() {
       {/* Nav */}
       <div className="fixed top-0 left-0 right-0 z-50 px-8 md:px-16 flex items-center justify-between h-[72px] border-b border-barak-gold/10"
         style={{ background: 'rgba(13,8,5,0.96)', backdropFilter: 'blur(20px)' }}>
-        <Link to="/" className="text-2xl font-black text-barak-gold hover:text-barak-gold-light transition-colors tracking-widest">
-          BARAK
+        <Link to="/" className="flex items-center">
+          <img src={logo} alt="BARAK Tea" className="h-8 md:h-10 w-auto object-contain" />
         </Link>
         <div className="hidden md:block"><Steps current={2} /></div>
         <Link to="/shop" className="text-[11px] tracking-widest uppercase text-barak-muted hover:text-barak-gold transition-colors">

@@ -101,14 +101,12 @@ function App() {
           } />
           <Route path="/checkout" element={
             <>
-              <Navbar />
               <Checkout />
               <Footer />
             </>
           } />
           <Route path="/confirmation" element={
             <>
-              <Navbar />
               <Confirmation />
               <Footer />
             </>

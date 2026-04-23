@@ -44,15 +44,13 @@ export default function Navbar() {
               <img src={logo} alt="BARAK Tea" className="h-12 md:h-16 w-auto object-contain" />
             </Link>
 
-
-
             {/* Desktop Navigation */}
-            <div className="hidden md:flex gap-8 items-center">
+            <div className="hidden md:flex gap-8 items-center h-full">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="text-sm font-medium text-barak-cream hover:text-barak-gold transition-colors duration-300"
+                  className="text-sm font-medium text-barak-cream hover:text-barak-gold transition-colors duration-300 py-2"
                 >
                   {link.label}
                 </Link>
@@ -61,12 +59,12 @@ export default function Navbar() {
 
             {/* Right Icons */}
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:text-barak-gold transition-colors" aria-label="Search">
+              <button className="p-2 hover:text-barak-gold transition-colors flex items-center" aria-label="Search">
                 <MagnifyingGlass size={20} />
               </button>
               <button
                 onClick={() => navigate('/cart')}
-                className="relative p-2 hover:text-barak-gold transition-colors"
+                className="relative p-2 hover:text-barak-gold transition-colors flex items-center"
                 aria-label="Shopping cart"
               >
                 <ShoppingCart size={20} />
@@ -84,7 +82,7 @@ export default function Navbar() {
 
               {/* Mobile Menu Toggle */}
               <button
-                className="md:hidden p-2"
+                className="md:hidden p-2 flex items-center"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Menu"
               >
@@ -98,6 +96,7 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
@@ -137,9 +136,7 @@ export default function Navbar() {
         </motion.div>
       )}
 
-      {/* Spacer for fixed navbar */}
-      <div className="h-18 md:h-22" />
     </>
-
   );
 }
+
