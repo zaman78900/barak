@@ -341,10 +341,24 @@ function ProductsPage() {
     
     try {
       setLoading(true);
+      
+      // Cast numeric fields to actual numbers before sending to API
+      const payload = {
+        ...form,
+        price: parseFloat(form.price) || 0,
+        mrp: parseFloat(form.mrp) || parseFloat(form.price) || 0,
+        stock_quantity: parseInt(form.stock_quantity) || 0,
+        variants: (form.variants || []).map(v => ({
+          ...v,
+          price: parseFloat(v.price) || 0,
+          stock: parseInt(v.stock) || 0
+        }))
+      };
+
       if(editing) {
-        await adminAPI.products.update(editing, form);
+        await adminAPI.products.update(editing, payload);
       } else {
-        await adminAPI.products.create(form);
+        await adminAPI.products.create(payload);
       }
       await loadProducts();
       setShowModal(false);
@@ -452,14 +466,17 @@ function ProductsPage() {
                         {uploading === `variant-${idx}` && <div style={{position:"absolute", inset:0, background:"rgba(0,0,0,0.5)", display:"flex", alignItems:"center", justifyContent:"center"}}><RefreshCw size={12} className="animate-spin"/></div>}
                         <input type="file" id={`v-up-${idx}`} hidden accept="image/*" onChange={(e) => handleFileUpload(e, 'variant', idx)}/>
                       </div>
-                      <input value={v.variant_name} onChange={e => updateVariant(idx, 'variant_name', e.target.value)} placeholder="e.g. 500g Pack" style={{background:"transparent", border:"none", color:C.cream, fontSize:13, outline:"none"}}/>
-                      <div style={{display:"flex", alignItems:"center", gap:4}}>
+                      <input value={v.variant_name} onChange={e => updateVariant(idx, 'variant_name', e.target.value)} placeholder="e.g. 500g Pack" 
+                        style={{background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px", color:C.cream, fontSize:13, outline:"none"}}/>
+                      <div style={{display:"flex", alignItems:"center", gap:4, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px"}}>
                         <span style={{color:C.muted, fontSize:12}}>₹</span>
-                        <input value={v.price} onChange={e => updateVariant(idx, 'price', e.target.value)} type="number" placeholder="Price" style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", outline:"none"}}/>
+                        <input value={v.price} onChange={e => updateVariant(idx, 'price', e.target.value)} type="number" placeholder="Price" 
+                          style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", outline:"none"}}/>
                       </div>
-                      <div style={{display:"flex", alignItems:"center", gap:4}}>
+                      <div style={{display:"flex", alignItems:"center", gap:4, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px"}}>
                         <span style={{color:C.muted, fontSize:12}}>Qty:</span>
-                        <input value={v.stock} onChange={e => updateVariant(idx, 'stock', e.target.value)} type="number" placeholder="0" style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", outline:"none"}}/>
+                        <input value={v.stock} onChange={e => updateVariant(idx, 'stock', e.target.value)} type="number" placeholder="0" 
+                          style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", outline:"none"}}/>
                       </div>
                       <button onClick={() => removeVariant(idx)} style={{background:"none", border:"none", color:C.error, cursor:"pointer", opacity:0.6}}><Trash2 size={16}/></button>
                     </div>
