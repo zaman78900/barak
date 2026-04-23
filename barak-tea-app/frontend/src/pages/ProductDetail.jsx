@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProduct, useProducts, useReviews } from '../utils/hooks';
 import { useCartStore } from '../store';
-import { FiStar, FiChevronLeft, FiChevronRight, FiMinus, FiPlus, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { FiStar, FiChevronLeft, FiChevronRight, FiMinus, FiPlus, FiChevronDown, FiChevronUp, FiRefreshCw } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 
 /* ─── SCROLL & PARALLAX CONSTANTS ────────────────────────────── */
@@ -31,13 +31,7 @@ export default function ProductDetail() {
   const { reviews } = useReviews(id);
   const addItem = useCartStore(state => state.addItem);
 
-  // Scroll to top on load or ID change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [id]);
-
   // Local State
-
   const [activeImage, setActiveImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -45,11 +39,24 @@ export default function ProductDetail() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [openAccordion, setOpenAccordion] = useState('brew'); // 'brew', 'desc', or null
 
-  // Setup Gallery Images
-  const gallery = product ? [
-    product.image_url,
-    ...(product.images || [])
-  ].filter(Boolean) : [];
+  // Scroll to top on load or ID change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    setActiveImage(0);
+    setSelectedVariant(null);
+  }, [id]);
+
+  // Setup Gallery Images (Main + Gallery + Variant Images)
+  const gallery = useMemo(() => {
+    if (!product) return [];
+    const images = [
+      product.image_url,
+      ...(product.images || []),
+      ...(product.variants?.map(v => v.image_url) || [])
+    ].filter(Boolean);
+    // Unique images only
+    return [...new Set(images)];
+  }, [product]);
 
   // Initialize variant when product loads
   useEffect(() => {
@@ -61,14 +68,10 @@ export default function ProductDetail() {
   // Handle Variant Selection
   const handleVariantSelect = (v) => {
     setSelectedVariant(v);
-    // If variant has a specific image, find it in gallery or set it
     if (v.image_url) {
       const idx = gallery.indexOf(v.image_url);
       if (idx !== -1) {
         setActiveImage(idx);
-      } else {
-        // If not in gallery, we could temporarily add it or just show it
-        // For simplicity, we'll assume it's either in gallery or we just use it
       }
     }
   };
