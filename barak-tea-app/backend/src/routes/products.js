@@ -68,23 +68,31 @@ router.get('/:id', async (req, res) => {
 // Create product (admin only)
 router.post('/', authenticate, authorize(['admin']), async (req, res) => {
   try {
-    const { name, category, description, price, mrp, stock_quantity, image_url } = req.body;
+    const { name, category, description, price, mrp, stock_quantity, image_url, status } = req.body;
 
     if (!name || !category || !price) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    const priceNum = parseFloat(price);
+    const mrpNum = mrp ? parseFloat(mrp) : priceNum;
+    const stockNum = stock_quantity ? parseInt(stock_quantity, 10) : 0;
+
+    const payload = {
+      name,
+      category,
+      price: priceNum,
+      mrp: mrpNum,
+      stock_quantity: stockNum,
+    };
+    
+    if (description !== undefined) payload.description = description;
+    if (image_url !== undefined) payload.image_url = image_url;
+    if (status !== undefined) payload.status = status;
+
     const { data, error } = await supabase
       .from('products')
-      .insert([{
-        name,
-        category,
-        description,
-        price,
-        mrp: mrp || price,
-        stock_quantity: stock_quantity || 0,
-        image_url,
-      }])
+      .insert([payload])
       .select()
       .single();
 
@@ -102,7 +110,15 @@ router.post('/', authenticate, authorize(['admin']), async (req, res) => {
 router.put('/:id', authenticate, authorize(['admin']), async (req, res) => {
   try {
     const { id } = req.params;
-    const updates = req.body;
+    const updates = { ...req.body };
+
+    // Sanitize numeric fields to prevent empty string cast errors
+    if (updates.price !== undefined) updates.price = parseFloat(updates.price) || 0;
+    if (updates.mrp === "") updates.mrp = updates.price || null;
+    else if (updates.mrp !== undefined) updates.mrp = parseFloat(updates.mrp);
+    
+    if (updates.stock_quantity === "") updates.stock_quantity = 0;
+    else if (updates.stock_quantity !== undefined) updates.stock_quantity = parseInt(updates.stock_quantity, 10) || 0;
 
     const { data, error } = await supabase
       .from('products')
