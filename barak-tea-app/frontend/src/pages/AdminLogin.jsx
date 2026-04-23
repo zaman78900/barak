@@ -61,7 +61,7 @@ export default function AdminLogin() {
     try {
       // Try to authenticate with demo credentials
       const response = await api.post('/auth/login', { 
-        email: 'admin@barak.tea', 
+        email: 'barakadmin@gmail.com', 
         password: 'admin123' 
       });
       
@@ -111,7 +111,7 @@ export default function AdminLogin() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@barak.tea"
+                placeholder="barakadmin@gmail.com"
                 className="w-full bg-barak-bg border border-barak-border rounded px-4 py-2 text-barak-cream placeholder-barak-muted outline-none focus:border-barak-gold"
                 disabled={loading}
               />
