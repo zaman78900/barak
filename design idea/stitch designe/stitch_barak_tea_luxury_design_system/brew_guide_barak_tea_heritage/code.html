@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BARAK | The Perfect Cup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed": "#e9e2d0",
+                        "background": "#1b1105",
+                        "secondary-container": "#4a4739",
+                        "on-error": "#690005",
+                        "outline": "#9c8f7c",
+                        "on-secondary-fixed": "#1e1c10",
+                        "tertiary-fixed-dim": "#cfc5bc",
+                        "secondary-fixed-dim": "#ccc6b4",
+                        "on-error-container": "#ffdad6",
+                        "surface-tint": "#f8bc51",
+                        "primary-fixed-dim": "#f8bc51",
+                        "on-tertiary": "#352f29",
+                        "surface-container-high": "#342819",
+                        "tertiary": "#cfc5bc",
+                        "surface-container-lowest": "#160c02",
+                        "on-primary": "#422c00",
+                        "surface-container-low": "#241a0c",
+                        "secondary": "#ccc6b4",
+                        "on-tertiary-fixed-variant": "#4c463f",
+                        "on-secondary-fixed-variant": "#4a4739",
+                        "on-primary-fixed-variant": "#5f4100",
+                        "surface-container": "#291e0f",
+                        "inverse-on-surface": "#3b2e1f",
+                        "on-background": "#f5dfc8",
+                        "error-container": "#93000a",
+                        "on-surface": "#f5dfc8",
+                        "outline-variant": "#504536",
+                        "on-tertiary-fixed": "#201b15",
+                        "surface-dim": "#1b1105",
+                        "tertiary-container": "#a39a92",
+                        "surface": "#1b1105",
+                        "surface-bright": "#443727",
+                        "primary": "#f8bc51",
+                        "primary-fixed": "#ffdeab",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#ebe1d7",
+                        "on-secondary-container": "#bbb5a3",
+                        "surface-variant": "#3f3323",
+                        "surface-container-highest": "#3f3323",
+                        "on-surface-variant": "#d4c4b0",
+                        "inverse-primary": "#7e5700",
+                        "on-tertiary-container": "#38322c",
+                        "on-primary-container": "#462f00",
+                        "on-secondary": "#333024",
+                        "on-primary-fixed": "#281900",
+                        "primary-container": "#c8922a",
+                        "inverse-surface": "#f5dfc8"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "md": "16px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "gutter": "24px",
+                        "xl": "48px",
+                        "sm": "8px",
+                        "xxl": "96px",
+                        "max-width": "1440px"
+                    },
+                    fontFamily: {
+                        "label": ["Inter"],
+                        "body": ["Inter"],
+                        "h3": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "accent-tagline": ["Inter"],
+                        "h1": ["Inter"],
+                        "display-hero": ["Inter"],
+                        "cta": ["Inter"]
+                    },
+                    fontSize: {
+                        "label": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body": ["16px", { "lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400" }],
+                        "h3": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "h2": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400" }],
+                        "accent-tagline": ["18px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h1": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-hero": ["100px", { "lineHeight": "0.95", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "cta": ["15px", { "lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background-color: rgba(27, 17, 5, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(248, 188, 81, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(248, 188, 81, 0.3);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #f8bc51;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 10px rgba(248, 188, 81, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #4a4739;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased overflow-x-hidden min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-neutral-950/40 backdrop-blur-xl border-b border-amber-500/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]">
+<nav class="flex justify-between items-center h-20 px-8 max-w-[1440px] mx-auto">
+<ul class="hidden md:flex gap-8">
+<li><a class="font-inter tracking-tight uppercase text-xs font-semibold text-neutral-400 hover:text-amber-200 transition-colors" href="#">Collections</a></li>
+<li><a class="font-inter tracking-tight uppercase text-xs font-semibold text-amber-500 border-b border-amber-500 pb-1" href="#">Brew Guides</a></li>
+<li><a class="font-inter tracking-tight uppercase text-xs font-semibold text-neutral-400 hover:text-amber-200 transition-colors" href="#">Heritage</a></li>
+<li><a class="font-inter tracking-tight uppercase text-xs font-semibold text-neutral-400 hover:text-amber-200 transition-colors" href="#">Our Story</a></li>
+</ul>
+<div class="text-2xl font-serif italic text-amber-500 tracking-widest scale-95 active:scale-90 transition-transform cursor-pointer">BARAK</div>
+<div class="flex items-center gap-6">
+<button class="font-inter tracking-tight uppercase text-xs font-semibold text-neutral-400 hover:text-amber-200 transition-colors hidden md:block">Shop Now</button>
+<div class="flex gap-4">
+<button class="text-neutral-400 hover:text-amber-200 transition-colors"><span class="material-symbols-outlined">shopping_bag</span></button>
+<button class="text-neutral-400 hover:text-amber-200 transition-colors"><span class="material-symbols-outlined">person</span></button>
+</div>
+</div>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative w-full h-[819px] min-h-[600px] flex items-center justify-center overflow-hidden bg-[#0D0905]">
+<!-- Radial Glow & Gradient Overlay -->
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(200,146,42,0.15)_0%,transparent_60%)]"></div>
+<!-- Hero Image Background -->
+<div class="absolute inset-0 z-0">
+<img alt="Hero Image" class="w-full h-full object-cover opacity-40 mix-blend-luminosity" data-alt="Dark, moody overhead shot of a steaming cup of rich amber tea on a black slate surface, surrounded by scattered whole spices and loose tea leaves, dramatic spotlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHXzq9agkDJX6fdewoyOD8VoRRAtckvKn1qJhtTSyyJ0cCaRBYkjO4uFehHEFekuPnaXUV6JHYvi0rYwfjBSikfXuIW1GqQPFq480T6_6dh9Aes2alX7D8eQj9OCNzeePtHnZn9SN_HJVuRLRpC89prAMDs4pkkwoImdEDStJnm7zaX352SweKNh_A-xr_GkTGFGRmNUbPLBz8VggE-voizjixxwzDY_sQnwycd3BPATX3R1NG74sXpxejgznOvF09NaV0METVXYA"/>
+<!-- Steam Wave Gradient Illusion -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#0D0905] via-transparent to-transparent"></div>
+</div>
+<!-- Content -->
+<div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-20">
+<span class="font-accent-tagline text-accent-tagline text-primary block mb-6 tracking-[0.2em] uppercase">The Art of Brewing</span>
+<h1 class="font-display-hero text-[60px] md:text-display-hero text-on-surface mb-8 text-glow leading-tight font-extrabold tracking-tight">The Perfect Cup<br/>of Chai</h1>
+<p class="font-body text-body text-on-surface-variant max-w-2xl mx-auto">Master the ritual of brewing Barak Valley's finest. A guide to patience, proportion, and pure indulgence.</p>
+</div>
+</section>
+<!-- Tab Switcher -->
+<section class="sticky top-20 z-40 bg-background/80 backdrop-blur-xl border-b border-white/5 py-4">
+<div class="max-w-md mx-auto px-4 flex justify-center">
+<div class="glass-panel p-1 rounded-full flex relative w-full max-w-[300px]">
+<!-- Active Indicator (Static simulation) -->
+<div class="absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] bg-primary-container/20 rounded-full border border-primary/30 pointer-events-none"></div>
+<button class="flex-1 py-3 text-center z-10 font-label text-label text-primary">Classic CTC</button>
+<button class="flex-1 py-3 text-center z-10 font-label text-label text-on-surface-variant hover:text-on-surface transition-colors">Masala Chai</button>
+</div>
+</div>
+</section>
+<!-- Main Content Area -->
+<section class="py-xxl relative z-10">
+<div class="max-w-[1440px] mx-auto px-8 lg:px-24">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+<!-- 6-Step Guide (Left/Main Column) -->
+<div class="lg:col-span-8 flex flex-col gap-32">
+<!-- Step 1 -->
+<div class="relative flex flex-col md:flex-row items-center gap-12">
+<div class="absolute -left-12 -top-12 font-display-hero text-[160px] text-primary/10 leading-none select-none pointer-events-none font-black">1</div>
+<div class="w-full md:w-1/2 aspect-square relative rounded-2xl overflow-hidden glass-panel p-2">
+<img alt="Boil Water" class="w-full h-full object-cover rounded-xl" data-alt="Close up of a premium copper kettle pouring boiling water, dark moody background, high contrast, golden highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4hmygZhWZcEixWzm8eZZMiBRWmkkoo_frOGyhfzj4kthsEAQ0CXVrXUzPWoeQafx4XEBYVis5NJq0RsqVWgkzzV6IOiOkqITCLFLrsZ2iHfgIhfim7D7kfp2cJDHhoh7C7kTtEv-S645xp5RGIalsDBPm5KpqKvIYIxZmhXv7A03198ALyh8388FJTcn5npIJm7gynfBJeL4pLb9HnEXev0aFc7UAfDQFdeqxNK--4sBDCX47EQBljL1jospYxtmMN7-cR0Pco-A"/>
+</div>
+<div class="w-full md:w-1/2 relative z-10">
+<h3 class="font-h2 text-h2 text-on-surface mb-4">Boil Fresh Water</h3>
+<p class="font-body text-body text-on-surface-variant mb-6">Always start with cold, freshly drawn water. Bring it to a rolling boil (100°C/212°F). Oxygenated water draws out the complex malt notes of our CTC blend.</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative flex flex-col md:flex-row-reverse items-center gap-12">
+<div class="absolute -right-12 -top-12 font-display-hero text-[160px] text-primary/10 leading-none select-none pointer-events-none font-black">2</div>
+<div class="w-full md:w-1/2 aspect-square relative rounded-2xl overflow-hidden glass-panel p-2">
+<img alt="Add Tea" class="w-full h-full object-cover rounded-xl" data-alt="Macro shot of dark, granular CTC black tea leaves being scooped with a golden brass spoon, rich dark background, cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVOG46fGHIPBQv6PXOO_uQuxOqCPkIN7KXrEvdt8nwNpT1JvqSmKuATEeSQtvtOGTAkkP8E1sAcvnj6XrP2TTDNi0os3aYEjgckYt4DiTWMJI4l4vRsfsNeqYIjHd1CsLoscUvuAgHyxijPiSD8fzaebmQtQnUUR37xMeEr2fvmrEuuwhh3FaKlnggZdSJaVj_GbEymsRdydBjRHnBIzwiRIhLqECuf2xNyQBNoTPohh-NnWYttfubb-7bk_cvvo3fF9gdcJvtfgI"/>
+</div>
+<div class="w-full md:w-1/2 relative z-10">
+<h3 class="font-h2 text-h2 text-on-surface mb-4">Add Quality Tea</h3>
+<p class="font-body text-body text-on-surface-variant mb-8">Measure exactly 1 rounded teaspoon (approx. 2.5g) of Barak Valley CTC per cup into your warmed teapot or saucepan.</p>
+<!-- Product Cross-link Card -->
+<div class="glass-panel rounded-xl p-4 flex items-center gap-4 border-l-4 border-l-primary hover:bg-white/5 transition-colors cursor-pointer">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container-high flex-shrink-0">
+<img alt="Product" class="w-full h-full object-cover opacity-80" data-alt="Premium tea tin packaging, matte black with gold foil details, dark studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-u7576ZauFpD_q3EegNRJnbpQP7NOjCRvWp2eW-yu0Vo-Jx8Lpl1iQNw1zbTNZ8nb3A9tStZUPBagrMkbAeIn_N-6E5VCDMjIfW_TqArzUDNH-RK2SWl1k_7wIZay4djgUtcJqxK862vHweMHzyWomFR8QjvOwDJVkSxv0WODZAbHgbnc2h_THWUBWwUgaOqtKrQQ4cbVgYAOMrjkqAOlnJV2EqDNe3ttl0bPszw1otT-RNnNoWBWcDr_hQqJ03sUveC5Q4IDuEI"/>
+</div>
+<div>
+<p class="font-label text-label text-primary mb-1">Recommended</p>
+<p class="font-body text-body-sm text-on-surface font-semibold">Estate Reserve CTC</p>
+</div>
+<span class="material-symbols-outlined text-primary ml-auto">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative flex flex-col md:flex-row items-center gap-12">
+<div class="absolute -left-12 -top-12 font-display-hero text-[160px] text-primary/10 leading-none select-none pointer-events-none font-black">3</div>
+<div class="w-full md:w-1/2 aspect-[4/3] relative rounded-2xl overflow-hidden glass-panel p-2">
+<img alt="Steep" class="w-full h-full object-cover rounded-xl" data-alt="Dark red-brown tea steeping in a glass pot, steam rising, backlit with warm light against a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4_g64hJ7im0K_XC9TfHyGQVjCks_K5bHMoRuztgae4p8GNfb5P2T-SThUr1UAnf22p6MHWowhLzSE6H24f4L3XdwW8OoSWJ_Qm_IOawmV5r7n601r4p_lEN3XUbJPgJGtS2Tx3ckC9W01rUkMUlgzj48Bc9ZEe5U7fGRmNXoQM8eH5e4kcTUURHecVpQFBdGGKEorXj9e_xhakIka1ojXd_wZTF1Dn93VpbiYZ2wIrS5EnjcEJgjQIqo78o579AXWOVV5x1aH4HY"/>
+</div>
+<div class="w-full md:w-1/2 relative z-10">
+<h3 class="font-h2 text-h2 text-on-surface mb-4">Steep &amp; Brew</h3>
+<p class="font-body text-body text-on-surface-variant mb-6">Pour the boiling water over the leaves. Let it steep for 3-5 minutes depending on desired strength. For an authentic Indian style, simmer gently on the stove.</p>
+<!-- Pro Tip Callout -->
+<div class="glass-panel rounded-xl p-6 flex gap-4 bg-primary/5">
+<span class="material-symbols-outlined text-primary flex-shrink-0">lightbulb</span>
+<div>
+<h4 class="font-label text-label text-primary mb-2">Pro Tip</h4>
+<p class="font-body text-body-sm text-on-surface-variant">Do not rush this step. The robust, malty character of Assam-style tea needs time to fully extract before adding milk.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Brew Calculator (Right/Sticky Column) -->
+<div class="lg:col-span-4">
+<div class="sticky top-40 glass-panel rounded-2xl p-8 border-t-2 border-t-primary">
+<h3 class="font-h3 text-h3 text-on-surface mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">calculate</span>
+                                Brew Calculator
+                            </h3>
+<p class="font-body text-body-sm text-on-surface-variant mb-8">Perfect proportions for Classic CTC.</p>
+<!-- Cups Slider -->
+<div class="mb-10">
+<div class="flex justify-between items-center mb-4">
+<span class="font-label text-label text-on-surface">Serving Size</span>
+<span class="font-h3 text-h3 text-primary">2 Cups</span>
+</div>
+<input class="w-full appearance-none bg-transparent" max="10" min="1" type="range" value="2"/>
+<div class="flex justify-between text-[10px] font-label text-outline mt-2 uppercase tracking-widest">
+<span>1</span>
+<span>10</span>
+</div>
+</div>
+<!-- Live Stats -->
+<div class="space-y-4">
+<div class="flex justify-between items-center py-3 border-b border-white/5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">eco</span>
+</div>
+<span class="font-body text-body-sm text-on-surface">Tea Leaves</span>
+</div>
+<span class="font-body text-body text-primary font-semibold">2 tsp</span>
+</div>
+<div class="flex justify-between items-center py-3 border-b border-white/5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-blue-400/70">water_drop</span>
+</div>
+<span class="font-body text-body-sm text-on-surface">Water</span>
+</div>
+<span class="font-body text-body text-primary font-semibold">240 ml</span>
+</div>
+<div class="flex justify-between items-center py-3 border-b border-white/5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-amber-100/70">opacity</span>
+</div>
+<span class="font-body text-body-sm text-on-surface">Whole Milk</span>
+</div>
+<span class="font-body text-body text-primary font-semibold">120 ml</span>
+</div>
+<div class="flex justify-between items-center py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">view_in_ar</span>
+</div>
+<span class="font-body text-body-sm text-on-surface">Sugar</span>
+</div>
+<span class="font-body text-body text-primary font-semibold">To taste</span>
+</div>
+</div>
+<button class="w-full mt-8 py-4 bg-primary text-background font-cta text-cta rounded-lg hover:bg-primary-fixed transition-colors">Shop Estate Reserve</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-16 px-8 bg-neutral-950 border-t border-white/5">
+<div class="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="text-xl font-bold text-amber-600 font-serif italic">BARAK</div>
+<div class="col-span-1 md:col-span-2">
+<ul class="flex flex-wrap gap-6 font-inter text-sm antialiased text-neutral-500">
+<li><a class="hover:text-amber-400 transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-amber-400 transition-all opacity-80 hover:opacity-100" href="#">Shipping &amp; Returns</a></li>
+<li><a class="hover:text-amber-400 transition-all opacity-80 hover:opacity-100" href="#">Wholesale Inquiry</a></li>
+<li><a class="hover:text-amber-400 transition-all opacity-80 hover:opacity-100" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div class="font-inter text-sm antialiased text-neutral-500 text-right md:text-left">
+                © 2024 BARAK TEA ESTATE. BORN IN THE VALLEY.
+            </div>
+</div>
+</footer>
+</body></html>

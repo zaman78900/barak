@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Barak Valley Tea - Cart Drawer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#241a0c",
+                    "on-primary": "#422c00",
+                    "inverse-on-surface": "#3b2e1f",
+                    "on-tertiary-fixed": "#201b15",
+                    "outline-variant": "#504536",
+                    "surface-container-highest": "#3f3323",
+                    "secondary-container": "#4a4739",
+                    "primary-container": "#c8922a",
+                    "on-error": "#690005",
+                    "on-tertiary": "#352f29",
+                    "surface-container-lowest": "#160c02",
+                    "primary": "#f8bc51",
+                    "primary-fixed": "#ffdeab",
+                    "background": "#1b1105",
+                    "primary-fixed-dim": "#f8bc51",
+                    "tertiary-fixed-dim": "#cfc5bc",
+                    "on-tertiary-container": "#38322c",
+                    "on-secondary-fixed-variant": "#4a4739",
+                    "surface-variant": "#3f3323",
+                    "inverse-primary": "#7e5700",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#1b1105",
+                    "on-secondary-container": "#bbb5a3",
+                    "tertiary-fixed": "#ebe1d7",
+                    "on-surface-variant": "#d4c4b0",
+                    "on-primary-fixed": "#281900",
+                    "on-tertiary-fixed-variant": "#4c463f",
+                    "outline": "#9c8f7c",
+                    "inverse-surface": "#f5dfc8",
+                    "surface-container-high": "#342819",
+                    "surface-container": "#291e0f",
+                    "surface": "#1b1105",
+                    "surface-bright": "#443727",
+                    "tertiary": "#cfc5bc",
+                    "on-surface": "#f5dfc8",
+                    "error-container": "#93000a",
+                    "on-primary-fixed-variant": "#5f4100",
+                    "on-background": "#f5dfc8",
+                    "tertiary-container": "#a39a92",
+                    "secondary": "#ccc6b4",
+                    "on-secondary-fixed": "#1e1c10",
+                    "on-secondary": "#333024",
+                    "surface-tint": "#f8bc51",
+                    "secondary-fixed-dim": "#ccc6b4",
+                    "secondary-fixed": "#e9e2d0",
+                    "on-primary-container": "#462f00",
+                    "on-error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "xl": "48px",
+                    "max-width": "1440px",
+                    "sm": "8px",
+                    "xxl": "96px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "cta": ["Inter"],
+                    "h3": ["Inter"],
+                    "h2": ["Inter"],
+                    "display-hero": ["Inter"],
+                    "label": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "h1": ["Inter"],
+                    "body": ["Inter"],
+                    "accent-tagline": ["Inter"]
+            },
+            "fontSize": {
+                    "cta": ["15px", {"lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "700"}],
+                    "h3": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-hero": ["100px", {"lineHeight": "0.95", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                    "label": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h1": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body": ["16px", {"lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400"}],
+                    "accent-tagline": ["18px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen relative overflow-hidden">
+<!-- Mock Background for Context -->
+<div class="absolute inset-0 z-0">
+<img alt="Background" class="w-full h-full object-cover opacity-40" data-alt="misty tea plantation at dawn with rolling hills and soft golden sunlight filtering through the fog" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhtJYV1oWi1S4Z8rSrGuPhgqvcS3AR84k4oCOkfX7F9q5wqHGomvoxnDVAXKjMAasFU3mUnddZljDfVtlm2vugBtoxKR3oJ5mfLaYuLw8zH6_aTJmuDVRlUPvNi5qtgZccot9uwu2jK_g9-wkq-TlZPJsFy-eUGZ5wU8obn8Mf_4bqQknyGGiREl-HFGeN6LB2jo5TsSzQmeSEZQYHVOm1lfL9Nbh95YpLDlMhk5WdaTngol6tVWHOhQsJG4AHNoS00yypsS8Y_hs"/>
+<div class="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/90"></div>
+</div>
+<!-- TopNavBar (Semantic Shell Anchor) -->
+<nav class="bg-surface-container-lowest/70 glass-panel fixed top-0 w-full z-[100] border-b border-primary-container/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]">
+<div class="max-w-[1440px] mx-auto flex justify-between items-center px-8 h-20">
+<div class="text-2xl font-light tracking-[0.2em] uppercase text-primary-container">Barak Valley Tea</div>
+<div class="hidden md:flex items-center gap-8">
+<span class="text-on-surface-variant hover:text-primary-container transition-colors duration-300 font-label text-label cursor-pointer uppercase">Heritage</span>
+<span class="text-on-surface-variant hover:text-primary-container transition-colors duration-300 font-label text-label cursor-pointer uppercase">Collections</span>
+<span class="text-on-surface-variant hover:text-primary-container transition-colors duration-300 font-label text-label cursor-pointer uppercase">Artisanal</span>
+<span class="text-on-surface-variant hover:text-primary-container transition-colors duration-300 font-label text-label cursor-pointer uppercase">Experience</span>
+</div>
+<div class="flex items-center gap-4 text-primary-container">
+<span class="material-symbols-outlined cursor-pointer hover:scale-105 transition-transform duration-300">person</span>
+<span class="material-symbols-outlined cursor-pointer hover:scale-105 transition-transform duration-300">shopping_bag</span>
+</div>
+</div>
+</nav>
+<!-- Cart Overlay -->
+<div class="fixed inset-0 bg-background/80 glass-panel z-[999] transition-opacity duration-300"></div>
+<!-- Slide-in Cart Drawer -->
+<aside class="fixed right-0 top-0 h-full w-full sm:w-[420px] bg-surface-container-lowest/95 glass-panel z-[1000] border-l border-primary-container/20 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] flex flex-col transform transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)]">
+<!-- Header -->
+<header class="flex justify-between items-center p-lg border-b border-outline-variant/30 flex-shrink-0">
+<div class="flex items-center gap-sm">
+<h2 class="font-h3 text-h3 text-on-surface">Your Cart</h2>
+<span class="bg-primary-container/20 text-primary-container font-label text-label px-2 py-1 rounded-full border border-primary-container/30">2</span>
+</div>
+<button aria-label="Close cart" class="text-on-surface-variant hover:text-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+</header>
+<!-- Progress Bar -->
+<div class="p-md bg-surface-container/40 border-b border-outline-variant/30 flex-shrink-0">
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-xs">Add <span class="text-primary-container font-semibold">₹150</span> more for free delivery!</p>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[70%] rounded-full shadow-[0_0_10px_rgba(200,146,42,0.5)]"></div>
+</div>
+</div>
+<!-- Cart Items Scrollable -->
+<div class="flex-1 overflow-y-auto p-lg space-y-lg hide-scrollbar">
+<!-- Item 1 -->
+<div class="flex gap-md group">
+<div class="w-16 h-16 rounded-DEFAULT border border-outline-variant/30 overflow-hidden flex-shrink-0 relative">
+<img alt="Gold Reserve Tea" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="close up of loose golden tea leaves on a dark textured slate background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVP7ixO6J9lL9tjjln3Tl5EGJeB-ZdtF9lZAVgP7KvRLrdu0_EqGOwORIuVdaoBwRZuSXZrbWMfPS6R0B17lNQf605ViZ5rV1iD_WYebSJD3tVrkCc02oenUPqoORVoOtWD5jEHS_-96tEELDU0avTsOraef51rnTJMArt93XwTdNdczaFMTRqfbTKNau7H_CTB7sKLcqEDzPC6Us2VJ9FchVpH3ZB_f2iRzlJnscbuCj6rKVFu9faEGIz6gSgrNgmxUOkiZ828bE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-body text-body font-bold text-on-surface leading-tight">Gold Reserve</h3>
+<p class="font-label text-label text-on-surface-variant mt-1">100g Loose Leaf</p>
+</div>
+<button class="text-outline hover:text-error transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex items-center gap-2 bg-surface-container rounded-full px-2 py-1 border border-outline-variant/50">
+<button class="text-on-surface-variant hover:text-primary-container"><span class="material-symbols-outlined text-[16px]">remove</span></button>
+<span class="font-label text-label text-on-surface w-4 text-center">1</span>
+<button class="text-on-surface-variant hover:text-primary-container"><span class="material-symbols-outlined text-[16px]">add</span></button>
+</div>
+<span class="font-body text-body font-bold text-primary-container">₹1,250</span>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex gap-md group">
+<div class="w-16 h-16 rounded-DEFAULT border border-outline-variant/30 overflow-hidden flex-shrink-0 relative">
+<img alt="Heritage Blend Tea" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="steaming cup of dark amber tea on a wooden saucer with blurred dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCciX4FnNgNJLNiGlLXZIqRZaHjfErgf_isQQZ70YYzEHdqWaMA5OfoknM6n5hrLKfYzWjaVXlPc_wPcp_2JcQw2j8xyk-TAnTIZGqm6SMwRyz872L2zvdy9h89J2p1fuUvCn0mZuFRyBN5E4FXO9JybsvCVj0bs4OPMNaae0PLmS2oL9AuDLOofrvic3wB_zCVEa6mopoCGEIPuz_OPpTjB0OFIxQMfPqcbveOvuDzC8WMdViJzE7PBrrfrFDW99wGP9rsX5VenE8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-body text-body font-bold text-on-surface leading-tight">Heritage Blend</h3>
+<p class="font-label text-label text-on-surface-variant mt-1">250g Tin</p>
+</div>
+<button class="text-outline hover:text-error transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex items-center gap-2 bg-surface-container rounded-full px-2 py-1 border border-outline-variant/50">
+<button class="text-on-surface-variant hover:text-primary-container"><span class="material-symbols-outlined text-[16px]">remove</span></button>
+<span class="font-label text-label text-on-surface w-4 text-center">1</span>
+<button class="text-on-surface-variant hover:text-primary-container"><span class="material-symbols-outlined text-[16px]">add</span></button>
+</div>
+<span class="font-body text-body font-bold text-primary-container">₹850</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Upsell Row -->
+<div class="py-md border-t border-outline-variant/20 flex-shrink-0">
+<p class="px-lg font-label text-label text-on-surface-variant mb-sm uppercase tracking-wider">You might also like...</p>
+<div class="flex gap-md px-lg overflow-x-auto hide-scrollbar pb-2">
+<div class="w-[140px] flex-shrink-0 bg-surface-container/30 border border-outline-variant/30 rounded-DEFAULT p-sm hover:border-primary-container/50 transition-colors duration-300 cursor-pointer">
+<div class="h-[80px] rounded-sm overflow-hidden mb-2 bg-surface-container-highest">
+<img alt="Tea Infuser" class="w-full h-full object-cover opacity-80" data-alt="small elegant ceramic tea infuser resting on dark wood table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWKmIm6k3RSA5gEqTvKZHEBkBwiD3K6fBm7b142XrM0gToz2mQLfSFSvRvN-By5mbtcZHmLcLS5X2ta85pmY8oVLdLFdE4V8h1NuFAOL4hKbWstlgYOmi8lUNNy6a-L4ZxVPfDIMEx8VhD7xNqkQAI5tVLKofTwjrIGpCBijjFn0qJrreMkU7wghWTY9brQlgnvcoHYA1vyVegJ4vLT_raNAFoMFnTHUljBFVCDOmVGCbZSugwEhwmIbC9FBL0uUrUr2ZtOCtxT4s"/>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface font-semibold truncate">Brass Infuser</p>
+<p class="font-label text-label text-primary-container mt-1">+ ₹450</p>
+</div>
+<div class="w-[140px] flex-shrink-0 bg-surface-container/30 border border-outline-variant/30 rounded-DEFAULT p-sm hover:border-primary-container/50 transition-colors duration-300 cursor-pointer">
+<div class="h-[80px] rounded-sm overflow-hidden mb-2 bg-surface-container-highest">
+<img alt="Tea Chocolate" class="w-full h-full object-cover opacity-80" data-alt="artisanal dark chocolate bar with tea leaves sprinkled on top" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxDk5tpja47h4ceRS7bUslzmYLzhRqofC38MWmduRGlvZh5nekXl3Tc6--RaqQDHvRvXfpHoGL_B_FrnaNUTFzIlp9ziQCt5ObG-g9a4CMGz2a2sn9-lMcYNOTc1NAAeeIT728lFJHQIYCGDGM-tbp39nfNXFvA6V2Tne8HwhniNYGWE6xcCYfBFZ0xInPXMBWNp6f8uQMn43J7dwypIo8nFvQn8989AfoTTGCoZH2-h0uL8eNscVo6zdd2BISiTMT94FnH_euO2U"/>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface font-semibold truncate">Tea Chocolate</p>
+<p class="font-label text-label text-primary-container mt-1">+ ₹250</p>
+</div>
+</div>
+</div>
+<!-- Footer Area -->
+<div class="bg-surface-container-high/80 backdrop-blur-md p-lg border-t border-primary-container/20 flex-shrink-0 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<!-- Coupon -->
+<div class="flex gap-sm mb-lg">
+<input class="flex-1 bg-surface border border-outline-variant rounded-DEFAULT px-md py-sm font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" placeholder="Gift card or discount code" type="text"/>
+<button class="bg-surface border border-primary-container/40 text-primary-container px-md py-sm rounded-DEFAULT font-cta text-cta hover:bg-primary-container/10 transition-colors duration-300">Apply</button>
+</div>
+<!-- Summary -->
+<div class="space-y-sm mb-lg border-b border-outline-variant/30 pb-lg">
+<div class="flex justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span>Subtotal</span>
+<span>₹2,100</span>
+</div>
+<div class="flex justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span>Shipping</span>
+<span>Calculated at next step</span>
+</div>
+<div class="flex justify-between font-h3 text-h3 text-primary-container mt-2 pt-2 border-t border-outline-variant/20">
+<span>Total</span>
+<span>₹2,100</span>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-md">
+<button class="w-full bg-primary-container text-on-primary-container py-md rounded-lg font-cta text-cta flex items-center justify-center gap-sm shadow-[0_0_15px_rgba(200,146,42,0.3)] hover:shadow-[0_0_25px_rgba(200,146,42,0.5)] transition-shadow duration-300 transform active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">chat</span>
+                    Checkout via WhatsApp
+                </button>
+<button class="w-full text-center font-body-sm text-body-sm text-on-surface-variant hover:text-primary-container transition-colors duration-300 underline underline-offset-4 decoration-outline-variant hover:decoration-primary-container">
+                    Continue Shopping
+                </button>
+</div>
+</div>
+</aside>
+</body></html>

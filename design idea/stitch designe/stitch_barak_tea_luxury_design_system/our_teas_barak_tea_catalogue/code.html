@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BARAK - Our Teas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#462f00",
+                        "surface-bright": "#443727",
+                        "on-tertiary-fixed-variant": "#4c463f",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#f5dfc8",
+                        "secondary-container": "#4a4739",
+                        "inverse-primary": "#7e5700",
+                        "secondary-fixed": "#e9e2d0",
+                        "secondary": "#ccc6b4",
+                        "surface-container-low": "#241a0c",
+                        "outline": "#9c8f7c",
+                        "surface-container-lowest": "#160c02",
+                        "outline-variant": "#504536",
+                        "on-primary-fixed": "#281900",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#ccc6b4",
+                        "on-surface-variant": "#d4c4b0",
+                        "tertiary-fixed-dim": "#cfc5bc",
+                        "on-secondary-container": "#bbb5a3",
+                        "on-tertiary-fixed": "#201b15",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#1b1105",
+                        "on-secondary-fixed-variant": "#4a4739",
+                        "on-error": "#690005",
+                        "on-tertiary": "#352f29",
+                        "on-primary-fixed-variant": "#5f4100",
+                        "surface-tint": "#f8bc51",
+                        "surface-container-high": "#342819",
+                        "primary-fixed-dim": "#f8bc51",
+                        "on-tertiary-container": "#38322c",
+                        "surface-container": "#291e0f",
+                        "surface": "#1b1105",
+                        "on-secondary-fixed": "#1e1c10",
+                        "on-primary": "#422c00",
+                        "surface-container-highest": "#3f3323",
+                        "tertiary-fixed": "#ebe1d7",
+                        "primary-container": "#c8922a",
+                        "primary-fixed": "#ffdeab",
+                        "on-secondary": "#333024",
+                        "primary": "#f8bc51",
+                        "inverse-on-surface": "#3b2e1f",
+                        "on-surface": "#f5dfc8",
+                        "inverse-surface": "#f5dfc8",
+                        "background": "#1b1105",
+                        "tertiary": "#cfc5bc",
+                        "tertiary-container": "#a39a92",
+                        "surface-variant": "#3f3323"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "max-width": "1440px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "xl": "48px",
+                        "gutter": "24px",
+                        "xxl": "96px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "label": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h3": ["Inter"],
+                        "accent-tagline": ["Inter"],
+                        "h2": ["Inter"],
+                        "cta": ["Inter"],
+                        "body": ["Inter"],
+                        "display-hero": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400" }],
+                        "h3": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "accent-tagline": ["18px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h2": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "cta": ["15px", { "lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "700" }],
+                        "body": ["16px", { "lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400" }],
+                        "display-hero": ["100px", { "lineHeight": "0.95", "letterSpacing": "-0.04em", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0D0905;
+            background-image: radial-gradient(circle at 50% 0%, #1b1105 0%, #0D0905 100%);
+            background-attachment: fixed;
+        }
+        .glass-panel {
+            background: rgba(250, 243, 224, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(248, 188, 81, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+        .glass-btn {
+            background: rgba(250, 243, 224, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(248, 188, 81, 0.3);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-btn:hover {
+            border-color: rgba(248, 188, 81, 0.8);
+            box-shadow: 0 0 15px rgba(248, 188, 81, 0.2) inset;
+        }
+        .product-card {
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(248, 188, 81, 0.5);
+            box-shadow: 0 12px 48px 0 rgba(248, 188, 81, 0.1);
+        }
+    </style>
+</head>
+<body class="text-on-background min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-black/40 backdrop-blur-md sticky top-0 w-full z-50 border-b border-amber-500/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]">
+<div class="max-w-7xl mx-auto px-8 flex justify-between items-center h-20">
+<div class="text-2xl font-bold tracking-tighter text-amber-500">BARAK</div>
+<div class="hidden md:flex gap-8 font-inter tracking-wide uppercase text-sm">
+<a class="text-stone-400 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform" href="#">Heritage</a>
+<a class="text-amber-500 border-b border-amber-500 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform" href="#">Collection</a>
+<a class="text-stone-400 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform" href="#">Tasting Room</a>
+<a class="text-stone-400 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform" href="#">Journal</a>
+</div>
+<div class="flex gap-4 text-amber-500">
+<button class="scale-95 active:scale-90 transition-transform hover:text-amber-400 transition-colors duration-350">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+<button class="scale-95 active:scale-90 transition-transform hover:text-amber-400 transition-colors duration-350">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Page Header -->
+<header class="max-w-7xl mx-auto px-8 pt-24 pb-12 w-full">
+<div class="flex items-center gap-2 font-label text-label text-on-background/50 mb-6">
+<span>Home</span>
+<span class="text-primary">›</span>
+<span>Shop</span>
+</div>
+<h1 class="font-h1 text-[56px] leading-[1.1] tracking-[-0.02em] font-bold text-on-background mb-4">Our Teas</h1>
+<p class="font-body text-body font-medium text-on-background/60">Freshly packed from Barak Valley</p>
+</header>
+<!-- Filter Bar & Search -->
+<div class="sticky top-20 z-40 w-full glass-panel border-x-0 border-t-0 mb-12">
+<div class="max-w-7xl mx-auto px-8 py-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+<div class="flex flex-wrap gap-3">
+<button class="px-4 py-2 rounded-full bg-primary text-background font-label text-label transition-all">All</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-primary font-label text-label hover:border-primary transition-all">Everyday</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-primary font-label text-label hover:border-primary transition-all">Premium</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-primary font-label text-label hover:border-primary transition-all">Blends</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-primary font-label text-label hover:border-primary transition-all">Gift Boxes</button>
+</div>
+<div class="flex gap-4 w-full md:w-auto">
+<div class="relative flex-grow md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-high/50 border border-outline-variant rounded-lg pl-10 pr-4 py-2 text-on-background placeholder-outline focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all font-body-sm text-body-sm" placeholder="Search teas..." type="text"/>
+</div>
+<button class="glass-btn px-4 py-2 rounded-lg flex items-center gap-2 text-on-background font-label text-label">
+<span class="material-symbols-outlined text-[18px]">sort</span> Sort
+                </button>
+<button class="glass-btn px-4 py-2 rounded-lg flex items-center gap-2 text-on-background font-label text-label">
+<span class="material-symbols-outlined text-[18px]">tune</span> Filter
+                </button>
+</div>
+</div>
+</div>
+<!-- Product Grid -->
+<main class="max-w-7xl mx-auto px-8 pb-32 flex-grow w-full">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Product Card 1 -->
+<article class="glass-panel rounded-[16px] overflow-hidden flex flex-col product-card">
+<div class="relative aspect-square w-full bg-surface-container-highest/30">
+<img alt="" class="w-full h-full object-cover mix-blend-luminosity opacity-80" data-alt="Loose leaf black tea arranged beautifully on dark textured slate background with dramatic lighting emphasizing golden tips" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKYCiRTBKjfl1X0RBH4hI0rIfZ5CUUVDbGORAYHMqv6g7h-YrsXYkYdzC_LMqZUtlzDac35al03zsOCUIzjyxnyVCqIO0VkAQPczQ7cChsQQWmHX-gyrvbFNV2vkkgrzj3QQA2JpKUaVTCMBsMKUgmsYWqiy1mA9VK98LPGSjz3XnFndBWaOMrNWYDO8QWWIzH4bPVTuiFnIRj1T3-TFYaly2sc0HdwT-Z2E9BMmYk4r7XljUhUNDKQbDYkRxSEgypiB4VGCbM6xw"/>
+<div class="absolute top-4 left-4 bg-emerald-900/80 backdrop-blur-sm border border-emerald-500/30 text-emerald-100 font-label text-[10px] uppercase tracking-wider px-2 py-1 rounded">Packed: Apr 2026</div>
+<button class="absolute top-4 right-4 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<span class="font-label text-[10px] uppercase text-primary mb-2">Premium</span>
+<h3 class="font-h3 text-h3 text-on-background mb-4">Golden Tippy Assam</h3>
+<div class="flex gap-2 mb-6">
+<button class="px-3 py-1 border border-primary text-primary font-label text-[10px] rounded-full">250g</button>
+<button class="px-3 py-1 border border-outline-variant text-on-surface-variant font-label text-[10px] rounded-full hover:border-primary transition-colors">500g</button>
+<button class="px-3 py-1 border border-outline-variant text-on-surface-variant font-label text-[10px] rounded-full hover:border-primary transition-colors">1kg</button>
+</div>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="text-on-surface-variant line-through font-body-sm text-[12px]">$45.00</span>
+<span class="text-primary font-bold text-[18px]">$38.00</span>
+</div>
+<div class="text-on-surface-variant font-body-sm text-[11px] mb-6">$15.20 / 100g</div>
+<button class="w-full glass-btn py-3 rounded-lg font-cta text-cta text-primary flex justify-center items-center gap-2">
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</article>
+<!-- Product Card 2 -->
+<article class="glass-panel rounded-[16px] overflow-hidden flex flex-col product-card">
+<div class="relative aspect-square w-full bg-surface-container-highest/30">
+<img alt="" class="w-full h-full object-cover mix-blend-luminosity opacity-80" data-alt="A delicate glass cup filled with amber tea placed next to loose dried tea leaves on dark wooden table with soft side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaWb0VHcu46Quy5poyLJ2Sa7DYpHm7DhjwIYaoIt3G_LmZ5EwhQSYkCPWg1-ndUyHsnnFG_3Wq8aHSM6S91wZFt-DqkIvGgJXkxP9ud4lSEVO1RoIU91XP_8h1vnNKe1vYF1OeuH-QPYTXijtAkiRxPkUdoKlNqzgjJvsMFF_Gpy7ev-nLauTNMrOmjWJw1BrkkTTpE5kdZhAPKar6O6GuFr9ZcCaniJhbn5Fg9c1mITFuuaQe2hoeKjUpfC_61pLipyTaJZLzl-g"/>
+<div class="absolute top-4 left-4 bg-emerald-900/80 backdrop-blur-sm border border-emerald-500/30 text-emerald-100 font-label text-[10px] uppercase tracking-wider px-2 py-1 rounded">Packed: Mar 2026</div>
+<button class="absolute top-4 right-4 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<span class="font-label text-[10px] uppercase text-primary mb-2">Everyday</span>
+<h3 class="font-h3 text-h3 text-on-background mb-4">Valley Morning Blend</h3>
+<div class="flex gap-2 mb-6">
+<button class="px-3 py-1 border border-outline-variant text-on-surface-variant font-label text-[10px] rounded-full hover:border-primary transition-colors">250g</button>
+<button class="px-3 py-1 border border-primary text-primary font-label text-[10px] rounded-full">500g</button>
+<button class="px-3 py-1 border border-outline-variant text-on-surface-variant font-label text-[10px] rounded-full hover:border-primary transition-colors">1kg</button>
+</div>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="text-on-surface-variant line-through font-body-sm text-[12px]">$30.00</span>
+<span class="text-primary font-bold text-[18px]">$24.00</span>
+</div>
+<div class="text-on-surface-variant font-body-sm text-[11px] mb-6">$4.80 / 100g</div>
+<button class="w-full glass-btn py-3 rounded-lg font-cta text-cta text-primary flex justify-center items-center gap-2">
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</article>
+<!-- Product Card 3 -->
+<article class="glass-panel rounded-[16px] overflow-hidden flex flex-col product-card">
+<div class="relative aspect-square w-full bg-surface-container-highest/30">
+<img alt="" class="w-full h-full object-cover mix-blend-luminosity opacity-80" data-alt="Elegant black tin box with gold lettering alongside dried tea leaves and spices on a dark slate background moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvUYVENpBy_WkcD9zk5xFDGrL4CYDhsBxhq7C_81LuqNlMvsk4JptfKp4QZCxxtIWyQtExSfbSDFdCrBXw5b6lOYaUIZ0CB6X3oSvlTajVJWEf6kYhScjnxwLt4Y_-pbyebBMgfrWiYxyC0V_bPZzj_4Cb5EAlP9QZ3NJeNlhnzzFbBM4zdKapYK58lS6OXmMjAbTAymwTqUyLi3xLDEzlNHG6HSoQNKDVhsBV2J5dUjmBOeWKVz7npwIJ151B4gzwgmnZdcAVZEA"/>
+<div class="absolute top-4 left-4 bg-emerald-900/80 backdrop-blur-sm border border-emerald-500/30 text-emerald-100 font-label text-[10px] uppercase tracking-wider px-2 py-1 rounded">Packed: Apr 2026</div>
+<button class="absolute top-4 right-4 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<span class="font-label text-[10px] uppercase text-primary mb-2">Blends</span>
+<h3 class="font-h3 text-h3 text-on-background mb-4">Heritage Masala Chai</h3>
+<div class="flex gap-2 mb-6">
+<button class="px-3 py-1 border border-primary text-primary font-label text-[10px] rounded-full">250g</button>
+<button class="px-3 py-1 border border-outline-variant text-on-surface-variant font-label text-[10px] rounded-full hover:border-primary transition-colors">500g</button>
+<button class="px-3 py-1 border border-outline-variant text-on-surface-variant font-label text-[10px] rounded-full hover:border-primary transition-colors">1kg</button>
+</div>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="text-on-surface-variant line-through font-body-sm text-[12px]">$35.00</span>
+<span class="text-primary font-bold text-[18px]">$28.00</span>
+</div>
+<div class="text-on-surface-variant font-body-sm text-[11px] mb-6">$11.20 / 100g</div>
+<button class="w-full glass-btn py-3 rounded-lg font-cta text-cta text-primary flex justify-center items-center gap-2">
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</article>
+<!-- Product Card 4 -->
+<article class="glass-panel rounded-[16px] overflow-hidden flex flex-col product-card">
+<div class="relative aspect-square w-full bg-surface-container-highest/30">
+<img alt="" class="w-full h-full object-cover mix-blend-luminosity opacity-80" data-alt="Beautifully crafted wooden gift box containing small glass vials of different tea varieties dark moody setup with soft highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIeBJoSUEGewLnw1zwckHGyZkNiKyhxUE6hDYBc4jHUM-nG68b4New_muRDDuXi2qBDGlBr0mBYT5nvAUzyCSxFoPmvYeczMAdkU-CNW6vViQURe6EhxFtMQ3RJjNhF9MZIvP_BrmClG8ccui8xfZLChjVWOVOx9LsMGR34J3OqbbKYft-__yVsmxp2Tf7phKoZX4hBby39glAXsO6vdn9d28uTdesibBiuej4HcB02YgpfeYSvpYZhbvBJyrZyU3h4cHmOnCRGao"/>
+<div class="absolute top-4 left-4 bg-emerald-900/80 backdrop-blur-sm border border-emerald-500/30 text-emerald-100 font-label text-[10px] uppercase tracking-wider px-2 py-1 rounded">Packed: Feb 2026</div>
+<button class="absolute top-4 right-4 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<span class="font-label text-[10px] uppercase text-primary mb-2">Gift Boxes</span>
+<h3 class="font-h3 text-h3 text-on-background mb-4">Artisan Tasting Set</h3>
+<div class="flex gap-2 mb-6">
+<button class="px-3 py-1 border border-primary text-primary font-label text-[10px] rounded-full">4 x 50g</button>
+</div>
+<div class="mt-auto">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="text-on-surface-variant line-through font-body-sm text-[12px]">$85.00</span>
+<span class="text-primary font-bold text-[18px]">$72.00</span>
+</div>
+<div class="text-on-surface-variant font-body-sm text-[11px] mb-6">Gift Assortment</div>
+<button class="w-full glass-btn py-3 rounded-lg font-cta text-cta text-primary flex justify-center items-center gap-2">
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-stone-950 w-full py-12 border-t border-amber-900/30 tonal-shift-dark flat mt-auto">
+<div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center fade-in duration-300">
+<div class="text-xl font-black text-amber-600">BARAK</div>
+<div class="flex flex-wrap gap-4 font-inter text-xs tracking-widest uppercase md:justify-end">
+<a class="text-stone-500 hover:text-amber-200 transition-colors" href="#">Privacy Policy</a>
+<a class="text-stone-500 hover:text-amber-200 transition-colors" href="#">Terms of Service</a>
+<a class="text-stone-500 hover:text-amber-200 transition-colors" href="#">Shipping &amp; Returns</a>
+<a class="text-stone-500 hover:text-amber-200 transition-colors" href="#">Wholesale</a>
+</div>
+<div class="font-inter text-xs tracking-widest uppercase text-amber-500 md:col-span-2 md:text-center mt-8">
+                © 2024 BARAK TEA HERITAGE. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+</body></html>

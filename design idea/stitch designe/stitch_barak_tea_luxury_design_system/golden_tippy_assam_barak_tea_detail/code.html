@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Golden Tippy Assam - Barak Tea Heritage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#291e0f",
+                        "primary-container": "#c8922a",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#ffdeab",
+                        "on-tertiary-fixed-variant": "#4c463f",
+                        "on-secondary": "#333024",
+                        "surface-dim": "#1b1105",
+                        "inverse-surface": "#f5dfc8",
+                        "on-surface-variant": "#d4c4b0",
+                        "on-secondary-fixed": "#1e1c10",
+                        "tertiary": "#cfc5bc",
+                        "on-secondary-container": "#bbb5a3",
+                        "on-primary-fixed-variant": "#5f4100",
+                        "outline": "#9c8f7c",
+                        "surface": "#1b1105",
+                        "surface-container-high": "#342819",
+                        "surface-bright": "#443727",
+                        "primary": "#f8bc51",
+                        "surface-container-lowest": "#160c02",
+                        "error-container": "#93000a",
+                        "surface-container-low": "#241a0c",
+                        "secondary": "#ccc6b4",
+                        "surface-tint": "#f8bc51",
+                        "inverse-primary": "#7e5700",
+                        "on-primary-fixed": "#281900",
+                        "tertiary-container": "#a39a92",
+                        "on-background": "#f5dfc8",
+                        "primary-fixed-dim": "#f8bc51",
+                        "on-tertiary-container": "#38322c",
+                        "on-tertiary": "#352f29",
+                        "outline-variant": "#504536",
+                        "on-secondary-fixed-variant": "#4a4739",
+                        "surface-variant": "#3f3323",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#ebe1d7",
+                        "on-error": "#690005",
+                        "background": "#1b1105",
+                        "surface-container-highest": "#3f3323",
+                        "secondary-fixed-dim": "#ccc6b4",
+                        "on-primary-container": "#462f00",
+                        "on-surface": "#f5dfc8",
+                        "secondary-container": "#4a4739",
+                        "on-primary": "#422c00",
+                        "on-tertiary-fixed": "#201b15",
+                        "tertiary-fixed-dim": "#cfc5bc",
+                        "secondary-fixed": "#e9e2d0",
+                        "inverse-on-surface": "#3b2e1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "xxl": "96px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "gutter": "24px",
+                        "xl": "48px",
+                        "max-width": "1440px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "display-hero": ["Inter"],
+                        "accent-tagline": ["Inter"],
+                        "h2": ["Inter"],
+                        "body": ["Inter"],
+                        "cta": ["Inter"],
+                        "label": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-hero": ["100px", {"lineHeight": "0.95", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                        "accent-tagline": ["18px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body": ["16px", {"lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400"}],
+                        "cta": ["15px", {"lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "700"}],
+                        "label": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Base Glass properties injected to supplement inline classes */
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-black/40 backdrop-blur-md sticky top-0 w-full z-50 border-b border-amber-500/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]">
+<div class="max-w-7xl mx-auto px-8 flex justify-between items-center h-20">
+<div class="text-2xl font-bold tracking-tighter text-amber-500 font-h2">BARAK</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="font-inter tracking-wide uppercase text-sm text-stone-400 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform" href="#">Heritage</a>
+<a class="font-inter tracking-wide uppercase text-sm text-amber-500 border-b border-amber-500 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform" href="#">Collection</a>
+<a class="font-inter tracking-wide uppercase text-sm text-stone-400 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform" href="#">Tasting Room</a>
+<a class="font-inter tracking-wide uppercase text-sm text-stone-400 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform" href="#">Journal</a>
+</nav>
+<div class="flex gap-4 items-center">
+<button class="text-amber-500 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+<button class="text-amber-500 hover:text-amber-400 transition-colors duration-350 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-max-width mx-auto px-lg md:px-xl py-xl">
+<!-- Breadcrumb -->
+<nav class="mb-lg flex items-center gap-2 text-on-surface-variant font-label text-label uppercase">
+<a class="hover:text-primary-container transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary-container transition-colors" href="#">Shop</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary-container transition-colors" href="#">Premium</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary-container">Golden Tippy Assam</span>
+</nav>
+<!-- 55/45 Split Layout -->
+<div class="flex flex-col lg:flex-row gap-gutter relative">
+<!-- Left Column: Gallery (55%) -->
+<div class="w-full lg:w-[55%] flex flex-col gap-sm">
+<!-- Main Image -->
+<div class="w-full aspect-square bg-surface-container rounded-xl overflow-hidden border border-outline-variant/30 relative glass-panel">
+<img alt="Golden Tippy Assam Main" class="w-full h-full object-cover opacity-90 mix-blend-lighten" data-alt="Macro shot of golden-tipped loose leaf black tea scattered elegantly on dark slate with soft warm rim lighting highlighting the amber tips" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCshzycXZsAQjG7ksOP6bjvx88fQlSk9uw8B12fsU4OVklCCau8NfAJl6dEwQvMaIgip9sYMzAs9PM51FJ9wHto1u2KpJSTLMFi2hZR_Ss35b-uqyC9_rns_b_0AVKYWZegxFNgkrXIQgi2A1sa8c12Es4DA3ts1uvEkEoe7QENfNPoT9RAgFLe_h0L0J1HkP1fwlceOrtGiqvtiICPDFhIQKclpi-qyowm0wXVHUaO3jAlkSvAQK9IJzt3I3pb1r_zUmWlJDdVVk"/>
+</div>
+<!-- Thumbnails -->
+<div class="grid grid-cols-4 gap-sm">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden border border-primary-container/50 cursor-pointer">
+<img alt="Thumb 1" class="w-full h-full object-cover opacity-80" data-alt="Macro shot of golden-tipped loose leaf black tea" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuVEKRhPK_d7FdbzDl2j1q5rjTSFeIbsW7qOUTbUJZQqzE7OWkE9jduyivVPW3QeGbyf8g5PepPA7I0kfXGsLV2_nL8Z1oOkKirUWUmB4rbs4IQfOSzNzF1IzqUvLha5GfUyV63m7AosFD68s0oPv827eEblXWolbx62Bav_v-T8CrIZNanXwQ2i47udTB8_rPRo8rKjS9QsRzZwWo-wrcAAYOUB6IRRbUhW5PlNFMid9IRruE7mz3yLxOiWAjgz2JzWp-z1aQHcs"/>
+</div>
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden border border-outline-variant/30 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+<img alt="Thumb 2" class="w-full h-full object-cover" data-alt="Steaming cup of dark amber tea in a sleek ceramic cup resting on a wooden saucer in dim moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVvu01va1a7a8-qSJYvIcL-7t0ALHmHEWEcNki3X0pxUE1mrJ-9iXW-M1RWUlG-Bj_crMUJjIK7dijZ6bBRrPcH081mi2_cijJZYMv1UsjeMyjmpSwgTmuWXhoFCfRbtqdOdW-sU6m3ESmkl79galzg0YDN6SA9LvWTLkZIU_oUmY8od-xdxOofCiGJ28VfpWFX3WOjs3XOS9McWgtXf0McST_IN7u7f0PqKRNaQS0e3MBe8aQMM-EbLCcAZCEGdE33KnMoz1iOO8"/>
+</div>
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden border border-outline-variant/30 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+<img alt="Thumb 3" class="w-full h-full object-cover" data-alt="Vintage brass tea strainer resting on a dark marble surface surrounded by scattered tea leaves" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAITv1kLJtan3Whtr5k-5eP0vkEuyv0tGtKsL08vxVQ-mlsYseoLOFNf3-jiO4zLRi_fm1jCJn7yoPkpyCqFqaBeY_uRK6ibnRzKaGU2kXoJ1mUnfpe5Mge_4ReoHgo9Z-mCcdB6oaO5Og0_RBjCELFhHERt68CJ5vjwwK7WGMn7ANT_ulh1U0rEXKyNW6hwI_E5NlMrRlRz5MNGj2hXAf0mBKD8PWr6zj1V4EozGmoSZInyk6_W86oYM70O34c-pvMFDZdGoLj3dw"/>
+</div>
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden border border-outline-variant/30 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+<img alt="Thumb 4" class="w-full h-full object-cover" data-alt="Lush green tea estate terraced hills shrouded in early morning mist in Assam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsEN_iiEOyjvHZSVIrJ7RueDWhxTmgHX2v3p3mMqscE1rkvE3YPozLby_KjHSMZmRYCV-4Wais-AnWRjAQ4eFI7weB5f72bIFVlwaTlvjewhIWiq40QOa6Mhz3ArNlQ2ieKe8Cg_4d9YdCi83zYuCJlXI0tXmIptF0wpbCuroaE2lig9U9RtlJ5dGuRmIFrvo2fM3oMqzIXOKIVkQojt7d0Dx3FM1eG1SjHlr0pchQO7WRPHMlS7WR1xNIHcRCocH7FTXcze1tzck"/>
+</div>
+</div>
+</div>
+<!-- Right Column: Sticky Info Panel (45%) -->
+<div class="w-full lg:w-[45%]">
+<div class="sticky top-[100px] bg-surface-container/40 glass-panel border border-primary-container/20 rounded-[16px] p-[32px] shadow-[0_32px_48px_-12px_rgba(0,0,0,0.5)]">
+<!-- Header -->
+<div class="flex justify-between items-start mb-sm">
+<h1 class="font-h1 text-h1 text-primary-fixed">Golden Tippy Assam</h1>
+<button class="text-outline hover:text-primary-container transition-colors mt-2">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<!-- Rating -->
+<div class="flex items-center gap-2 mb-lg">
+<div class="flex text-primary-container text-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">(24 reviews)</span>
+</div>
+<!-- Pricing -->
+<div class="mb-lg">
+<div class="flex items-end gap-4">
+<span class="font-h2 text-h2 text-on-surface">₹280</span>
+<span class="font-body text-body text-outline line-through mb-1">MRP ₹340</span>
+</div>
+<p class="font-body-sm text-body-sm text-primary-container mt-1">₹56/100g</p>
+</div>
+<div class="h-px w-full bg-gradient-to-r from-primary-container/0 via-primary-container/20 to-primary-container/0 mb-lg"></div>
+<!-- Variants (Weight) -->
+<div class="mb-lg">
+<p class="font-label text-label text-on-surface-variant uppercase mb-md">Select Weight</p>
+<div class="flex flex-wrap gap-4">
+<button class="px-6 py-2 rounded-full border border-primary-container bg-primary-container/10 text-primary-container font-cta text-cta glass-panel shadow-[0_0_10px_rgba(200,146,42,0.1)]">250g</button>
+<button class="px-6 py-2 rounded-full border border-outline-variant bg-transparent text-outline font-cta text-cta hover:border-primary-container/50 hover:text-on-surface transition-colors">500g</button>
+<button class="px-6 py-2 rounded-full border border-outline-variant bg-transparent text-outline font-cta text-cta hover:border-primary-container/50 hover:text-on-surface transition-colors">1kg</button>
+</div>
+</div>
+<!-- Quantity & CTAs -->
+<div class="mb-xl flex flex-col gap-4">
+<p class="font-label text-label text-on-surface-variant uppercase mb-xs">Quantity</p>
+<div class="flex gap-4 items-center">
+<!-- Stepper -->
+<div class="flex items-center border border-outline-variant rounded-lg bg-surface-container-high/50 glass-panel h-[48px]">
+<button class="px-4 text-outline hover:text-primary-container transition-colors"><span class="material-symbols-outlined">remove</span></button>
+<span class="font-body text-body text-on-surface w-8 text-center">1</span>
+<button class="px-4 text-outline hover:text-primary-container transition-colors"><span class="material-symbols-outlined">add</span></button>
+</div>
+<!-- Main CTAs -->
+<div class="flex flex-1 gap-2 h-[48px]">
+<button class="w-[60%] bg-primary-container text-surface-container-lowest font-cta text-cta rounded-lg flex items-center justify-center gap-2 hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+                                    Add to Cart
+                                </button>
+<button class="w-[40%] bg-[#25D366]/20 border border-[#25D366]/50 text-[#25D366] font-cta text-cta rounded-lg glass-panel flex items-center justify-center gap-2 hover:bg-[#25D366]/30 transition-colors">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+                                    WhatsApp
+                                </button>
+</div>
+</div>
+</div>
+<!-- Details Tabs -->
+<div class="mt-xl">
+<div class="flex border-b border-outline-variant/30 gap-6 relative">
+<button class="pb-2 font-accent-tagline text-accent-tagline text-primary-container border-b-2 border-primary-container relative top-[1px]">Description</button>
+<button class="pb-2 font-accent-tagline text-accent-tagline text-outline hover:text-on-surface transition-colors">Ingredients &amp; Nutrition</button>
+<button class="pb-2 font-accent-tagline text-accent-tagline text-outline hover:text-on-surface transition-colors">Shipping &amp; Returns</button>
+</div>
+<div class="pt-md font-body text-body text-on-surface-variant">
+<p>A quintessential representation of the Barak Valley's rich terroir. Our Golden Tippy Assam is a robust, full-bodied CTC blend adorned with abundant golden tips. Expect deep malty notes, a bold liquor, and a lingering sweet finish, perfectly crafted for the discerning palate.</p>
+</div>
+</div>
+<!-- Accordion -->
+<div class="mt-xl border-t border-outline-variant/30 pt-md">
+<button class="w-full flex justify-between items-center py-2 text-on-surface font-h3 text-h3 group">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">water_drop</span>
+                                How to Brew
+                            </span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary-container transition-colors">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacing before next sections -->
+<div class="h-xxl"></div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-stone-950 w-full py-12 border-t border-amber-900/30 flat tonal-shift-dark fade-in duration-300">
+<div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+<div class="flex flex-col gap-4">
+<div class="text-xl font-black text-amber-600 font-h3">BARAK</div>
+<p class="font-inter text-xs tracking-widest uppercase text-amber-500">© 2024 BARAK TEA HERITAGE. ALL RIGHTS RESERVED.</p>
+</div>
+<nav class="flex flex-wrap gap-6 md:justify-end">
+<a class="font-inter text-xs tracking-widest uppercase text-stone-500 hover:text-amber-200 fade-in duration-300" href="#">Privacy Policy</a>
+<a class="font-inter text-xs tracking-widest uppercase text-stone-500 hover:text-amber-200 fade-in duration-300" href="#">Terms of Service</a>
+<a class="font-inter text-xs tracking-widest uppercase text-stone-500 hover:text-amber-200 fade-in duration-300" href="#">Shipping &amp; Returns</a>
+<a class="font-inter text-xs tracking-widest uppercase text-stone-500 hover:text-amber-200 fade-in duration-300" href="#">Wholesale</a>
+</nav>
+</div>
+</footer>
+</body></html>

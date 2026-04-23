@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BARAK Tea - Wholesale/B2B Enquiry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "surface-container-high": "#342819",
+                            "outline-variant": "#504536",
+                            "on-tertiary-fixed-variant": "#4c463f",
+                            "on-primary-fixed-variant": "#5f4100",
+                            "on-surface": "#f5dfc8",
+                            "surface-container-lowest": "#160c02",
+                            "on-surface-variant": "#d4c4b0",
+                            "on-primary-fixed": "#281900",
+                            "surface-bright": "#443727",
+                            "error": "#ffb4ab",
+                            "primary-fixed": "#ffdeab",
+                            "primary-fixed-dim": "#f8bc51",
+                            "tertiary-container": "#a39a92",
+                            "on-primary": "#422c00",
+                            "tertiary-fixed": "#ebe1d7",
+                            "on-secondary": "#333024",
+                            "outline": "#9c8f7c",
+                            "on-tertiary-fixed": "#201b15",
+                            "background": "#1b1105",
+                            "surface-variant": "#3f3323",
+                            "on-tertiary-container": "#38322c",
+                            "surface-dim": "#1b1105",
+                            "on-secondary-fixed": "#1e1c10",
+                            "surface-container-highest": "#3f3323",
+                            "secondary-container": "#4a4739",
+                            "tertiary-fixed-dim": "#cfc5bc",
+                            "primary": "#f8bc51",
+                            "error-container": "#93000a",
+                            "inverse-primary": "#7e5700",
+                            "on-tertiary": "#352f29",
+                            "on-primary-container": "#462f00",
+                            "surface-container-low": "#241a0c",
+                            "surface-container": "#291e0f",
+                            "on-secondary-container": "#bbb5a3",
+                            "secondary": "#ccc6b4",
+                            "inverse-surface": "#f5dfc8",
+                            "surface-tint": "#f8bc51",
+                            "secondary-fixed": "#e9e2d0",
+                            "on-error": "#690005",
+                            "tertiary": "#cfc5bc",
+                            "on-background": "#f5dfc8",
+                            "on-error-container": "#ffdad6",
+                            "surface": "#1b1105",
+                            "primary-container": "#c8922a",
+                            "on-secondary-fixed-variant": "#4a4739",
+                            "inverse-on-surface": "#3b2e1f",
+                            "secondary-fixed-dim": "#ccc6b4"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "xxl": "96px",
+                            "sm": "8px",
+                            "lg": "24px",
+                            "xl": "48px",
+                            "md": "16px",
+                            "max-width": "1440px",
+                            "xs": "4px",
+                            "gutter": "24px"
+                    },
+                    "fontFamily": {
+                            "accent-tagline": ["Inter"],
+                            "body": ["Inter"],
+                            "h1": ["Inter"],
+                            "label": ["Inter"],
+                            "h3": ["Inter"],
+                            "h2": ["Inter"],
+                            "display-hero": ["Inter"],
+                            "cta": ["Inter"],
+                            "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                            "accent-tagline": ["18px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                            "body": ["16px", {"lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400"}],
+                            "h1": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "label": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                            "h3": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "display-hero": ["100px", {"lineHeight": "0.95", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                            "cta": ["15px", {"lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "700"}],
+                            "body-sm": ["14px", {"lineHeight": "1.8", "letterSpacing": "0", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background-color: rgba(63, 51, 35, 0.4); /* surface-container-highest */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(248, 188, 81, 0.15); /* primary */
+            box-shadow: 0 32px 48px -12px rgba(0, 0, 0, 0.5);
+        }
+        .glass-pill {
+            background-color: rgba(63, 51, 35, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(248, 188, 81, 0.2);
+        }
+        .gold-glow {
+            text-shadow: 0 0 20px rgba(248, 188, 81, 0.3);
+        }
+        .bg-radial-gold {
+            background: radial-gradient(circle at top right, rgba(200, 146, 42, 0.15) 0%, rgba(27, 17, 5, 0) 50%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar (Shared Component) -->
+<nav class="sticky top-0 w-full z-50 bg-zinc-950/70 backdrop-blur-xl border-b border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+<div class="flex justify-between items-center px-8 h-20 max-w-[1440px] mx-auto">
+<div class="text-2xl font-light tracking-[0.2em] text-amber-500 uppercase font-inter tracking-tight">
+                BARAK Tea
+            </div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-zinc-400 font-normal hover:text-amber-200 hover:backdrop-brightness-125 transition-all duration-350 active:scale-95 duration-300 font-inter tracking-tight" href="#">Home</a>
+<a class="text-zinc-400 font-normal hover:text-amber-200 hover:backdrop-brightness-125 transition-all duration-350 active:scale-95 duration-300 font-inter tracking-tight" href="#">Our Heritage</a>
+<a class="text-amber-500 font-medium border-b border-amber-500 pb-1 hover:text-amber-200 hover:backdrop-brightness-125 transition-all duration-350 active:scale-95 duration-300 font-inter tracking-tight" href="#">Wholesale</a>
+<a class="text-zinc-400 font-normal hover:text-amber-200 hover:backdrop-brightness-125 transition-all duration-350 active:scale-95 duration-300 font-inter tracking-tight" href="#">Private Label</a>
+<a class="text-zinc-400 font-normal hover:text-amber-200 hover:backdrop-brightness-125 transition-all duration-350 active:scale-95 duration-300 font-inter tracking-tight" href="#">Sustainability</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="hidden md:block bg-primary text-on-primary px-6 py-2 rounded-full font-cta text-cta hover:bg-primary-fixed-dim transition-colors duration-350 active:scale-95">
+                    Enquire Now
+                </button>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-amber-500 hover:text-amber-200 transition-colors cursor-pointer" style="font-variation-settings: 'FILL' 0;">shopping_bag</span>
+<span class="material-symbols-outlined text-amber-500 hover:text-amber-200 transition-colors cursor-pointer" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col w-full relative">
+<!-- HERO SECTION -->
+<section class="relative w-full h-[350px] bg-[#0D0905] bg-radial-gold flex flex-col justify-center items-center text-center px-lg overflow-hidden">
+<!-- Background Image Overlay for Texture -->
+<div class="absolute inset-0 opacity-20 pointer-events-none bg-cover bg-center" data-alt="close up of dark premium loose leaf tea leaves with subtle warm lighting casting soft shadows" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAqEIGmV-l2Fx85j-LQR_M1JgNxisdgqU4lLHYQa7wUdz_-CrQrxRRl9TT-W_wHfFIe4rzSt1EqJUg5OWOFhReQr3Dk5w3siGqZIP-3sBxikb_0LTkOskY6oIlzjiSeVbZm2NRMDYPrhhNBR-Gdhz8Oq2airM1CzumxPi4XbTzqkH5h-Ef5TXMjwchfftAasTJBhm2yZK4CLRWT7T1xSsq0kNYdE-exk_NRLcCwKxre5uqq2oMNz7w0wfKFY8oqn6j05wSb1RxW2fQ');"></div>
+<div class="relative z-10 flex flex-col items-center gap-md max-w-3xl">
+<span class="font-label text-label text-on-surface-variant uppercase tracking-widest opacity-80">B2B OPPORTUNITIES</span>
+<h1 class="font-h1 text-h1 text-on-surface gold-glow">Partner with BARAK Tea</h1>
+<p class="font-body text-body text-on-surface-variant opacity-90 max-w-2xl">Bulk pricing for restaurants, hotels, and distributors across India</p>
+</div>
+</section>
+<div class="w-full max-w-max-width mx-auto px-gutter py-xl flex flex-col gap-xxl relative z-20 -mt-xl">
+<!-- INFO PILLS ROW -->
+<section class="flex flex-wrap justify-center gap-md">
+<div class="glass-pill rounded-full px-6 py-3 flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">package</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">MOQ: 10kg per order</span>
+</div>
+<div class="glass-pill rounded-full px-6 py-3 flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">GST Invoice Ready</span>
+</div>
+<div class="glass-pill rounded-full px-6 py-3 flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">timer</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">24-Hour Response</span>
+</div>
+</section>
+<!-- TIERED PRICING TABLE (Blurred/Locked) -->
+<section class="flex flex-col gap-lg items-center relative py-lg">
+<h2 class="font-h2 text-h2 text-on-surface text-center w-full">Our Bulk Pricing</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg w-full max-w-5xl relative">
+<!-- Blur Overlay Container -->
+<div class="absolute inset-0 z-10 backdrop-blur-md bg-surface-dim/40 flex flex-col items-center justify-center rounded-xl border border-outline-variant/30 gap-lg">
+<span class="font-h3 text-h3 text-on-surface drop-shadow-md">Submit Enquiry to See Pricing</span>
+<button class="bg-gradient-to-r from-primary to-primary-container text-on-primary px-8 py-3 rounded-full font-cta text-cta shadow-[0_0_20px_rgba(248,188,81,0.4)] hover:shadow-[0_0_30px_rgba(248,188,81,0.6)] transition-all duration-350 hover:-translate-y-1">
+                            Unlock Bulk Rates
+                        </button>
+</div>
+<!-- Dummy Cards behind blur -->
+<div class="glass-panel rounded-xl p-lg flex flex-col gap-md opacity-50 blur-sm pointer-events-none">
+<div class="font-h3 text-h3 text-primary">10kg+</div>
+<div class="text-[40px] font-bold text-outline-variant line-through">₹---</div>
+<ul class="flex flex-col gap-sm font-body-sm text-body-sm text-on-surface-variant mt-sm">
+<li class="flex gap-sm items-center"><span class="material-symbols-outlined text-primary text-[16px]">check</span> Starter volume</li>
+<li class="flex gap-sm items-center"><span class="material-symbols-outlined text-primary text-[16px]">check</span> Standard packaging</li>
+</ul>
+</div>
+<div class="glass-panel rounded-xl p-lg flex flex-col gap-md border-primary/40 opacity-50 blur-sm pointer-events-none scale-105">
+<div class="font-h3 text-h3 text-primary">50kg+</div>
+<div class="text-[40px] font-bold text-outline-variant line-through">₹---</div>
+<ul class="flex flex-col gap-sm font-body-sm text-body-sm text-on-surface-variant mt-sm">
+<li class="flex gap-sm items-center"><span class="material-symbols-outlined text-primary text-[16px]">check</span> Priority dispatch</li>
+<li class="flex gap-sm items-center"><span class="material-symbols-outlined text-primary text-[16px]">check</span> Custom packaging options</li>
+</ul>
+</div>
+<div class="glass-panel rounded-xl p-lg flex flex-col gap-md opacity-50 blur-sm pointer-events-none">
+<div class="font-h3 text-h3 text-primary">100kg+</div>
+<div class="text-[40px] font-bold text-outline-variant line-through">₹---</div>
+<ul class="flex flex-col gap-sm font-body-sm text-body-sm text-on-surface-variant mt-sm">
+<li class="flex gap-sm items-center"><span class="material-symbols-outlined text-primary text-[16px]">check</span> Dedicated account manager</li>
+<li class="flex gap-sm items-center"><span class="material-symbols-outlined text-primary text-[16px]">check</span> Private label eligible</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- ENQUIRY FORM CARD -->
+<section class="w-full flex justify-center py-xl">
+<div class="glass-panel rounded-xl p-xl w-full max-w-[680px] flex flex-col gap-lg">
+<div class="flex flex-col gap-xs text-center">
+<h2 class="font-h2 text-h2 text-on-surface gold-glow text-[28px]">Request a Custom Quote</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Fill out the details below and our B2B team will contact you within 24 hours.</p>
+</div>
+<form class="flex flex-col gap-md mt-sm">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="flex flex-col gap-xs">
+<label class="font-label text-label text-on-surface-variant ml-2">BUSINESS NAME *</label>
+<input class="bg-surface-container-low border-none rounded-lg text-on-surface focus:ring-1 focus:ring-primary h-12 px-4 placeholder:text-outline-variant transition-shadow" placeholder="Your Company Ltd." type="text"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label text-label text-on-surface-variant ml-2">CONTACT PERSON *</label>
+<input class="bg-surface-container-low border-none rounded-lg text-on-surface focus:ring-1 focus:ring-primary h-12 px-4 placeholder:text-outline-variant transition-shadow" placeholder="Full Name" type="text"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label text-label text-on-surface-variant ml-2">PHONE *</label>
+<div class="flex">
+<span class="bg-surface-container flex items-center px-4 rounded-l-lg border-r border-outline-variant/20 text-on-surface-variant font-body-sm">+91</span>
+<input class="bg-surface-container-low border-none rounded-r-lg text-on-surface focus:ring-1 focus:ring-primary h-12 px-4 w-full placeholder:text-outline-variant transition-shadow" placeholder="10-digit number" type="tel"/>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label text-label text-on-surface-variant ml-2">EMAIL *</label>
+<input class="bg-surface-container-low border-none rounded-lg text-on-surface focus:ring-1 focus:ring-primary h-12 px-4 placeholder:text-outline-variant transition-shadow" placeholder="work@company.com" type="email"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label text-label text-on-surface-variant ml-2">CITY *</label>
+<select class="bg-surface-container-low border-none rounded-lg text-on-surface focus:ring-1 focus:ring-primary h-12 px-4 transition-shadow">
+<option class="text-outline-variant" disabled="" selected="" value="">Select City</option>
+<option value="mumbai">Mumbai</option>
+<option value="delhi">New Delhi</option>
+<option value="bengaluru">Bengaluru</option>
+<option value="other">Other</option>
+</select>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label text-label text-on-surface-variant ml-2">MONTHLY REQUIREMENT (KG) *</label>
+<select class="bg-surface-container-low border-none rounded-lg text-on-surface focus:ring-1 focus:ring-primary h-12 px-4 transition-shadow">
+<option class="text-outline-variant" disabled="" selected="" value="">Select Volume</option>
+<option value="10-50">10 - 50 kg</option>
+<option value="50-100">50 - 100 kg</option>
+<option value="100+">100+ kg</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col gap-xs mt-sm">
+<label class="font-label text-label text-on-surface-variant ml-2">GST NUMBER (OPTIONAL)</label>
+<input class="bg-surface-container-low border-none rounded-lg text-on-surface focus:ring-1 focus:ring-primary h-12 px-4 placeholder:text-outline-variant transition-shadow" placeholder="22AAAAA0000A1Z5" type="text"/>
+</div>
+<div class="flex flex-col gap-xs mt-sm">
+<label class="font-label text-label text-on-surface-variant ml-2">ADDITIONAL MESSAGE</label>
+<textarea class="bg-surface-container-low border-none rounded-lg text-on-surface focus:ring-1 focus:ring-primary p-4 placeholder:text-outline-variant transition-shadow resize-none h-32" placeholder="Tell us about your specific blend requirements or business type..."></textarea>
+</div>
+<button class="mt-lg w-full bg-primary text-on-primary font-cta text-cta py-4 rounded-lg hover:bg-primary-fixed-dim transition-colors duration-350 active:scale-[0.98]" type="submit">
+                            Send Enquiry
+                        </button>
+</form>
+</div>
+</section>
+<!-- TRUST INDICATORS SECTION -->
+<section class="flex flex-wrap justify-center gap-xl py-lg border-t border-outline-variant/20">
+<div class="flex flex-col items-center gap-xs text-center w-40">
+<span class="material-symbols-outlined text-primary text-[32px] mb-xs" style="font-variation-settings: 'wght' 300;">verified</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant opacity-80">Certified Quality</span>
+</div>
+<div class="flex flex-col items-center gap-xs text-center w-40">
+<span class="material-symbols-outlined text-primary text-[32px] mb-xs" style="font-variation-settings: 'wght' 300;">eco</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant opacity-80">Direct Sourcing</span>
+</div>
+<div class="flex flex-col items-center gap-xs text-center w-40">
+<span class="material-symbols-outlined text-primary text-[32px] mb-xs" style="font-variation-settings: 'wght' 300;">currency_rupee</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant opacity-80">Competitive Pricing</span>
+</div>
+<div class="flex flex-col items-center gap-xs text-center w-40">
+<span class="material-symbols-outlined text-primary text-[32px] mb-xs" style="font-variation-settings: 'wght' 300;">support_agent</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant opacity-80">Dedicated Support</span>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="w-full border-t border-white/5 bg-zinc-950 mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-16 max-w-[1440px] mx-auto gap-8">
+<div class="text-lg font-semibold text-amber-500 font-inter text-sm uppercase tracking-widest">
+                BARAK Tea
+            </div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-zinc-500 hover:text-amber-400 transition-colors duration-300 opacity-80 hover:opacity-100 font-inter text-sm uppercase tracking-widest" href="#">Terms of Service</a>
+<a class="text-zinc-500 hover:text-amber-400 transition-colors duration-300 opacity-80 hover:opacity-100 font-inter text-sm uppercase tracking-widest" href="#">Privacy Policy</a>
+<a class="text-amber-500 hover:text-amber-400 transition-colors duration-300 opacity-80 hover:opacity-100 font-inter text-sm uppercase tracking-widest" href="#">B2B Portal</a>
+<a class="text-zinc-500 hover:text-amber-400 transition-colors duration-300 opacity-80 hover:opacity-100 font-inter text-sm uppercase tracking-widest" href="#">Global Distribution</a>
+<a class="text-zinc-500 hover:text-amber-400 transition-colors duration-300 opacity-80 hover:opacity-100 font-inter text-sm uppercase tracking-widest" href="#">Contact</a>
+</div>
+<div class="font-inter text-sm uppercase tracking-widest text-zinc-500 text-center md:text-right">
+                © 2024 BARAK Tea. Crafted for the Epicurean.
+            </div>
+</div>
+</footer>
+</body></html>

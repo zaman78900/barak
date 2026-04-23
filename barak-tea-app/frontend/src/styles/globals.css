@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply font-inter;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-barak-bg text-barak-cream;
+  font-feature-settings: "kern";
+}
+
+/* Glass Surface Styling */
+.glass {
+  @apply bg-[rgba(250,243,224,0.08)] backdrop-blur-glass border border-[rgba(200,146,42,0.12)] rounded-glass transition-all duration-350;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(250, 243, 224, 0.1);
+}
+
+.glass:hover {
+  @apply bg-[rgba(250,243,224,0.12)] border-[rgba(200,146,42,0.2)];
+  box-shadow: 0 12px 48px rgba(200, 146, 42, 0.15), inset 0 1px 0 rgba(250, 243, 224, 0.15);
+}
+
+/* Gold Glow Effect */
+.gold-glow {
+  box-shadow: 0 0 20px rgba(200, 146, 42, 0.4);
+}
+
+/* Gradient Text */
+.gradient-gold {
+  @apply bg-gradient-to-r from-barak-gold to-barak-gold-light bg-clip-text text-transparent;
+}
+
+/* Animations */
+@layer utilities {
+  .animate-float {
+    @apply animate-[float_3s_ease-in-out_infinite];
+  }
+
+  .animate-pulse-glow {
+    @apply animate-[pulseGlow_2s_ease-in-out_infinite];
+  }
+
+  .transform-gpu {
+    @apply accelerate;
+  }
+
+  /* Stagger animation helper */
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  /* Prefixed animations that work across browsers */
+  @supports (animation: fadeUp) {
+    .animate-fadeUp {
+      animation: fadeUp 0.6s ease-out forwards;
+    }
+  }
+
+  @supports (animation: slideIn) {
+    .animate-slideIn {
+      animation: slideIn 0.5s ease-out forwards;
+    }
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      @apply !transition-none !animate-none;
+    }
+  }
+}
+
+/* Smooth scroll behavior with Lenis */
+.lenis {
+  height: 100vh;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(26, 17, 10, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(200, 146, 42, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 146, 42, 0.8);
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  @apply outline-2 outline-offset-2 outline-barak-gold;
+}
+
+/* Prevent layout shift on scrollbar appearance */
+html {
+  overflow-y: scroll;
+}

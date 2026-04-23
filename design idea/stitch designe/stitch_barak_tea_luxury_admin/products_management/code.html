@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BARAK Tea Admin - Products</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#462f00",
+                        "on-surface-variant": "#d4c4b0",
+                        "on-error": "#690005",
+                        "secondary-fixed-dim": "#ccc6b4",
+                        "on-tertiary": "#003257",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed": "#e9e2d0",
+                        "secondary": "#ccc6b4",
+                        "inverse-on-surface": "#353027",
+                        "inverse-primary": "#7e5700",
+                        "surface-bright": "#3e3830",
+                        "on-primary": "#422c00",
+                        "primary": "#f8bc51",
+                        "on-secondary": "#333024",
+                        "on-primary-fixed-variant": "#5f4100",
+                        "error-container": "#93000a",
+                        "surface-container-high": "#2f2921",
+                        "on-secondary-container": "#bbb5a3",
+                        "surface-container-highest": "#3a342c",
+                        "on-tertiary-container": "#00355c",
+                        "background": "#17130c",
+                        "surface-container-low": "#201b14",
+                        "tertiary-fixed-dim": "#9dcaff",
+                        "on-surface": "#ece1d5",
+                        "surface-container-lowest": "#120e07",
+                        "tertiary-container": "#62a0e0",
+                        "outline-variant": "#504536",
+                        "on-tertiary-fixed": "#001d35",
+                        "on-primary-fixed": "#281900",
+                        "outline": "#9c8f7c",
+                        "tertiary-fixed": "#d1e4ff",
+                        "tertiary": "#9dcaff",
+                        "surface": "#17130c",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#4a4739",
+                        "surface-tint": "#f8bc51",
+                        "on-secondary-fixed-variant": "#4a4739",
+                        "surface-container": "#241f17",
+                        "surface-variant": "#3a342c",
+                        "primary-fixed": "#ffdeab",
+                        "on-background": "#ece1d5",
+                        "surface-dim": "#17130c",
+                        "primary-fixed-dim": "#f8bc51",
+                        "on-tertiary-fixed-variant": "#00497b",
+                        "on-secondary-fixed": "#1e1c10",
+                        "primary-container": "#c8922a",
+                        "inverse-surface": "#ece1d5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2.5rem",
+                        "side-margin": "40px",
+                        "xs": "0.25rem",
+                        "grid-gutter": "24px",
+                        "sm": "0.5rem"
+                    },
+                    "fontFamily": {
+                        "body-base": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-base": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0D0905;
+        }
+        
+        .glass-surface {
+            background: rgba(26, 17, 10, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(200, 146, 42, 0.15);
+        }
+        
+        .glass-panel {
+            background: rgba(13, 9, 5, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(200, 146, 42, 0.15);
+            box-shadow: -20px 0 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .btn-primary {
+            background: rgba(250, 243, 224, 0.08);
+            border: 1px solid #f8bc51;
+            color: #f8bc51;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary:hover {
+            border-color: #ffdeab;
+            color: #ffdeab;
+            box-shadow: 0 0 15px rgba(248, 188, 81, 0.2);
+        }
+
+        .input-glass {
+            background: rgba(250, 243, 224, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(200, 146, 42, 0.15);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-glass:focus {
+            border-color: #f8bc51;
+            box-shadow: 0 0 10px rgba(248, 188, 81, 0.15);
+            outline: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(200, 146, 42, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="text-on-surface font-body-base antialiased min-h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full flex flex-col z-40 bg-stone-900/80 backdrop-blur-lg font-inter text-sm font-medium h-screen w-64 border-r border-amber-500/15 shadow-xl">
+<div class="px-6 py-8 border-b border-amber-500/15 flex flex-col items-center">
+<div class="h-16 w-16 rounded-full bg-surface-container flex items-center justify-center mb-4 border border-primary/20">
+<img alt="BARAK Tea Logo" class="h-14 w-14 rounded-full object-cover" data-alt="Close up of steaming dark tea in a porcelain cup on a wooden table, dark moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwcZXN5MzSfJQTpkJ5sa1ilufCt6gCepksjEbqy3xq-JwLs3BGXMhkxOco3NEIQx1i3RLZEPAyWNE-K-E5umEj4CD29KFqKhpifqP3SEYV-qyeIZ0R-jnNbq8jlsI_3rx5w1sJ6Tr6WueJMe9Actc1FDWN-cht6PZxHJmpxxoMBVcTwuDHCt-q7QGtM1ZaXIni1DOFMYCTsZaQ6TDNbQuyjxUhvZTPW6DIIZ0f16daVlZD_Njyqm8Ux5Nkjtd9N_AQkVfcZqlyMcM"/>
+</div>
+<h1 class="text-amber-500 font-bold text-lg tracking-wider uppercase">BARAK Admin</h1>
+<p class="text-stone-400 text-xs mt-1">Luxury Curator</p>
+</div>
+<div class="flex-1 overflow-y-auto py-6 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-stone-400 px-4 py-3 hover:bg-white/5 hover:text-stone-200 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-amber-500/10 text-amber-500 border-r-2 border-amber-500 px-4 py-3 shadow-[0_0_15px_rgba(200,146,42,0.2)] transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)">
+<span class="material-symbols-outlined" data-icon="spa" style="font-variation-settings: 'FILL' 1;">spa</span>
+<span>Tea Inventory</span>
+</a>
+<a class="flex items-center gap-3 text-stone-400 px-4 py-3 hover:bg-white/5 hover:text-stone-200 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Sales Analytics</span>
+</a>
+<a class="flex items-center gap-3 text-stone-400 px-4 py-3 hover:bg-white/5 hover:text-stone-200 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Customer Profiles</span>
+</a>
+<a class="flex items-center gap-3 text-stone-400 px-4 py-3 hover:bg-white/5 hover:text-stone-200 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</div>
+<div class="p-6 border-t border-amber-500/15">
+<button class="w-full py-3 px-4 rounded-lg btn-primary flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span class="font-medium tracking-wide">New Shipment</span>
+</button>
+</div>
+</nav>
+<!-- TopNavBar (Mobile Only based on hierarchy rules, but keeping consistent structure for layout) -->
+<div class="flex flex-col flex-1 ml-64 min-h-screen relative">
+<header class="flex justify-between items-center px-6 py-3 w-full sticky top-0 z-30 bg-stone-950/70 backdrop-blur-xl font-inter tracking-tight docked full-width top-0 border-b border-white/10 shadow-2xl shadow-black/60 hidden md:flex">
+<div class="text-xl font-bold uppercase tracking-widest text-amber-500">
+                BARAK Tea
+            </div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-stone-400">
+<button class="hover:text-amber-400 transition-colors duration-350 cursor-pointer active:scale-95 ease-in-out">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+</button>
+<button class="hover:text-amber-400 transition-colors duration-350 cursor-pointer active:scale-95 ease-in-out relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:text-amber-400 transition-colors duration-350 cursor-pointer active:scale-95 ease-in-out">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+<button class="text-amber-500 hover:text-amber-400 transition-colors duration-350 text-sm font-medium tracking-wide border border-amber-500/30 px-4 py-1.5 rounded-full">
+                    WhatsApp HQ
+                </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto p-8 relative">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-title-sm text-[28px] text-on-surface font-bold tracking-tight">Products</h2>
+<p class="font-body-sm text-[12px] text-on-surface opacity-50 mt-1">6 active</p>
+</div>
+<button class="btn-primary flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                    Add Product
+                </button>
+</div>
+<!-- Toolbar Row -->
+<div class="flex flex-wrap items-center gap-4 mb-6">
+<div class="relative flex-1 min-w-[240px]">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-60">search</span>
+<input class="w-full input-glass rounded-full py-2.5 pl-11 pr-4 text-sm text-on-surface placeholder:text-on-surface/40" placeholder="Search products..." type="text"/>
+</div>
+<div class="flex gap-2 bg-surface-container/50 backdrop-blur-md rounded-full p-1 border border-outline/20">
+<button class="px-4 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary border border-primary/30">All</button>
+<button class="px-4 py-1.5 rounded-full text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Everyday</button>
+<button class="px-4 py-1.5 rounded-full text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Premium</button>
+<button class="px-4 py-1.5 rounded-full text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Blends</button>
+<button class="px-4 py-1.5 rounded-full text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Gifts</button>
+</div>
+<div class="flex gap-2">
+<button class="input-glass rounded-full px-4 py-2.5 text-sm flex items-center gap-2 text-on-surface-variant hover:text-on-surface">
+                        Status: All
+                        <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+<button class="input-glass rounded-full px-4 py-2.5 text-sm flex items-center gap-2 text-on-surface-variant hover:text-on-surface">
+                        Sort by: Name
+                        <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Products Table Card -->
+<div class="glass-surface rounded-[16px] overflow-hidden">
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[rgba(200,146,42,0.08)] font-label-caps text-[11px] text-primary tracking-widest border-b border-[rgba(200,146,42,0.15)]">
+<th class="py-4 px-6 font-semibold">Product</th>
+<th class="py-4 px-4 font-semibold">Category</th>
+<th class="py-4 px-4 font-semibold">Variants</th>
+<th class="py-4 px-4 font-semibold">Price</th>
+<th class="py-4 px-4 font-semibold">MRP</th>
+<th class="py-4 px-4 font-semibold">Stock</th>
+<th class="py-4 px-4 font-semibold">Sold</th>
+<th class="py-4 px-4 font-semibold">Status</th>
+<th class="py-4 px-6 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<!-- Row 1 -->
+<tr class="border-b border-[rgba(200,146,42,0.08)] hover:bg-[rgba(200,146,42,0.05)] transition-colors duration-300">
+<td class="py-3 px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-xl border border-outline/10">🍃</div>
+<div>
+<div class="font-title-sm text-[14px] text-on-surface">Darjeeling First Flush</div>
+<div class="font-body-sm text-[11px] text-on-surface-variant">ID: BT-DFF-01</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Premium</td>
+<td class="py-3 px-4 text-on-surface-variant">3</td>
+<td class="py-3 px-4 font-bold text-primary">₹1,200</td>
+<td class="py-3 px-4 text-on-surface-variant line-through text-xs">₹1,500</td>
+<td class="py-3 px-4 text-emerald-400">124</td>
+<td class="py-3 px-4 text-on-surface-variant">45</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(52,211,153,0.1)]">Active</span>
+</td>
+<td class="py-3 px-6 text-right">
+<div class="flex items-center justify-end gap-2 text-on-surface-variant">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 (Low Stock) -->
+<tr class="border-b border-[rgba(200,146,42,0.08)] hover:bg-[rgba(200,146,42,0.05)] transition-colors duration-300 relative">
+<td class="py-3 px-6 relative">
+<div class="absolute left-0 top-0 bottom-0 w-[2px] bg-primary"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-xl border border-outline/10">🌸</div>
+<div>
+<div class="font-title-sm text-[14px] text-on-surface">Jasmine Pearl White</div>
+<div class="font-body-sm text-[11px] text-on-surface-variant">ID: BT-JPW-02</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Blends</td>
+<td class="py-3 px-4 text-on-surface-variant">2</td>
+<td class="py-3 px-4 font-bold text-primary">₹2,400</td>
+<td class="py-3 px-4 text-on-surface-variant line-through text-xs">₹2,800</td>
+<td class="py-3 px-4 text-orange-400 flex items-center gap-1">
+                                    12
+                                    <span class="material-symbols-outlined text-[14px]">warning</span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">89</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(52,211,153,0.1)]">Active</span>
+</td>
+<td class="py-3 px-6 text-right">
+<div class="flex items-center justify-end gap-2 text-on-surface-variant">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-[rgba(200,146,42,0.08)] hover:bg-[rgba(200,146,42,0.05)] transition-colors duration-300">
+<td class="py-3 px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-xl border border-outline/10">☕</div>
+<div>
+<div class="font-title-sm text-[14px] text-on-surface">Assam CTC Gold</div>
+<div class="font-body-sm text-[11px] text-on-surface-variant">ID: BT-ASG-03</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Everyday</td>
+<td class="py-3 px-4 text-on-surface-variant">4</td>
+<td class="py-3 px-4 font-bold text-primary">₹450</td>
+<td class="py-3 px-4 text-on-surface-variant line-through text-xs">₹500</td>
+<td class="py-3 px-4 text-emerald-400">450</td>
+<td class="py-3 px-4 text-on-surface-variant">210</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(52,211,153,0.1)]">Active</span>
+</td>
+<td class="py-3 px-6 text-right">
+<div class="flex items-center justify-end gap-2 text-on-surface-variant">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Slide-in Panel (Edit Product) -->
+<div class="fixed top-0 right-0 h-full w-[480px] glass-panel z-50 transform transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex flex-col translate-x-0">
+<!-- Panel Header -->
+<div class="px-6 py-5 border-b border-outline/10 flex justify-between items-center">
+<h3 class="font-title-sm text-[20px] font-bold text-on-surface">Edit Product</h3>
+<button class="p-2 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-variant/30 transition-colors">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+<!-- Panel Content -->
+<div class="flex-1 overflow-y-auto px-6 py-6 custom-scrollbar">
+<!-- Images -->
+<div class="mb-6">
+<label class="block font-label-caps text-on-surface-variant mb-3">Product Images</label>
+<div class="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+<div class="w-24 h-24 rounded-lg flex-shrink-0 border border-primary/30 relative overflow-hidden group">
+<img alt="Tea Packaging" class="w-full h-full object-cover" data-alt="Minimalist dark brown matte tea pouch packaging on dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOGTKKAJifnFAIJjgbOgLJUWLo7mRMbahe8bejmGqvgEVqhMxncOAu0py-frFpeEdVcfzPhrr1VuSFFD8If_QteWmaPaIsXTP2gOx7a45svR8ZQZ_zZ19kAjKRZzM5CA91QjRyzDtCOC9B0vY-EBHI5g9tozJq1Kolx5z4PDIGLD5NtD7YMpOIkeliHP3n_SSAlD1Xbb95wpMfmioRSs7RAl-l6C08vkI3yX6meyqgm49uZr_-8FPvRgRITnTZI1K8o_F9GUUtT4w"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm">edit</span>
+</div>
+</div>
+<div class="w-24 h-24 rounded-lg flex-shrink-0 border border-outline/20 relative overflow-hidden group">
+<img alt="Loose Tea" class="w-full h-full object-cover" data-alt="Close up macro shot of premium loose leaf black tea leaves, warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5QioLAOqYfhefZIQGyyswKz4luwgK2w5R24heUXsH8OfDIsmR3AULP3YHGFNIfjAuvc5bIGPiwBQv_jplCzBKWvTQ_6YB4lgeNyTysG44vD4ZB-dZ86uth3hnOk62hsRulEWiqaZvx01MshFboVTkcZC0L-W6SGNP7zV9bs1wFEhhrDXp8_VTtXLLNm8UOMw-fixaRTvWJjSaZKk7qDAjeXIRovcTJ3o9DbxvLSdqIN5B9tjVeMm6gszR6FDVjx18eXMd3yWMRdo"/>
+</div>
+<div class="w-24 h-24 rounded-lg flex-shrink-0 border border-outline/20 border-dashed flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary/50 transition-colors cursor-pointer bg-surface-container/30">
+<span class="material-symbols-outlined">add_photo_alternate</span>
+</div>
+</div>
+</div>
+<!-- Form Fields -->
+<div class="space-y-5">
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-2">Product Name</label>
+<input class="w-full input-glass rounded-lg px-4 py-3 text-sm text-on-surface" type="text" value="Darjeeling First Flush"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-2">Category</label>
+<div class="relative">
+<select class="w-full input-glass rounded-lg px-4 py-3 text-sm text-on-surface appearance-none bg-transparent">
+<option class="bg-surface" value="premium">Premium</option>
+<option class="bg-surface" value="everyday">Everyday</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-2">Status</label>
+<div class="relative">
+<select class="w-full input-glass rounded-lg px-4 py-3 text-sm text-on-surface appearance-none bg-transparent">
+<option class="bg-surface" value="active">Active</option>
+<option class="bg-surface" value="inactive">Inactive</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-2">Pack Sizes</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-1.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/30">250g</button>
+<button class="px-4 py-1.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/30">500g</button>
+<button class="px-4 py-1.5 rounded-full text-xs font-medium input-glass text-on-surface-variant hover:text-on-surface">1kg</button>
+<button class="px-3 py-1.5 rounded-full text-xs font-medium input-glass text-on-surface-variant hover:text-on-surface border-dashed">
+<span class="material-symbols-outlined text-[14px]">add</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-2">Price (₹)</label>
+<input class="w-full input-glass rounded-lg px-4 py-3 text-sm text-primary font-medium" type="number" value="1200"/>
+</div>
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-2">MRP (₹)</label>
+<input class="w-full input-glass rounded-lg px-4 py-3 text-sm text-on-surface-variant" type="number" value="1500"/>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-2">Stock Level</label>
+<input class="w-full input-glass rounded-lg px-4 py-3 text-sm text-on-surface" type="number" value="124"/>
+</div>
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-2">Description</label>
+<textarea class="w-full input-glass rounded-lg px-4 py-3 text-sm text-on-surface resize-none" rows="4">The champagne of teas. First harvest leaves providing a light, floral, and slightly astringent cup with muscatel notes.</textarea>
+</div>
+</div>
+</div>
+<!-- Panel Footer -->
+<div class="p-6 border-t border-outline/10 bg-background/50 backdrop-blur-md">
+<button class="w-full py-3.5 rounded-lg btn-primary font-medium text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                        Save Changes
+                    </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

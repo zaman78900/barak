@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BARAK Tea - Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-variant": "#3a342c",
+                        "surface-dim": "#17130c",
+                        "surface-container-high": "#2f2921",
+                        "on-tertiary-container": "#00355c",
+                        "on-secondary": "#333024",
+                        "secondary-fixed": "#e9e2d0",
+                        "surface-tint": "#f8bc51",
+                        "on-secondary-fixed": "#1e1c10",
+                        "on-primary-fixed-variant": "#5f4100",
+                        "surface-container-highest": "#3a342c",
+                        "on-tertiary-fixed-variant": "#00497b",
+                        "surface-container-lowest": "#120e07",
+                        "primary-fixed": "#ffdeab",
+                        "surface-container-low": "#201b14",
+                        "tertiary-fixed-dim": "#9dcaff",
+                        "on-background": "#ece1d5",
+                        "inverse-primary": "#7e5700",
+                        "on-secondary-fixed-variant": "#4a4739",
+                        "background": "#17130c",
+                        "surface": "#17130c",
+                        "on-error": "#690005",
+                        "tertiary-container": "#62a0e0",
+                        "secondary-container": "#4a4739",
+                        "on-secondary-container": "#bbb5a3",
+                        "outline": "#9c8f7c",
+                        "inverse-surface": "#ece1d5",
+                        "primary-container": "#c8922a",
+                        "surface-container": "#241f17",
+                        "inverse-on-surface": "#353027",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#003257",
+                        "secondary-fixed-dim": "#ccc6b4",
+                        "on-primary-fixed": "#281900",
+                        "primary": "#f8bc51",
+                        "tertiary-fixed": "#d1e4ff",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#001d35",
+                        "outline-variant": "#504536",
+                        "surface-bright": "#3e3830",
+                        "on-surface": "#ece1d5",
+                        "tertiary": "#9dcaff",
+                        "on-surface-variant": "#d4c4b0",
+                        "on-primary": "#422c00",
+                        "error": "#ffb4ab",
+                        "secondary": "#ccc6b4",
+                        "primary-fixed-dim": "#f8bc51",
+                        "on-primary-container": "#462f00"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        xl: "2.5rem",
+                        lg: "1.5rem",
+                        "grid-gutter": "24px",
+                        sm: "0.5rem",
+                        "side-margin": "40px",
+                        md: "1rem",
+                        xs: "0.25rem"
+                    },
+                    fontFamily: {
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-base": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    fontSize: {
+                        "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.08em", fontWeight: "600" }],
+                        "headline-md": ["24px", { lineHeight: "1.3", letterSpacing: "-0.01em", fontWeight: "500" }],
+                        "title-sm": ["18px", { lineHeight: "1.4", fontWeight: "600" }],
+                        "display-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "body-base": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0D0905;
+        }
+        .glass-panel {
+            background: rgba(26, 17, 10, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(200, 146, 42, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+        .glass-warning {
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.1), 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+        .glass-button {
+            background: rgba(250, 243, 224, 0.05);
+            border: 1px solid var(--tw-colors-primary-container);
+            color: var(--tw-colors-primary-container);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-button:hover {
+            border-color: var(--tw-colors-primary);
+            color: var(--tw-colors-primary);
+            box-shadow: 0 0 10px rgba(248, 188, 81, 0.2);
+            background: rgba(248, 188, 81, 0.1);
+        }
+        .glass-button-secondary {
+            background: transparent;
+            border: 1px solid rgba(158, 140, 120, 0.3);
+            color: #9E8C78;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .status-badge {
+            background: rgba(0,0,0,0.2);
+        }
+        .status-badge.in-stock {
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #10B981;
+        }
+        .status-badge.low-stock {
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+        }
+        .status-badge.out-stock {
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+        }
+        .progress-bar-bg {
+            background: rgba(250, 243, 224, 0.1);
+        }
+    </style>
+</head>
+<body class="text-on-surface font-body-base antialiased min-h-screen flex overflow-hidden">
+<!-- SideNavBar Component -->
+<nav class="bg-[#1A110A] text-[#C8922A] font-inter text-sm font-medium docked left-0 h-screen w-72 border-r border-[#C8922A]/10 shadow-[10px_0_30px_rgba(0,0,0,0.4)] fixed left-0 top-0 h-full flex flex-col py-8 z-40 hidden md:flex">
+<div class="px-6">
+<div class="text-lg font-black text-[#C8922A] mb-8 tracking-[0.2em]">BARAK TEA</div>
+<div class="flex items-center gap-3 mb-8 pb-6 border-b border-[#C8922A]/10">
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden flex-shrink-0 border border-[#C8922A]/20">
+<img alt="Admin Portrait" class="w-full h-full object-cover" data-alt="Close up portrait of a professional man with a slight smile against a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBq1cHqrLU26ncRBAX9qmZJbvL_qKlol73l5LfAbveRkFW__na9Iyqn4-AahUxvXCM_mCClHb1a1LfttZxugV5DwdHux8l-dmPWY3EzwkmyVZaJxfP0M3P3BySG7zhTaPb_rgneSK_n2zoLOpDT3LCV_aspzb_PLcfGO3Iu1pSuJlNL4mpo6GxgtJhgaAS0ZjfveWgEB5j3k0hohduSR_F7EYYk6qqK7SDf7AgW4XPa-gEvIMMWkFYwwuKY0GVKEU_XmBiE92jin3Q"/>
+</div>
+<div>
+<div class="font-bold text-on-surface">BARAK Console</div>
+<div class="text-xs text-[#9E8C78]">Tea Inventory Admin</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col flex-1 gap-1">
+<a class="text-[#9E8C78] py-3 px-6 flex items-center gap-4 hover:bg-white/5 hover:translate-x-1 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="bg-[#C8922A]/10 text-[#C8922A] border-r-4 border-[#C8922A] py-3 px-6 flex items-center gap-4 hover:translate-x-1 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="text-[#9E8C78] py-3 px-6 flex items-center gap-4 hover:bg-white/5 hover:translate-x-1 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span>Orders</span>
+</a>
+<a class="text-[#9E8C78] py-3 px-6 flex items-center gap-4 hover:bg-white/5 hover:translate-x-1 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);">
+<span class="material-symbols-outlined">group</span>
+<span>Customers</span>
+</a>
+<a class="text-[#9E8C78] py-3 px-6 flex items-center gap-4 hover:bg-white/5 hover:translate-x-1 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);">
+<span class="material-symbols-outlined">analytics</span>
+<span>Analytics</span>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-1 border-t border-[#C8922A]/10 pt-4">
+<a class="text-[#9E8C78] py-3 px-6 flex items-center gap-4 hover:bg-white/5 hover:translate-x-1 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);">
+<span class="material-symbols-outlined">help_outline</span>
+<span>Support</span>
+</a>
+<a class="text-[#9E8C78] py-3 px-6 flex items-center gap-4 hover:bg-white/5 hover:translate-x-1 transition-all duration-350" href="#" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);">
+<span class="material-symbols-outlined">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col md:ml-72 h-screen overflow-y-auto overflow-x-hidden relative">
+<!-- TopNavBar Mobile (Only visible on mobile) -->
+<header class="bg-[#1A110A]/80 backdrop-blur-xl text-[#C8922A] font-inter tracking-tight docked full-width top-0 border-b border-[#C8922A]/15 shadow-2xl flex justify-between items-center px-8 h-20 w-full sticky top-0 z-50 md:hidden">
+<div class="text-xl font-bold tracking-[0.2em] text-[#C8922A]">BARAK TEA</div>
+<div class="flex gap-4">
+<button class="hover:bg-[#C8922A]/5 p-2 rounded-full transition-all duration-300 scale-98 active:opacity-80">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+<button class="hover:bg-[#C8922A]/5 p-2 rounded-full transition-all duration-300 scale-98 active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<div class="p-xl max-w-7xl mx-auto w-full flex-1 flex flex-col gap-lg">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-4">
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-[#FAF3E0] mb-1 tracking-tight">Inventory</h1>
+<p class="font-label-caps text-label-caps text-[#FAF3E0]/50 tracking-widest font-medium">Last updated: 5 min ago</p>
+</div>
+<button class="text-[#FAF3E0]/70 hover:text-primary-container transition-colors duration-300 p-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+</div>
+<!-- Overview Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-grid-gutter">
+<div class="glass-panel rounded-xl p-5 flex items-center gap-5 hover:translate-y-[-2px] transition-transform duration-300">
+<div class="w-14 h-14 rounded-full bg-primary-container/10 flex items-center justify-center border border-primary-container/30">
+<span class="material-symbols-outlined text-[32px] text-primary-container">package_2</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg font-bold text-primary-container">142</div>
+<div class="font-label-caps text-label-caps text-[#FAF3E0]/70 mt-1">Total SKUs</div>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-5 flex items-center gap-5 hover:translate-y-[-2px] transition-transform duration-300">
+<div class="w-14 h-14 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/30">
+<span class="material-symbols-outlined text-[32px] text-emerald-500">check_circle</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg font-bold text-primary-container">128</div>
+<div class="font-label-caps text-label-caps text-[#FAF3E0]/70 mt-1">Active Products</div>
+</div>
+</div>
+<div class="glass-panel glass-warning rounded-xl p-5 flex items-center gap-5 hover:translate-y-[-2px] transition-transform duration-300">
+<div class="w-14 h-14 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+<span class="material-symbols-outlined text-[32px] text-amber-500" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg font-bold text-amber-500">14</div>
+<div class="font-label-caps text-label-caps text-amber-500/70 mt-1">Low Stock Items</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-grid-gutter mt-2">
+<!-- Stock Level Table Area (Spans 2 cols on large screens) -->
+<div class="xl:col-span-2 flex flex-col gap-grid-gutter">
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col h-full">
+<div class="p-6 border-b border-primary-container/15 flex justify-between items-center bg-[#1A110A]/50">
+<h2 class="font-title-sm text-title-sm text-[#FAF3E0]">Stock Matrix</h2>
+<div class="flex gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-surface-variant text-sm">search</span>
+<input class="bg-surface-container-low border-outline-variant rounded-lg pl-9 pr-4 py-1.5 text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container/50 text-on-surface placeholder:text-surface-variant w-48 transition-all glass-button-secondary" placeholder="Search inventory..." type="text"/>
+</div>
+<button class="glass-button-secondary px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                                    Filter
+                                </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-primary-container/10 bg-[#1A110A]/30">
+<th class="p-4 font-label-caps text-label-caps text-[#FAF3E0]/60 font-medium">Product</th>
+<th class="p-4 font-label-caps text-label-caps text-[#FAF3E0]/60 font-medium w-48">Pack Variants</th>
+<th class="p-4 font-label-caps text-label-caps text-[#FAF3E0]/60 font-medium text-right">Stock</th>
+<th class="p-4 font-label-caps text-label-caps text-[#FAF3E0]/60 font-medium">Status</th>
+<th class="p-4 font-label-caps text-label-caps text-[#FAF3E0]/60 font-medium w-24">Level</th>
+<th class="p-4 font-label-caps text-label-caps text-[#FAF3E0]/60 font-medium text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary-container/10">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<span class="text-2xl">🫖</span>
+<span class="font-title-sm text-[13px] text-[#FAF3E0] font-semibold">Imperial Earl Grey</span>
+</div>
+</td>
+<td class="p-4 text-[11px] text-[#FAF3E0]/70 font-mono tracking-wide">
+                                            250g: 45 · 500g: 32 · 1kg: 65
+                                        </td>
+<td class="p-4 text-right font-bold text-emerald-400">142</td>
+<td class="p-4">
+<span class="status-badge in-stock px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> In Stock
+                                            </span>
+</td>
+<td class="p-4">
+<div class="h-1.5 w-full progress-bar-bg rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[75%] rounded-full shadow-[0_0_8px_rgba(200,146,42,0.8)]"></div>
+</div>
+</td>
+<td class="p-4 text-right flex justify-end gap-2">
+<button class="text-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-[18px]">visibility_off</span></button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors bg-amber-500/5">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<span class="text-2xl">🍵</span>
+<span class="font-title-sm text-[13px] text-[#FAF3E0] font-semibold">Sencha Reserve</span>
+</div>
+</td>
+<td class="p-4 text-[11px] text-[#FAF3E0]/70 font-mono tracking-wide">
+                                            250g: 12 · 500g: 8 · 1kg: 2
+                                        </td>
+<td class="p-4 text-right font-bold text-amber-500">22</td>
+<td class="p-4">
+<span class="status-badge low-stock px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Low Stock
+                                            </span>
+</td>
+<td class="p-4">
+<div class="h-1.5 w-full progress-bar-bg rounded-full overflow-hidden">
+<div class="h-full bg-amber-500 w-[20%] rounded-full shadow-[0_0_8px_rgba(245,158,11,0.8)]"></div>
+</div>
+</td>
+<td class="p-4 text-right flex justify-end gap-2">
+<button class="text-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-[18px]">visibility_off</span></button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<span class="text-2xl">🌸</span>
+<span class="font-title-sm text-[13px] text-[#FAF3E0] font-semibold">Jasmine Pearls</span>
+</div>
+</td>
+<td class="p-4 text-[11px] text-[#FAF3E0]/70 font-mono tracking-wide">
+                                            250g: 85 · 500g: 40 · 1kg: 10
+                                        </td>
+<td class="p-4 text-right font-bold text-emerald-400">135</td>
+<td class="p-4">
+<span class="status-badge in-stock px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> In Stock
+                                            </span>
+</td>
+<td class="p-4">
+<div class="h-1.5 w-full progress-bar-bg rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[80%] rounded-full shadow-[0_0_8px_rgba(200,146,42,0.8)]"></div>
+</div>
+</td>
+<td class="p-4 text-right flex justify-end gap-2">
+<button class="text-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-[18px]">visibility_off</span></button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors bg-red-500/5">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<span class="text-2xl">🌿</span>
+<span class="font-title-sm text-[13px] text-[#FAF3E0] font-semibold">Assam Gold</span>
+</div>
+</td>
+<td class="p-4 text-[11px] text-[#FAF3E0]/70 font-mono tracking-wide">
+                                            250g: 0 · 500g: 2 · 1kg: 0
+                                        </td>
+<td class="p-4 text-right font-bold text-red-500">2</td>
+<td class="p-4">
+<span class="status-badge out-stock px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Out of Stock
+                                            </span>
+</td>
+<td class="p-4">
+<div class="h-1.5 w-full progress-bar-bg rounded-full overflow-hidden">
+<div class="h-full bg-red-500 w-[5%] rounded-full shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div>
+</div>
+</td>
+<td class="p-4 text-right flex justify-end gap-2">
+<button class="text-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-[18px]">visibility_off</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Reorder Alerts Section -->
+<div class="xl:col-span-1">
+<div class="glass-panel glass-warning rounded-xl overflow-hidden h-full flex flex-col">
+<div class="p-6 border-b border-amber-500/20 bg-amber-500/5 flex items-center gap-3">
+<span class="material-symbols-outlined text-amber-500" style="font-variation-settings: 'FILL' 1;">warning</span>
+<h2 class="font-title-sm text-[20px] font-bold text-[#FAF3E0]">Reorder Alerts</h2>
+</div>
+<div class="p-2 flex-1 overflow-y-auto">
+<!-- Alert Item 1 (Critical) -->
+<div class="p-4 rounded-lg border border-red-500/20 bg-red-500/5 mb-2 hover:bg-red-500/10 transition-colors group">
+<div class="flex justify-between items-start mb-3">
+<div class="flex gap-3">
+<span class="text-xl">🌿</span>
+<div>
+<div class="font-semibold text-[14px] text-[#FAF3E0]">Assam Gold</div>
+<div class="text-[11px] text-surface-variant mt-1">Threshold: 15</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-bold text-red-500 text-lg leading-none">2</div>
+<div class="text-[10px] text-red-500/70 uppercase font-bold mt-1">Current</div>
+</div>
+</div>
+<button class="w-full glass-button py-2 rounded text-sm font-medium flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                    Notify Supplier
+                                </button>
+</div>
+<!-- Alert Item 2 (Warning) -->
+<div class="p-4 rounded-lg border border-amber-500/20 bg-amber-500/5 mb-2 hover:bg-amber-500/10 transition-colors group">
+<div class="flex justify-between items-start mb-3">
+<div class="flex gap-3">
+<span class="text-xl">🍵</span>
+<div>
+<div class="font-semibold text-[14px] text-[#FAF3E0]">Sencha Reserve</div>
+<div class="text-[11px] text-surface-variant mt-1">Threshold: 30</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-bold text-amber-500 text-lg leading-none">22</div>
+<div class="text-[10px] text-amber-500/70 uppercase font-bold mt-1">Current</div>
+</div>
+</div>
+<button class="w-full glass-button py-2 rounded text-sm font-medium flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                    Notify Supplier
+                                </button>
+</div>
+<!-- Alert Item 3 (Warning) -->
+<div class="p-4 rounded-lg border border-amber-500/20 bg-amber-500/5 mb-2 hover:bg-amber-500/10 transition-colors group">
+<div class="flex justify-between items-start mb-3">
+<div class="flex gap-3">
+<span class="text-xl">🌺</span>
+<div>
+<div class="font-semibold text-[14px] text-[#FAF3E0]">Hibiscus Bloom</div>
+<div class="text-[11px] text-surface-variant mt-1">Threshold: 25</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-bold text-amber-500 text-lg leading-none">24</div>
+<div class="text-[10px] text-amber-500/70 uppercase font-bold mt-1">Current</div>
+</div>
+</div>
+<button class="w-full glass-button py-2 rounded text-sm font-medium flex items-center justify-center gap-2 opacity-70 hover:opacity-100">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                    Notify Supplier
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BARAK Tea Admin - Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#17130c",
+                        "on-primary-fixed-variant": "#5f4100",
+                        "on-primary": "#422c00",
+                        "primary-fixed-dim": "#f8bc51",
+                        "on-secondary": "#333024",
+                        "on-tertiary-container": "#00355c",
+                        "on-secondary-fixed": "#1e1c10",
+                        "inverse-on-surface": "#353027",
+                        "surface-tint": "#f8bc51",
+                        "surface-container-highest": "#3a342c",
+                        "on-secondary-fixed-variant": "#4a4739",
+                        "surface-dim": "#17130c",
+                        "secondary-container": "#4a4739",
+                        "primary-container": "#c8922a",
+                        "tertiary-fixed-dim": "#9dcaff",
+                        "surface-variant": "#3a342c",
+                        "background": "#17130c",
+                        "tertiary-fixed": "#d1e4ff",
+                        "surface-container-high": "#2f2921",
+                        "on-error-container": "#ffdad6",
+                        "surface-container": "#241f17",
+                        "secondary-fixed-dim": "#ccc6b4",
+                        "on-tertiary": "#003257",
+                        "on-primary-container": "#462f00",
+                        "primary": "#f8bc51",
+                        "on-secondary-container": "#bbb5a3",
+                        "surface-bright": "#3e3830",
+                        "inverse-primary": "#7e5700",
+                        "primary-fixed": "#ffdeab",
+                        "on-tertiary-fixed": "#001d35",
+                        "on-surface-variant": "#d4c4b0",
+                        "secondary": "#ccc6b4",
+                        "surface-container-lowest": "#120e07",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "outline": "#9c8f7c",
+                        "error": "#ffb4ab",
+                        "on-surface": "#ece1d5",
+                        "tertiary-container": "#62a0e0",
+                        "secondary-fixed": "#e9e2d0",
+                        "on-background": "#ece1d5",
+                        "inverse-surface": "#ece1d5",
+                        "surface-container-low": "#201b14",
+                        "on-primary-fixed": "#281900",
+                        "tertiary": "#9dcaff",
+                        "outline-variant": "#504536",
+                        "on-tertiary-fixed-variant": "#00497b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-gutter": "24px",
+                        "side-margin": "40px",
+                        "xs": "0.25rem",
+                        "sm": "0.5rem",
+                        "lg": "1.5rem",
+                        "xl": "2.5rem",
+                        "md": "1rem"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-base": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "title-sm": ["18px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-base": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background-color: rgba(26, 17, 10, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(200, 146, 42, 0.15);
+        }
+        .chart-grid {
+            background-image: linear-gradient(to right, rgba(156, 143, 124, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(156, 143, 124, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background h-screen overflow-hidden flex font-body-base text-body-base">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full py-6 bg-[#1A110A] docked left-0 h-screen w-64 border-r border-[#C8922A]/10 font-inter text-sm font-medium text-[#C8922A] divide-y divide-[#C8922A]/5 z-40 shrink-0">
+<div class="px-6 mb-6 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-[#C8922A]/20 flex items-center justify-center border border-[#C8922A]/30 overflow-hidden">
+<img alt="BARAK Logo" class="w-full h-full object-cover" data-alt="close up of premium golden tea leaves on dark slate background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgrs55BPAkuC2YeOJ6WbGNrmT51hvIxM9R3IESjAH2uufnHnxwionzbUbg0UZsdiBZyh47jZrsXFkIrVZh492lkKhB4LuWdL5HcDUvnnxo2LNPgsODhoCVFfZgwq2ldC1DgIWj45-B_nUaaVtyWZpb-qXVkJuFc2TBFUSwuMLnmyB8qwvgxKi1p-yIXr-WPAp0DfF-l_pMDnIHGTeX1vKEbs86YF0JAzLFG8LpkIxfURwlQOL0yJM4dZQt_HMWo5LOS92IbFYva94"/>
+</div>
+<div>
+<h1 class="text-[#C8922A] font-bold tracking-wider uppercase text-lg">BARAK Tea</h1>
+<p class="text-[#9E8C78] text-xs">Luxury Admin</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4">
+<ul class="space-y-1">
+<!-- Dashboard -->
+<li>
+<a class="flex items-center gap-4 px-6 py-3 text-[#9E8C78] hover:bg-white/5 hover:text-[#C8922A] transition-colors duration-350 cursor-pointer transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<!-- Inventory -->
+<li>
+<a class="flex items-center gap-4 px-6 py-3 text-[#9E8C78] hover:bg-white/5 hover:text-[#C8922A] transition-colors duration-350 cursor-pointer transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="local_tea_shop">local_cafe</span>
+<span>Inventory</span>
+</a>
+</li>
+<!-- Sales -->
+<li>
+<a class="flex items-center gap-4 px-6 py-3 text-[#9E8C78] hover:bg-white/5 hover:text-[#C8922A] transition-colors duration-350 cursor-pointer transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Sales</span>
+</a>
+</li>
+<!-- Customers -->
+<li>
+<a class="flex items-center gap-4 px-6 py-3 text-[#9E8C78] hover:bg-white/5 hover:text-[#C8922A] transition-colors duration-350 cursor-pointer transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Customers</span>
+</a>
+</li>
+<!-- Analytics (ACTIVE) -->
+<li>
+<a class="flex items-center gap-4 px-6 py-3 bg-[#C8922A]/10 text-[#C8922A] border-r-2 border-[#C8922A] cursor-pointer transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics" data-weight="fill" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span>Analytics</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="pt-4">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-4 px-6 py-3 text-[#9E8C78] hover:bg-white/5 hover:text-[#C8922A] transition-colors duration-350 cursor-pointer transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help_center">help_center</span>
+<span>Support</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-6 py-3 text-[#9E8C78] hover:bg-white/5 hover:text-[#C8922A] transition-colors duration-350 cursor-pointer transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-8 h-20 w-full bg-[#1A110A]/80 backdrop-blur-xl text-[#C8922A] font-inter tracking-tight docked full-width top-0 sticky z-50 border-b border-[#C8922A]/15 shadow-[0_20_40px_rgba(0,0,0,0.6)] shrink-0">
+<div class="flex items-center gap-6 flex-1">
+<button class="md:hidden text-[#9E8C78] hover:text-[#E5B65A] transition-all duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex items-center gap-2 text-[#9E8C78] bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:border-[#C8922A]/30 transition-all duration-350 max-w-md w-full">
+<span class="material-symbols-outlined text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder-[#9E8C78]/70 text-[#C8922A]" placeholder="Search analytics..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#9E8C78] hover:text-[#E5B65A] transition-all duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-95 duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-[#9E8C78] hover:text-[#E5B65A] transition-all duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-95 duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-[#C8922A]/20 cursor-pointer hover:border-[#C8922A] transition-all duration-350 ml-2">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="portrait of a sophisticated man in dramatic lighting against a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlYyVwEv5jlBuHwN4PEcr2qEvm5z6NLrx7v2LgBnMIB0_Y8DDE99HmdZFx-IkDMh10_zsmplrTIy-_SBhFrUwYISSLcZFBF0ccXGcKdr7m9hSrKBCa7-uIxRYMgGKIhHcKsQGNwmfpxQtiozfynMhpBMh0MyAxm-7Qluq2KvuKyjqbuFa5kEgKNK2CLxitQ0rmagD40k5fdO5QP5r44ZOGJ4SYz0_qRrF3hKmtkazEuieovwZ43qTndqoFAf2-2EdZ_O9iO6vunPo"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto p-side-margin space-y-grid-gutter relative">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-xl">
+<div>
+<h2 class="font-headline-md text-headline-md text-inverse-surface font-bold">Analytics</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex glass-panel rounded-lg overflow-hidden p-1">
+<button class="px-4 py-1.5 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-350 rounded">7d</button>
+<button class="px-4 py-1.5 text-sm font-medium bg-primary/20 text-primary rounded shadow-[0_0_10px_rgba(200,146,42,0.2)]">30d</button>
+<button class="px-4 py-1.5 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-350 rounded">90d</button>
+<button class="px-4 py-1.5 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-350 rounded">Custom</button>
+</div>
+<button class="glass-panel text-primary px-6 py-2 rounded-lg font-medium hover:border-primary hover:shadow-[0_0_15px_rgba(200,146,42,0.3)] transition-all duration-350 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Export Report
+                    </button>
+</div>
+</div>
+<!-- ROW 1: KPI CARDS -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+<!-- KPI 1 -->
+<div class="glass-panel rounded-lg h-[80px] p-[12px_16px] flex flex-col justify-center relative overflow-hidden group hover:bg-surface-container/90 transition-colors duration-350">
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-70 mb-1">UNIQUE VISITORS</p>
+<div class="flex items-baseline gap-2">
+<p class="font-title-sm text-title-sm text-primary">1,240</p>
+<span class="text-xs text-tertiary font-medium">+12% ↑</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="glass-panel rounded-lg h-[80px] p-[12px_16px] flex flex-col justify-center relative overflow-hidden group hover:bg-surface-container/90 transition-colors duration-350">
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-70 mb-1">WHATSAPP CLICKS</p>
+<div class="flex items-baseline gap-2">
+<p class="font-title-sm text-title-sm text-primary">482</p>
+<span class="text-xs text-tertiary font-medium">+8% ↑</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="glass-panel rounded-lg h-[80px] p-[12px_16px] flex flex-col justify-center relative overflow-hidden group hover:bg-surface-container/90 transition-colors duration-350">
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-70 mb-1">CONVERSION RATE</p>
+<div class="flex items-baseline gap-2">
+<p class="font-title-sm text-title-sm text-primary">3.2%</p>
+<span class="text-xs text-tertiary font-medium">+0.5% ↑</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="glass-panel rounded-lg h-[80px] p-[12px_16px] flex flex-col justify-center relative overflow-hidden group hover:bg-surface-container/90 transition-colors duration-350">
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-70 mb-1">NEW CUSTOMERS</p>
+<div class="flex items-baseline gap-2">
+<p class="font-title-sm text-title-sm text-primary">124</p>
+<span class="text-xs text-tertiary font-medium">+15% ↑</span>
+</div>
+</div>
+<!-- KPI 5 -->
+<div class="glass-panel rounded-lg h-[80px] p-[12px_16px] flex flex-col justify-center relative overflow-hidden group hover:bg-surface-container/90 transition-colors duration-350">
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-70 mb-1">REPEAT RATE</p>
+<div class="flex items-baseline gap-2">
+<p class="font-title-sm text-title-sm text-primary">24%</p>
+<span class="text-xs text-tertiary font-medium">+2% ↑</span>
+</div>
+</div>
+<!-- KPI 6 -->
+<div class="glass-panel rounded-lg h-[80px] p-[12px_16px] flex flex-col justify-center relative overflow-hidden group hover:bg-surface-container/90 transition-colors duration-350">
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-70 mb-1">REVENUE/DAY</p>
+<div class="flex items-baseline gap-2">
+<p class="font-title-sm text-title-sm text-primary">₹845</p>
+<span class="text-xs text-tertiary font-medium">+10% ↑</span>
+</div>
+</div>
+</div>
+<!-- ROW 2: MAIN CHARTS -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-grid-gutter h-[400px]">
+<!-- Left: Revenue Over Time -->
+<div class="lg:col-span-7 glass-panel rounded-lg p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-sm text-title-sm text-inverse-surface">Revenue Over Time</h3>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+<div class="flex-1 relative chart-grid rounded border-b border-l border-outline/20">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 600 300">
+<defs>
+<lineargradient id="areaGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#C8922A" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#C8922A" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,250 L50,220 L100,240 L150,180 L200,190 L250,140 L300,160 L350,110 L400,130 L450,80 L500,100 L550,50 L600,60 L600,300 L0,300 Z" fill="url(#areaGradient)"></path>
+<path d="M0,250 L50,220 L100,240 L150,180 L200,190 L250,140 L300,160 L350,110 L400,130 L450,80 L500,100 L550,50 L600,60" fill="none" stroke="#C8922A" stroke-width="3"></path>
+<!-- Tooltip Point (Simulated) -->
+<circle cx="450" cy="80" fill="#1A110A" r="5" stroke="#C8922A" stroke-width="2"></circle>
+</svg>
+<!-- Simulated Tooltip -->
+<div class="absolute top-[30px] left-[400px] glass-panel px-3 py-2 rounded text-sm z-10 pointer-events-none">
+<p class="text-on-surface-variant text-xs">Oct 14</p>
+<p class="text-primary font-bold">₹1,240</p>
+</div>
+</div>
+</div>
+<!-- Right: Orders by Day -->
+<div class="lg:col-span-5 glass-panel rounded-lg p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-sm text-title-sm text-inverse-surface">Orders by Day of Week</h3>
+</div>
+<div class="flex-1 flex items-end justify-between px-4 pb-6 border-b border-outline/20 gap-2">
+<div class="w-full flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary rounded-t-sm h-[40%] group-hover:bg-primary-fixed-dim transition-colors"></div>
+<span class="text-xs text-on-surface-variant">M</span>
+</div>
+<div class="w-full flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary rounded-t-sm h-[55%] group-hover:bg-primary-fixed-dim transition-colors"></div>
+<span class="text-xs text-on-surface-variant">T</span>
+</div>
+<div class="w-full flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary rounded-t-sm h-[45%] group-hover:bg-primary-fixed-dim transition-colors"></div>
+<span class="text-xs text-on-surface-variant">W</span>
+</div>
+<div class="w-full flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary rounded-t-sm h-[70%] group-hover:bg-primary-fixed-dim transition-colors"></div>
+<span class="text-xs text-on-surface-variant">T</span>
+</div>
+<div class="w-full flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary rounded-t-sm h-[90%] group-hover:bg-primary-fixed-dim transition-colors"></div>
+<span class="text-xs text-on-surface-variant">F</span>
+</div>
+<div class="w-full flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary rounded-t-sm h-[80%] group-hover:bg-primary-fixed-dim transition-colors"></div>
+<span class="text-xs text-on-surface-variant">S</span>
+</div>
+<div class="w-full flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary rounded-t-sm h-[60%] group-hover:bg-primary-fixed-dim transition-colors"></div>
+<span class="text-xs text-on-surface-variant">S</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ROW 3: FUNNEL + GEOGRAPHY -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-grid-gutter">
+<!-- Left: Conversion Funnel -->
+<div class="glass-panel rounded-lg p-6">
+<h3 class="font-title-sm text-title-sm text-inverse-surface mb-6">Conversion Funnel</h3>
+<div class="space-y-4">
+<!-- Step 1 -->
+<div class="relative">
+<div class="flex justify-between text-sm mb-1 z-10 relative px-4 text-inverse-surface">
+<span>Product Views</span>
+<span class="font-bold">10k</span>
+</div>
+<div class="h-8 w-full bg-surface-container rounded-sm overflow-hidden border border-outline/10">
+<div class="h-full bg-gradient-to-r from-primary-container/80 to-primary-container/40" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative">
+<div class="flex justify-between text-sm mb-1 z-10 relative px-4 text-inverse-surface">
+<span>Add to Cart</span>
+<span class="font-bold">2k</span>
+</div>
+<div class="h-8 w-[80%] mx-auto bg-surface-container rounded-sm overflow-hidden border border-outline/10">
+<div class="h-full bg-gradient-to-r from-primary-container/70 to-primary-container/30" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative">
+<div class="flex justify-between text-sm mb-1 z-10 relative px-4 text-inverse-surface">
+<span>WhatsApp Click</span>
+<span class="font-bold">800</span>
+</div>
+<div class="h-8 w-[60%] mx-auto bg-surface-container rounded-sm overflow-hidden border border-outline/10">
+<div class="h-full bg-gradient-to-r from-primary-container/60 to-primary-container/20" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="relative">
+<div class="flex justify-between text-sm mb-1 z-10 relative px-4 text-primary font-medium">
+<span>Order Confirmed</span>
+<span class="font-bold">320</span>
+</div>
+<div class="h-8 w-[40%] mx-auto bg-surface-container rounded-sm overflow-hidden border border-outline/10 shadow-[0_0_15px_rgba(200,146,42,0.2)]">
+<div class="h-full bg-primary" style="width: 100%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Top Cities -->
+<div class="glass-panel rounded-lg p-6">
+<h3 class="font-title-sm text-title-sm text-inverse-surface mb-6">Top Cities</h3>
+<div class="space-y-5">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm text-on-surface-variant">
+<span>Silchar</span>
+<span>120 orders</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm text-on-surface-variant">
+<span>Guwahati</span>
+<span>98 orders</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary/80 h-full rounded-full" style="width: 81%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm text-on-surface-variant">
+<span>Karimganj</span>
+<span>76 orders</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary/60 h-full rounded-full" style="width: 63%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm text-on-surface-variant">
+<span>Hailakandi</span>
+<span>45 orders</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary/40 h-full rounded-full" style="width: 37%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm text-on-surface-variant">
+<span>Kolkata</span>
+<span>32 orders</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary/20 h-full rounded-full" style="width: 26%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="h-8"></div> <!-- Bottom padding -->
+</main>
+</div>
+</body></html>
