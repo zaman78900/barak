@@ -36,13 +36,13 @@ export default function Navbar() {
           : 'bg-transparent'
       }`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 md:h-28">
+          <div className="flex items-center justify-between h-18 md:h-22">
             {/* Logo */}
             <Link 
               to="/" 
               className="flex items-center"
             >
-              <img src={logo} alt="BARAK Tea" className="h-16 md:h-20 w-auto object-contain" />
+              <img src={logo} alt="BARAK Tea" className="h-12 md:h-16 w-auto object-contain" />
             </Link>
 
 
@@ -139,7 +139,7 @@ export default function Navbar() {
       )}
 
       {/* Spacer for fixed navbar */}
-      <div className="h-20 md:h-28" />
+      <div className="h-18 md:h-22" />
     </>
 
   );
