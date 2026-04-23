@@ -113,11 +113,32 @@ export default function Checkout() {
   const [processing, setProcessing] = useState(false);
   const [errors, setErrors]         = useState({});
 
-  const [form, setForm] = useState({
-    firstName: '', lastName: '', email: '', phone: '',
-    addr1: '', addr2: '', city: '', state: '', pincode: '',
-    upiId: '', cardNum: '', cardName: '', cardExpiry: '', cardCvv: '',
-    bank: '',
+  const [form, setForm] = useState(() => {
+    try {
+      const last = JSON.parse(localStorage.getItem('barak_last_order'));
+      if (last && last.customer) {
+        const names = (last.customer.name || '').trim().split(' ');
+        const fName = names[0] || '';
+        const lName = names.length > 1 ? names.slice(1).join(' ') : '';
+        return {
+          firstName: fName, lastName: lName, 
+          email: last.customer.email || '', 
+          phone: last.customer.phone || '',
+          addr1: last.address?.line1 || '', 
+          addr2: last.address?.line2 || '', 
+          city: last.address?.city || '', 
+          state: last.address?.state || '', 
+          pincode: last.address?.pin || '',
+          upiId: '', cardNum: '', cardName: '', cardExpiry: '', cardCvv: '', bank: '',
+        };
+      }
+    } catch (e) {}
+    return {
+      firstName: '', lastName: '', email: '', phone: '',
+      addr1: '', addr2: '', city: '', state: '', pincode: '',
+      upiId: '', cardNum: '', cardName: '', cardExpiry: '', cardCvv: '',
+      bank: '',
+    };
   });
 
   /* Load order totals from cart page */
