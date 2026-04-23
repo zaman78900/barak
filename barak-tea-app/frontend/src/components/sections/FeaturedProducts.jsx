@@ -2,63 +2,26 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingCart, ArrowRight } from 'phosphor-react';
 import { useNavigate } from 'react-router-dom';
+import { useProducts } from '../../utils/hooks';
+import { useCartStore } from '../../store';
 
 export default function FeaturedProducts() {
   const navigate = useNavigate();
+  const { products, loading } = useProducts(1, 4);
+  const addItem = useCartStore((s) => s.addItem);
 
-  const addToCart = (e, product) => {
+  const handleAddToCart = (e, product) => {
     e.stopPropagation();
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existing = cart.find((item) => item.id === product.id);
-    
-    if (existing) {
-      existing.quantity += 1;
-    } else {
-      cart.push({ ...product, quantity: 1 });
-    }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event('cartUpdated'));
-    alert(`${product.name} added to cart!`);
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image_url || '🍵',
+      category: product.category,
+      variant: 'Default',
+      quantity: 1,
+    });
   };
-  const products = [
-    {
-      id: 1,
-      name: 'Classic CTC Dust',
-      category: 'Everyday',
-      price: 180,
-      mrp: 220,
-      image: '🍵',
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      name: 'Premium Leaf Grade CTC',
-      category: 'Premium',
-      price: 280,
-      mrp: 340,
-      image: '🌿',
-      rating: 5,
-    },
-    {
-      id: 3,
-      name: 'Morning Masala Blend',
-      category: 'Blends',
-      price: 220,
-      mrp: 260,
-      image: '✨',
-      rating: 4.9,
-    },
-    {
-      id: 4,
-      name: 'Gift Box Collection',
-      category: 'Gifts',
-      price: 480,
-      mrp: 580,
-      image: '🎁',
-      rating: 4.7,
-    },
-  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -79,7 +42,22 @@ export default function FeaturedProducts() {
     },
   };
 
+  if (loading && (!products || products.length === 0)) {
+    return (
+      <section className="py-20 md:py-32 px-4 bg-barak-surface">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="glass rounded-glass h-96 animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
+
     <section className="py-20 md:py-32 px-4 bg-barak-surface">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -114,8 +92,18 @@ export default function FeaturedProducts() {
               className="glass rounded-glass overflow-hidden group cursor-pointer"
             >
               {/* Product Image */}
-              <div className="w-full aspect-square bg-barak-card flex items-center justify-center text-6xl hover:scale-110 transition-transform duration-500">
-                {product.image}
+              <div className="w-full aspect-square bg-barak-card overflow-hidden">
+                {product.image_url ? (
+                  <img 
+                    src={product.image_url} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-500">
+                    🍵
+                  </div>
+                )}
               </div>
 
               {/* Product Info */}
@@ -130,7 +118,7 @@ export default function FeaturedProducts() {
                 {/* Rating */}
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-xs text-barak-gold">★★★★★</span>
-                  <span className="text-xs text-barak-muted">{product.rating}</span>
+                  <span className="text-xs text-barak-muted">{product.rating || 4.8}</span>
                 </div>
 
                 {/* Price */}
@@ -141,18 +129,13 @@ export default function FeaturedProducts() {
 
                 {/* Add to Cart Button */}
                 <button 
-                  onClick={(e) => addToCart(e, { 
-                    id: product.id, 
-                    name: product.name, 
-                    price: product.price, 
-                    image: product.image,
-                    category: product.category
-                  })}
+                  onClick={(e) => handleAddToCart(e, product)}
                   className="w-full glass px-4 py-3 rounded-lg font-semibold text-barak-cream hover:text-barak-gold-light border border-barak-gold hover:border-barak-gold-light transition-all flex items-center justify-center gap-2"
                 >
                   <ShoppingCart size={18} />
                   Add to Cart
                 </button>
+
               </div>
             </motion.div>
           ))}
