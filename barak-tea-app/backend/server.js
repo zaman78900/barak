@@ -66,8 +66,8 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // ─── Start Server ──────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  logger.info(`🚀 BARAK Tea API running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  logger.info(`🚀 BARAK Tea API running on http://0.0.0.0:${PORT}`);
   logger.info(`📝 Environment: ${process.env.NODE_ENV}`);
   logger.info(`🔗 Frontend URL: ${process.env.FRONTEND_URL}`);
 });
