@@ -128,10 +128,10 @@ export default function Checkout() {
   const codFee  = payMethod === 'cod' ? 20 : 0;
   const displayTotal = (od.total || 0) + codFee;
 
-  /* Redirect if cart empty */
+  /* Redirect if cart empty (unless processing an order) */
   useEffect(() => {
-    if (items.length === 0) navigate('/cart');
-  }, [items]);
+    if (items.length === 0 && !processing) navigate('/cart');
+  }, [items, processing, navigate]);
 
   const set = (field) => (e) => {
     let val = e.target.value;
