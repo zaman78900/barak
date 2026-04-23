@@ -1,0 +1,1608 @@
+ 
+Patterns 
+Includes: Design Aesthetics · Scroll & Animation · Layouts · Navigation · Typography & Color · UI 
+AI  
+Everything   a beginner   needs  to know  to prompt  AI  tools like Stitch, Framer , or W ebflow  
+Guide 
+The Vibe Coder's Web Design 
+----------------Page (0) Break----------------
+ 
+cards fade in on scroll (animation).' That level of detail gets you great results. 
+'Build a glassmorphism hero section (aesthetic) with a centered two-column layout (layout) where the 
+TIP  W hen prompting an AI tool, always combine 3 things: Aesthetic + Layout + Animation. Example: 
+ 
+Example Sites   Real websites that use this style so you can see it in action 
+AI Prompt     A copy-paste prompt you can give to Stitch, Framer AI, or any AI builder 
+How it works   The visual mechanism — what makes it look or behave that way 
+What it is     A plain-English explanation of the concept 
+ 
+Each entry in this guide follows the same format: 
+ 
+to tell the AI exactly what you want. 
+prompting AI tools. You don't need to write code by hand. W hat you DO need is the vocabulary 
+This guide is your cheat sheet for web design — written for vibe coders who build websites by 
+How to Use This Guide 
+----------------Page (1) Break----------------
+ 
+(glassmorphism.com)
+ 
+→ Glassmorphism.com — Interactive CSS generator to understand the effect visually  
+→ Apple iCloud.com — Subtle glass panels in login UI — very refined glassmorphism  (icloud.com)   
+(dribbble.com/tags/glassmorphism)
+ 
+→ Halo Lab on Dribbble — Classic glassmorphism UI kit with frosted cards and vivid gradients  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+and a subtle drop shadow. Text should be white. Add a glass-style navbar at the top." 
+background: rgba(255,255,255,0.15), a backdrop-filter blur of 12px, a white border at 30% opacity, 
+to #764ba2). Create 3 feature cards that look like frosted glass panels — each card should have 
+"Build a glassmorphism SaaS landing page. Use a vivid purple-to-blue gradient background (#667eea 
+AI PROMPT TO USE
+ 
+ 
+background 
+Best       Purple/blue/pink gradients, abstract blobs, or colorful photos 
+nt 
+Semi-transpare Partially see-through — like looking through tinted glass 
+rgba()       Color with transparency — the 4th value (alpha) controls how see-through it is 
+backdrop-filter  CSS property that blurs the content behind an element 
+ 
+panels — otherwise there's nothing to blur. 
+completes the glass look. You always need a colorful, vibrant background behind the glass 
+is a low value like 0.15 making it partially transparent. A thin white border at low opacity 
+behind the element, and a background-color set to rgba() (red, green, blue, alpha) where alpha 
+The magic happens with two CSS properties: backdrop-filter:blur() which blurs everything 
+How it works 
+lets some of the background bleed through while remaining readable. 
+subtle border. Imagine a glass panel sitting in front of a colorful, blurry background. The panel 
+Glassmorphism makes UI elements look like frosted glass — semi-transparent, blurred, with a 
+What it is 
+1.1 Glassmorphism 
+ 
+an AI. 
+reacting to its aesthetic. Understanding these styles lets you describe exactly what you want to 
+W hen you look at a website and think 'that looks futuristic' or 'that feels premium', you're 
+Design aesthetics are the visual language of a website — the overall 'vibe' and personality. 
+1. Design Aesthetics 
+----------------Page (2) Break----------------
+1.3 Brutalism 
+ 
+(ui8.net/tags/neumorphism)
+ 
+→ UI8 Soft UI Kits — Downloadable neumorphism design kits showing real app screens  
+(dribbble.com/tags/neumorphism)
+ 
+→ Dribbble — Neumorphism UI — Hundreds of beautiful Neumorphism UI examples for reference  
+learn it.  (neumorphism.io)    
+→ Neumorphism.io — CSS generator — drag the sliders and watch the effect build. Best way to 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+#ffffff. Include a volume slider and track progress bar in the same neumorphic style." 
+#ffffff. Add pressed (active) state with inset shadows: inset 4px 4px 8px #b8bec7, inset -4px -4px 8px 
+play/pause buttons using dual box-shadows: box-shadow: 6px 6px 12px #b8bec7, -6px -6px 12px 
+"Create a neumorphism music player dashboard on a #e0e5ec background. Build raised circular 
+AI PROMPT TO USE
+ 
+ 
+low — don't use it for critical text or important CTAs. 
+and dashboard widgets. It struggles with accessibility on bright screens because the contrast is very 
+TIP  Neumorphism looks best at low contrast. It's ideal for dark mode music players, control panels, 
+ 
+Color rule     Background color and element color MUST match exactly 
+Convex      Pushed outward — feels like a raised element (outer shadow) 
+Concave      Pressed inward — feels like a pressed button (inner shadow) 
+comma 
+box-shadow    CSS property — you can apply TW O shadows to one element separated by a 
+ 
+#e0e5ec), the element appears to grow organically from the surface rather than sit on top of it. 
+W OULD hit. Because both the background and the element are the exact same color (like 
+simulates where light would NOT hit a raised surface. The light shadow simulates where light 
+The trick is all in box-shadow. You apply two shadows simultaneously. The dark shadow 
+How it works 
+the top-left. 
+pair of shadows: one dark shadow from the bottom-right and one light (near-white) shadow from 
+— the background and the element share an identical color. W hat creates the 3D illusion is a 
+physically pushed out of or pressed into the background surface. Everything is the SAME color 
+Neumorphism (new + skeuomorphism) creates buttons and cards that look like they are 
+What it is 
+1.2 Neumorphism (Soft UI) 
+----------------Page (3) Break----------------
+creates visual rhythm and breathing room. 
+monochromatic or near-monochromatic color palette, and zero decoration. The whitespace itself 
+content is removed. W hat remains is: generous white (or off-white) space, a single typeface, a 
+Minimalism is the philosophy that content is the design. Everything that doesn't serve the 
+What it is 
+1.4 Minimalism 
+ 
+(hype4.academy)
+ 
+→ Hype4.academy — W eb design learning platform with a slightly brutalist aesthetic  
+templates to study  (figma.com/community)     
+→ Figma — Community Brutalism UI — Search 'brutalism' in Figma Community for ready-made 
+borders  (gumroad.com)    
+→ Gumroad.com — The most famous modern brutalist website — product selling platform with thick 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+monospace font for body text. No gradients, no drop shadows, no border-radius anywhere." 
+sections. Add slight rotation (transform: rotate(-1deg) to -2deg) on some image cards. Use a 
+at 80px, font-weight 900). Accent color is yellow (#FFE600) used for hover states and highlighted 
+(3px solid #000) on every card and section. Typography should be black and oversized (hero headline 
+"Build a brutalist portfolio website with a pure white #FFFFFF background. Use bold black borders 
+AI PROMPT TO USE
+ 
+ 
+Primary colors  Pure red, yellow, blue, black, white — no pastels or muted tones 
+border-radius 
+No        Sharp corners only — no rounded shapes anywhere 
+Monospace font  Fixed-width font like Courier that looks like a typewriter 
+() 
+transform:rotate Tilts elements by a few degrees — a hallmark brutalism detail 
+ 
+HTML in Notepad in 1998. Paradoxically, it takes skill to do brutalism W ELL. 
+that are slightly rotated with CSS transform:rotate, and a general sense that someone typed the 
+everything, backgrounds of pure yellow (#FFE600) or pure white, text in bold black, elements 
+No rounded corners. No gradients. No subtle shadows. Instead: solid 2-4px black borders on 
+How it works 
+layouts. It's the punk rock of web design. 
+primary colors (red, yellow, black), system fonts like monospace, and asymmetric or tilted 
+polished corporate design of most tech companies and embraces thick black borders, stark 
+Brutalist web design is intentionally raw, ugly-on-purpose, and anti-establishment. It rejects the 
+What it is 
+----------------Page (4) Break----------------
+with large typography and a stat. The variety in size AND color is what makes it feel premium. 
+some light (#F5F5F5), some with gradient backgrounds, some with product screenshots, some 
+rows, some are small and square. Cards have different visual treatments: some dark (#111), 
+CSS Grid is the technical foundation. Some cards span 2 columns, others are tall and span 2 
+How it works 
+visual collage. 
+product landing pages. Think of it as a mosaic of cards, each with its own design, creating a 
+Apple's Mac product pages, it's now one of the most popular design trends for SaaS and 
+varied-size compartments, each showing a different feature or piece of content. Popularized by 
+A bento grid is a layout (and aesthetic) inspired by a Japanese bento box — a grid of 
+What it is 
+1.5 Bento Grid 
+ 
+→ Typewolf.com — Typography-focused minimal design inspiration, all real websites  (typewolf.com)   
+(linear.app)
+ 
+→ Linear.app — Project management tool — one of the cleanest, most minimal SaaS designs  
+(awwwards.com/websites/minimal)
+ 
+→ Awwwards — Minimalist Category — Award-winning minimal websites — filter by 'minimalism'  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+vertical). Image grid with generous white space between photos. Let the whitespace be the design." 
+captions. No icons, no decorative elements, no gradients. Large padding on all sections (80px 
+headline at 72px weight 300, section titles at 32px. Color palette: near-black #111 for text, #888 for 
+background. Typography only: a single font family (Cormorant Garamond or Playfair Display), hero 
+"Design a minimalist photography portfolio homepage. Use #FAFAF9 (warm off-white) as the 
+AI PROMPT TO USE
+ 
+ 
+themselves 
+Negative space  The empty areas around and between objects — as important as the objects 
+Monochromatic  Using one color at different shades — like all blacks, grays, and whites 
+hierarchy 
+Typographic   Using size, weight, and spacing alone to show what's important 
+Whitespace    Empty space used intentionally as a design element — not wasted space 
+ 
+purpose. 
+typographic hierarchy. No icons, no illustrations, no gradients — unless they serve a specific 
+(light, regular, bold), near-black text on near-white background, and content arranged with clear 
+without losing meaning?' Large padding and margins, a single font used at multiple weights 
+Think of minimalism as removal. You start with a design and keep asking 'can this be removed 
+How it works 
+----------------Page (5) Break----------------
+(#8B5CF6) — is used sparingly for CTAs, icons, and highlights. Typography is pure white or 
+A single accent color — often electric blue (#0066FF), amber (#F59E0B), or soft purple 
+harsh. Cards and sections use slightly lighter darks (#111111, #1A1A2E) to create subtle depth. 
+Background is near-black (#0A0A0A or #0D0D1A), NOT pure black (#000000) which can feel 
+How it works 
+product screenshots pop dramatically. 
+dark mode — it's a deliberate aesthetic choice that uses darkness to make accent colors and 
+atmosphere. Think of a high-end watch brand website or a premium SaaS product. It's not just 
+Dark luxury uses deep charcoal or near-black backgrounds to create a premium, sophisticated 
+What it is 
+1.6 Dark Mode / Dark Luxury 
+ 
+(dribbble.com/tags/bento)
+ 
+→ Dribbble — Bento Grid UI — Search 'bento grid' for hundreds of design references  
+→ Framer.com — W ebsite builder with a beautiful bento grid on their homepage  (framer .com)  
+→ Linear.app homepage — Dark bento-style feature grid for a SaaS product  (linear.app)  
+sizes and treatments  (apple.com/mac)    
+→ Apple Mac product page — The gold standard of bento grids — study how Apple varies card 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+(transform: scale(1.02))." 
+accent cards use #1A1A2E. Round all cards with 16px border-radius. Add hover scale effect 
+faster'), and 4 smaller cards each highlighting one feature. Dark cards use #111111 background, light 
+columns showing a product screenshot, one tall card spanning 2 rows with a bold stat (like '10x 
+Grid with 3 columns and auto rows. Include 6 cards of varying sizes: one large card spanning 2 
+"Build a bento grid feature section on a #0A0A0A (near-black) background. Create a responsive CSS 
+AI PROMPT TO USE
+ 
+ 
+large cards should hold your most impressive content. 
+you want 1-2 large featured cards (span 2 columns or 2 rows) and 3-4 smaller supporting cards. The 
+TIP  The key to a great bento grid is the mix of big and small. Don't make all cards the same size — 
+ 
+Apple-style    Usually on a black or very dark gray page background for max contrast 
+treatments 
+Varied      Each card has its own background — dark, light, gradient, or image 
+grid-row: span 2  Makes a card take up 2 rows — creates a tall featured card 
+span 2 
+grid-column:   Makes a card take up 2 columns of the grid instead of 1 
+ 
+----------------Page (6) Break----------------
+or Black Han Sans for headings. Add CSS sparkle/star decorations (small ✦ symbols) scattered on 
+electric cyan #00E5FF, and neon lime #AAFF00 as accents. Use a bold display font like Bebas Neue 
+"Create a Y2K-inspired portfolio website on a #0A0A0A background. Color palette: hot pink #FF1493, 
+AI PROMPT TO USE
+ 
+ 
+Chrome/metallic text effects. 
+Bright gradients that look unafraid. Sometimes actual animated GIF-style elements. 
+technological or retro feel. Star/sparkle decorations scattered across the page. Bold italic type. 
+as main colors, often on a black or very dark background. Pixel or display fonts with a 
+Key visual ingredients: hot pink (#FF00FF) and cyan (#00FFFF) or bright lime green (#AAFF00) 
+How it works 
+hottest aesthetics right now. 
+before everyone agreed on 'good taste'. Ironically, Gen Z designers have made this one of the 
+pixel art, bold typography, starfield backgrounds, and the visual energy of early web design 
+Retro and Y2K design draws nostalgia from the 90s and early 2000s internet — neon gradients, 
+What it is 
+1.7 Retro / Y2K 
+ 
+→ Stripe.com — Premium dark sections mixed with light sections — a masterclass  (stripe.com)   
+→ Raycast.com — Mac productivity app with stunning dark luxury aesthetic  (raycast.com)   
+(vercel.com)
+ 
+→ Vercel.com — Near-perfect dark luxury SaaS design — study every detail of their homepage  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+30px rgba(0,102,255,0.4))." 
+(Inter or Satoshi). CTA button: #0066FF with white text and a subtle glow effect (box-shadow: 0 0 
+hero: a soft purple glow at 20% opacity centered behind the hero text. Clean sans-serif typography 
+background with a 1px border at rgba(255,255,255,0.08). Add a very subtle radial gradient in the 
+#F1F1EE. Accent color: electric blue #0066FF for buttons and highlighted text. Cards use #111827 
+"Build a dark luxury SaaS landing page. Background: #0D0D1A (deep dark blue-black). Primary text: 
+AI PROMPT TO USE
+ 
+ 
+Subtle gradient  A very faint radial gradient in the background gives depth without being garish 
+Border opacity  Very low opacity borders like rgba(255,255,255,0.08) for subtle separation 
+Accent color    One bright color used ONLY for important elements — CTAs, icons, highlights 
+Near-black     #0A0A0A or #0D0D1A — not pure black, which can feel harsh on screens 
+ 
+softly. 
+near-white (#F1F1EE). Thin borders at low opacity (rgba(255,255,255,0.08)) separate sections 
+----------------Page (7) Break----------------
+Background is a soft light blue-gray." 
+on buttons: transform: translateY(4px) with reduced shadow to simulate physical pressing. 
+#FF6B6B, mint #4ECDC4. All elements have border-radius: 20px minimum. Add pressed animation 
+rgba(108,99,255,0.35) for a raised purple button. Use candy colors: soft purple #6C63FF, coral 
+cards and buttons using multi-layer box-shadows: box-shadow: 0 8px 0 #4B44CC, 0 14px 20px 
+"Design a claymorphism task management app UI on a soft #F0F4FF background. Create 3D-looking 
+AI PROMPT TO USE
+ 
+ 
+border-radius 
+High       24-32px corners — very rounded, almost pill-shaped for small elements 
+Press state    On click, bottom shadow disappears, element moves down by the shadow height 
+Candy colors   Bright but slightly soft colors — purple, coral, mint, sky blue 
+shadow 
+Multi-layer    Two or three box-shadows at once: a hard bottom one for depth, soft ambient glow 
+ 
+like it's being physically pressed down. 
+(24px+) on everything. W hen the button is clicked, the bottom shadow shrinks, making it feel 
+element. Candy colors (soft pastels or vivid saturated colors) are typical. High border-radius 
+element's color (simulating the underside), and a larger soft glow shadow around the whole 
+The 3D effect is created with multiple box-shadows: a bottom shadow in a darker version of the 
+How it works 
+corporate. 
+general consumers, productivity tools, and any product that wants to feel fun rather than 
+style creates a playful, friendly, and approachable feel, making it popular for apps targeting 
+made of clay or rubber. Buttons and cards appear to have physical volume and weight. This 
+Claymorphism makes UI elements look inflated, puffy, and three-dimensional — like they're 
+What it is 
+1.8 Claymorphism / 3D UI 
+ 
+conventional design  (awwwards.com)     
+→ Awwwards — Experimental category — Find retro and experimental sites that push beyond 
+(bratgirlstudio.com)
+ 
+→ Brat Girl Studio — Real brand that fully commits to bright Y2K colors and energy  
+(dribbble.com/tags/y2k)
+ 
+→ Y2K Aesthetic Community on Dribbble — Search 'Y2K web design' for hundreds of references  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+bright gradient dividers. Navigation links in bold uppercase with a neon hover underline effect." 
+the page. Hero headline in chrome metallic gradient text (silver to white). Sections separated by 
+----------------Page (8) Break----------------
+ 
+(notion.so)
+ 
+→ Notion.so — Subtle 3D elements in their marketing — good example of refined claymorphism  
+(dribbble.com/tags/claymorphism)
+ 
+→ Dribbble — Claymorphism — Search 'clay UI' or 'claymorphism' for reference designs  
+examples  (cuberto.com)   
+→ Cuberto Agency — 3D UI Kits — Premium 3D and claymorphism UI kits with real app screen 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+----------------Page (9) Break----------------
+down and a section enters the visible area of the screen (the 'viewport'), that element animates 
+Elements are hidden (invisible and/or off-position) when the page loads. As the user scrolls 
+What it is 
+2.2 Scroll-Triggered Animations 
+ 
+(awwwards.com/websites/parallax)
+ 
+→ Awwwards — Parallax Sites — Award-winning websites using advanced parallax effects  
+understanding the mechanics  (university .webflow  .com)  
+→ Webflow University — Parallax Tutorial — No-code parallax scroll tutorial, great for 
+(firewatchgame.com)
+ 
+→ Firewatch Game Website — The most famous parallax website ever — multiple illustrated layers  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+illusion should be clearly visible when scrolling through the section." 
+JavaScript IntersectionObserver or requestAnimationFrame to update transforms on scroll. The depth 
+that move at 60% speed. Foreground layer: hero headline and CTA that scroll normally at 100%. Use 
+moves at 30% of scroll speed (translateY by 0.3 * scrollY). Middle layer: floating abstract blob shapes 
+"Build a parallax hero section with 3 scrolling layers. Background layer: a mountain/nature image that 
+AI PROMPT TO USE
+ 
+ 
+background (moves 50%), foreground text (moves 100%). 
+distance to each layer. Three layers minimum: far background (moves 20% of scroll speed), mid 
+far the user has scrolled and applies a CSS transform: translateY() at a fraction of that scroll 
+it stay put while the content scrolls over it. More advanced parallax uses JavaScript to track how 
+The simplest version uses CSS background-attachment: fixed on a background image, making 
+How it works 
+distant objects appear to move slower than close ones. 
+speed. This makes the page feel three-dimensional — like looking through a window where 
+speeds. The background moves slowly while the foreground (text, buttons) moves at normal 
+Parallax creates an illusion of depth by making different layers of the page scroll at different 
+What it is 
+2.1 Parallax Scrolling 
+ 
+Used poorly, they're just distracting. 
+well, they guide attention, reveal content at the right moment, and make a site feel premium. 
+control how elements appear, move, and respond as the user scrolls through your page. Used 
+Scroll and animation are what separate a static website from an experience. These techniques 
+2. Scroll & Animation 
+----------------Page (10) Break----------------
+content sideways instead. So as you scroll DOW N with your mouse or finger, the content inside 
+W hile the page scrolls vertically (up-down), a specific section 'hijacks' the scroll and moves the 
+What it is 
+2.3 Horizontal Scroll Sections 
+ 
+(gsap.com/scroll)
+ 
+→ GSAP ScrollTrigger Demos — The most powerful scroll animation library — see what's possible  
+supports  (michalsnik.github.io/aos)    
+→ AOS (Animate On Scroll) Demo — Interactive demo of every scroll animation type this library 
+they are  (stripe.com)   
+→ Stripe.com — Best-in-class scroll animations on every section — study how subtle and purposeful 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+0.2s)." 
+For 3-column feature grids, stagger each card by 0.1s extra delay (first card 0s, second 0.1s, third 
+opacity:1, transform:translateY(0) with transition duration 0.6s and ease: cubic-bezier(0.4, 0, 0.2, 1). 
+opacity:0 and transform:translateY(30px). On intersection, add class .visible which transitions to 
+IntersectionObserver to detect when each element is 20% visible. Apply these default start states: 
+"Build a features page where every card and section animates into view on scroll. Use 
+AI PROMPT TO USE
+ 
+ 
+AOS library    Animate On Scroll — a simple JavaScript library that handles all this automatically 
+effect 
+Stagger      Delaying each element slightly more than the previous — creates a cascading 
+→ 0 
+translateY(40px) Element moves upward as it reveals — the 'rise' in fade-up 
+opacity: 0 → 1   Element goes from invisible to fully visible — the foundation of fade animations 
+erver 
+IntersectionObs A JavaScript API that fires a callback when an element enters/leaves the viewport 
+ 
+long the animation takes and its easing — determines whether it feels smooth or janky. 
+transform:translateY(40px), then transitions to opacity:1 and translateY(0). The timing — how 
+transition or animation that plays the reveal. The element starts with opacity:0 and 
+W hen an element enters, a CSS class is added to it (like .visible). That class triggers a CSS 
+The IntersectionObserver JavaScript API watches when elements enter or leave the viewport. 
+How it works 
+fades in and slides up. 
+classic version is 'fade up' — element starts invisible and slightly below its final position, then 
+into place. This is by far the most common animation technique on modern websites. The 
+----------------Page (11) Break----------------
+AI PROMPT TO USE
+ 
+ 
+the visual on the left stays put and can change to reflect each feature. 
+column that scrolls normally (the feature list). As the user scrolls through features on the right, 
+with position:sticky (the persistent visual — a phone mockup, screenshot, or graphic) and right 
+of the viewport as long as its parent is in view. A common layout has two columns: left column 
+The simplest implementation uses CSS position:sticky top:0, which keeps the element at the top 
+How it works 
+screenshot on the left while the user scrolls through a list of features on the right. 
+called 'pinning'. It's perfect for feature explanations where you want to show one product 
+Once the user scrolls past that section, the element releases and scrolls away normally. This is 
+An element stays fixed on the screen while the user scrolls, but ONLY within its parent section. 
+What it is 
+2.4 Sticky Sections / Pinning 
+ 
+clone  (webflow  .com/templates)   
+→ Webflow — Horizontal Scroll Template — No-code horizontal scroll examples you can study and 
+(locomotivemtl.github.io/locomotive-scroll)
+ 
+→ Locomotive Scroll Examples — Smooth scroll library with horizontal scroll demos  
+(activetheory .net)
+ 
+→ Active Theory Agency — Award-winning agency with complex horizontal scroll portfolio  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+bar at the bottom of the section." 
+screenshot (top 60%), project title, brief description, and 'View Project' link. Add a horizontal progress 
+ScrollTrigger with pin:true and scrub:1 for a smooth tied-to-scroll feel. Each card has a project 
+page height, the cards slide horizontally from right to left revealing each project. Use GSAP 
+section should contain 5 project cards, each 80vw wide. As the user scrolls down through 500px of 
+"Create a horizontal scroll portfolio section that pins to the screen while the user scrolls vertically. The 
+AI PROMPT TO USE
+ 
+ 
+ScrollTrigger's pin and horizontal scrub features. 
+100vw wide, the section stays pinned for 500vh of scrolling. Typically implemented with GSAP 
+scrolling distance controls how far the horizontal movement goes — if you have 5 cards each 
+required distance, the inner content (a row of cards or panels) moves horizontally. The total 
+The section is 'pinned' in place on the screen while the user scrolls. As the user scrolls the 
+How it works 
+horizontal timeline. Used a lot on portfolio sites, case study pages, and product showcases. 
+that section slides from RIGHT to LEFT. It feels like flipping through cards or reading a 
+----------------Page (12) Break----------------
+animation  (awwwards.com/websites/typography)        
+→ Awwwards — Typography category — Filter for sites winning awards for typography and text 
+(split-type.vercel.app)
+ 
+→ SplitType.js Demo — Library documentation with live demos of text splitting and animation  
+→ Resn.co.nz — New Zealand agency — stunning text reveal animations throughout  (resn.co.nz)   
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+duration per word: 0.5 seconds." 
+transition-timing-function: cubic-bezier(0.4,0,0.2,1) for a smooth, professional feel. Total animation 
+0.08 second stagger between each word (word 1 at 0s, word 2 at 0.08s, word 3 at 0.16s, etc.). Use 
+at opacity:0 and transform:translateY(20px), then transitions to opacity:1 and translateY(0). Apply a 
+into individual word spans using a JavaScript loop. On page load (or scroll trigger), each word starts 
+"Create a hero section with a word-by-word text reveal animation. The main headline should be split 
+AI PROMPT TO USE
+ 
+ 
+focus transition. 
+effect itself can be: fade from opacity 0, slide up from below a clipping mask, or a blurry-to-sharp 
+those spans with a stagger — each one delayed slightly more than the previous. The reveal 
+individual spans — one per word or even per character. Then GSAP or CSS animations target 
+A JavaScript library called SplitType.js takes a heading like 'Hello W orld' and splits it into 
+How it works 
+'emerge' as the user scrolls through. 
+anywhere that wants to create a dramatic, editorial feel. The text seems to 'write itself' or 
+by one as the user scrolls. This is very popular on agency websites, portfolio sites, and 
+Instead of the whole heading appearing at once, individual words or characters animate in one 
+What it is 
+2.5 Text Reveal on Scroll 
+ 
+(lottiefiles.com)
+ 
+→ Lottiefiles.com — Uses sticky panels with animated Lottie illustrations alongside scrolling text  
+→ Linear.app — Excellent sticky feature sections with animated product screenshots  (linear.app)  
+right  (notion.so)  
+→ Notion.so Features page — Classic sticky scroll — left screenshot stays while feature text scrolls 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+UI screen with a smooth crossfade transition." 
+detect which block is most visible and update the left screenshot to show the corresponding product 
+description. As the user scrolls through each feature block on the right, use IntersectionObserver to 
+column (60% width): 4 feature blocks stacked vertically, each 400px tall, with icon, heading, and 2-line 
+phone mockup or browser window screenshot with position:sticky top:80px that stays in view. Right 
+"Design a SaaS feature explanation section with a sticky scroll layout. Left column (40% width): a 
+----------------Page (13) Break----------------
+ 
+(smashingmagazine.com)
+ 
+→ Any long-form blog — Scroll down any long article on major blogs — many now have this built in  
+examples  (css-tricks.com)   
+→ CSS Tricks article on progress bars — Technical breakdown of how to build one, with code 
+pattern  (medium.com)    
+→ Medium.com articles — Medium uses a reading progress bar — the standard reference for this 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+pink #f64f59. Add a smooth transition of 0.1s on the scale for a slight lag that feels natural." 
+Update the inner div's scaleX to the progress value (0 to 1). Use a gradient fill from purple #667eea to 
+transform-origin:left. On scroll event, calculate progress: scrolled / (totalHeight - viewportHeight). 
+height:3px, width:100%, z-index:9999. Inside it, a div that starts at transform:scaleX(0) and 
+"Add a reading progress bar to a blog post page. Create a fixed element: position:fixed, top:0, left:0, 
+AI PROMPT TO USE
+ 
+ 
+transform:scaleX() instead of changing width is smoother on most devices. 
+scrolled. A JavaScript scroll event listener updates the width in real-time. Using CSS 
+window.innerHeight)) * 100. This formula gives 0% when at the top and 100% when fully 
+Its width is calculated as a percentage: (scrollY / (document.body.scrollHeight - 
+A fixed-position element sits at the top of the viewport (position:fixed, top:0, left:0, height:3-4px). 
+How it works 
+blog posts and articles. 
+full. It gives readers a sense of how far through the content they are, particularly useful on long 
+the page. W hen the user is at the top, the bar is empty. W hen they reach the bottom, the bar is 
+A thin bar, usually at the very top of the page, that fills from left to right as the user reads down 
+What it is 
+2.6 Scroll Progress Indicator 
+ 
+----------------Page (14) Break----------------
+implementations  (awwwards.com)     
+→ Awwwards — Sites using Lenis — Filter Awwwards sites by 'smooth scroll' to find the best 
+native and smooth scroll  (lenis.darkroom.engineering)     
+→ Lenis by Studio Freight — Demo — The official Lenis demo page — feel the difference between 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+ScrollTrigger.update) and gsap.ticker.add((time) => { lenis.raf(time * 1000) })." 
+requestAnimationFrame(raf). If GSAP ScrollTrigger is used on this page, also add: lenis.on('scroll', 
+animation loop: function raf(time) { lenis.raf(time); requestAnimationFrame(raf); } 
+Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true }). Run in 
+src='https://unpkg.com/lenis@ 1.1.13/dist/lenis.min.js'></script>. Initialize with: const lenis = new 
+"Add Lenis smooth scrolling to this website. Import Lenis from CDN: <script 
+AI PROMPT TO USE
+ 
+ 
+it can cause visual glitches. 
+However: never apply smooth scroll to pages with fixed-height modals or overflow:hidden sections — 
+site feels premium and polished. It's one of the cheapest ways to make a website feel high-end. 
+TIP  Smooth scroll is a FEEL upgrade, not a visual one. Users might not notice it consciously, but the 
+ 
+compatibility 
+GSAP      Lenis passes its scroll position to GSAP so ScrollTrigger animations still work 
+lerp         Linear interpolation — how Lenis blends current position toward target position 
+Easing       The math curve controlling deceleration — cubic-bezier controls the 'feel' 
+onFrame      smooth 
+requestAnimati A browser API that fires a callback 60 times per second — how Lenis stays 
+Lenis        The most popular smooth scroll JavaScript library — free and widely used 
+ 
+pass Lenis's scroll position to GSAP and all your scroll-triggered animations work as expected. 
+frame using requestAnimationFrame. It integrates directly with GSAP ScrollTrigger — you just 
+GPU-accelerated. Lenis is initialized with a few lines of JavaScript and runs on every animation 
+via CSS transform instead of actual scrolling. This is smoother because CSS transforms are 
+touch swipe, trackpad), applies its own easing and momentum math, and then moves the page 
+Lenis works by overriding the browser's native scroll. It intercepts scroll input (mouse wheel, 
+How it works 
+think 'this scroll feels incredible, so buttery' — that's almost always Lenis. 
+rest. Lenis is the most popular modern JavaScript library for this. W hen you visit a website and 
+the page decelerates smoothly instead of stopping abruptly, like a heavy object slowly coming to 
+jumps. Smooth scroll replaces this with a physics-based momentum system: when you scroll, 
+By default, browsers scroll in a very mechanical, instant way — you flick the wheel and the page 
+What it is 
+2.7 Smooth Scroll / Lenis 
+----------------Page (15) Break----------------
+ 
+ 
+widely used  (locomotivemtl.github.io/locomotive-scroll)      
+→ Locomotive Scroll — Alternative smooth scroll library with its own parallax system — older but 
+----------------Page (16) Break----------------
+body (left-aligned text, comfortable line length of 65-70 characters max, 18px body text). Right 
+article title (left-aligned, not centered). Below: a two-column layout — left column 68% width for article 
+"Design a long-form blog article layout following the F-pattern reading behavior. Full-width header with 
+AI PROMPT TO USE
+ 
+ 
+below the fold where reading begins. 
+common. For marketing pages: center your hero for visual impact, then switch to left-aligned layouts 
+with lots of imagery, a Z-pattern (top-left → top-right → bottom-left → bottom-right diagonal) is more 
+TIP  The F-pattern is strongest on text-heavy pages like articles and search results. On landing pages 
+ 
+reading 
+Scanning vs   Most users scan first, read only if interested — design for scanners first 
+Z-pattern      For pages with less text (landing pages), eyes scan in a Z rather than F 
+Visual anchors  Bold text, images, and icons create stopping points that pull the eye 
+priority 
+Left edge    Left column and left-aligned text gets far more attention than right-aligned 
+Above the fold   The top portion visible without scrolling — highest attention zone 
+ 
+strategically placed where eyes actually go. 
+than reading. This means left-aligned text, left-placed CTAs, and left-column navigation are all 
+Content on the far right of the page is often never seen at all by users who are scanning rather 
+still near the top-left. Your left margin and left edge of content are seen far more than the right. 
+headline, navigation, hero message). Put your second most important element below that but 
+The practical takeaway is: put your most important content in the top horizontal band (the 
+How it works 
+fall. 
+Understanding this pattern helps you place your most important content where eyes naturally 
+then their eyes drift down the left edge of the page reading only the first few words of each line. 
+top bar of the F), then they scan a shorter horizontal band a little lower (the middle bar of the F), 
+word equally. Instead, they trace an F-shape: first they scan across the very top of the page (the 
+Eye-tracking research has shown that when people read web pages, their eyes don't scan every 
+What it is 
+3.1 F-Pattern Layout 
+scrolling). 
+center vs edges, how much space between elements, and what's above the fold (visible without 
+important, without them noticing. Layout decisions include: how many columns, what's in the 
+each other. A great layout guides the reader's eye from the most important element to the least 
+Layout is how you organize information on the page — where things go and how they relate to 
+3. Layouts 
+----------------Page (17) Break----------------
+ 
+identified the F-pattern, with heatmap images  (nngroup.com/articles/f-shaped-pattern-reading-web-content)          
+→ Nielsen Norman Group — F-Pattern research — The original eye-tracking research paper that 
+(smashingmagazine.com)
+ 
+→ Smashing Magazine — Expert-level article layout with strategic left-aligned hierarchy  
+reading behavior  (medium.com)    
+→ Medium.com — Article layout — Clean left-aligned article layout designed around natural 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+the left-aligned body column, not in the right sidebar." 
+inline pull-quotes to create visual stopping points. Place key CTAs (email signup, related articles) in 
+body, use bold lead sentences at the start of each paragraph, subheadings every 200-300 words, and 
+column 28% width for a sticky table of contents sidebar that stays visible as you read. In the article 
+----------------Page (18) Break----------------
+How it works 
+corporate. 
+creates visual tension that makes the layout feel dynamic and intentional rather than sterile and 
+video, illustration), while the other side gets supporting content (text, stats, CTA). The imbalance 
+proportions — like 60/40, 65/35, or 70/30. One side gets the dominant visual (large image, 
+Instead of dividing the page into equal 50/50 halves, asymmetric layouts use unequal 
+What it is 
+3.3 Asymmetric / Split Layout 
+ 
+type  (landingfolio.com)   
+→ Landingfolio.com — Gallery of 1000+ landing page designs for inspiration — all tagged by layout 
+(tailwindui.com/components)
+ 
+→ Tailwind UI Components — Pre-built hero and feature grid components to study the structure  
+perfectly  (vercel.com)   
+→ Vercel.com — The reference standard for SaaS landing pages — hero + feature grid done 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+quote. Then a pricing section. Finish with a CTA banner and footer." 
+small colored icon, bold feature title, 2-sentence description. 6 cards total. Below that: a testimonial 
+company logos in light gray. Then a feature grid: 3-column responsive CSS grid, each card has a 
+subtext, and two buttons side by side (primary: filled blue, secondary: outlined). Below: a row of 5-6 
+content, badge chip at top ('Now in Beta'), H1 headline at 64px bold with a gradient word, 1-line 
+"Build a complete SaaS landing page layout. Hero section: dark background (#0A0A0A), centered 
+AI PROMPT TO USE
+ 
+ 
+you're highlighting. 
+sentence description. The grid can have 2-4 rows of cards depending on how many features 
+Then the feature grid: 3 equal columns, each card with an icon, a 3-5 word title, and a 1-2 
+and a primary CTA button. Below this, often a strip of company logos ('Trusted by X and Y'). 
+Hero section: full-width, center-aligned, bold H1 headline (max 8 words), one-sentence subtext, 
+How it works 
+product. This layout has been battle-tested and converts extremely well. 
+a grid of Feature cards (usually 3 columns, 2-3 rows) each explaining one capability of the 
+top: a large, bold Hero section that states the main value proposition with a CTA button. Below: 
+The single most common layout for SaaS (Software as a Service) and product websites. At the 
+What it is 
+3.2 Hero + Feature Grid 
+ 
+----------------Page (19) Break----------------
+category filter bar at the top (All, Architecture, Portraits, Nature) that filters which images show." 
+On mobile (under 768px), reduce to columns:2. Under 480px, reduce to columns:1. Include a 
+masonry effect clearly. Add a hover overlay on each image showing a brief caption and a zoom icon. 
+margin-bottom:12px. Images should be different heights (some portrait, some landscape) to show the 
+12px on the container. Each image card should be display:inline-block, width:100%, 
+"Build a photography portfolio gallery using masonry layout. Use CSS columns: 3 with column-gap: 
+AI PROMPT TO USE
+ 
+ 
+result is the same: a grid where nothing is wasted. 
+JavaScript libraries like Masonry.js or Packery calculate and position each item manually. The 
+needs. Items flow down the first column, then the second, then third. For more control, 
+makes content flow into 3 columns automatically, with each item taking only as much height as it 
+The simplest CSS approach uses the CSS columns property: columns: 3 on the container 
+How it works 
+and social feeds. 
+feels organic and content-rich, making it perfect for photo galleries, blog posts, design portfolios, 
+adjacent columns, rather than leaving empty space. This creates a Pinterest-style mosaic that 
+where each card's height is determined by its content. Short items fill in below taller items in 
+Named after the way bricklayers stack bricks, a masonry layout arranges cards in columns 
+What it is 
+3.4 Masonry Layout 
+ 
+→ Lapa.ninja — Curated landing page designs — many use asymmetric splits beautifully  (lapa.ninja)  
+→ Dribbble — Split Layout — Search 'split layout web design' for visual references  (dribbble.com)   
+pages  (notion.so)  
+→ Notion.so Marketing pages — Excellent use of asymmetric split layouts across their feature 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+right, text on left) for visual variety." 
+grid-template-columns: 3fr 2fr. Add a second split section below with the layout reversed (image on 
+2-paragraph description, feature checklist with checkmarks, and a CTA button. Use CSS Grid: 
+(40%): vertically centered content with a small overline label (like 'NEW  FEATURE'), H2 heading, 
+product screenshot or mockup with subtle shadow, slightly overlapping the right column. Right side 
+"Create a product landing page using a 60/40 asymmetric split layout. Left side (60%): full-height 
+AI PROMPT TO USE
+ 
+ 
+while the smaller text column creates breathing room and guides the eye to the CTA. 
+key visual design principle here is contrast — a large, bold visual on one side creates focus, 
+holds the headline, description, and CTA. On mobile, both columns stack to 100% width. The 
+1fr (67/33). The larger column holds the hero image or product screenshot. The smaller column 
+Using CSS Grid with non-equal column definitions: grid-template-columns: 3fr 2fr (60/40) or 2fr 
+----------------Page (20) Break----------------
+3.6 Sidebar + Content Layout 
+ 
+(sony .com)
+ 
+→ Sony BE MOVED campaign — Classic example of fullpage scroll storytelling for a product  
+(webflow  .com/templates)
+ 
+→ Webflow — Full Page Templates — No-code full-page scroll website templates  
+the pattern  (alvarotrigo.com/fullPage/examples)      
+→ FullPage.js Examples — The most popular fullpage scroll library — dozens of examples showing 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+active dot is filled white, clicking a dot smoothly scrolls to that section using scrollIntoView." 
+5: Final CTA with newsletter signup. Add navigation dots on the right side: fixed position, 5 small dots, 
+Section 3: Statistics with 3 large numbers. Section 4: Testimonial quote centered with author. Section 
+Section 1: Dark hero with headline and CTA. Section 2: Feature explanation with image left, text right. 
+overflow-y:scroll, scroll-snap-type:y mandatory. Each section: height:100vh, scroll-snap-align:start. 
+"Build a 5-section fullpage scroll website using CSS scroll-snap. Container: height:100vh, 
+AI PROMPT TO USE
+ 
+ 
+focused message, one visual, and one CTA. 
+transitions, callbacks), the fullPage.js library handles everything. Each section typically has one 
+browser then handles the snapping automatically. For more features (navigation dots, 
+overflow-y: scroll. Each child section gets height: 100vh and scroll-snap-align: start. The 
+CSS makes this surprisingly simple. The container gets scroll-snap-type: y mandatory and 
+How it works 
+a time. This creates a very controlled, cinematic storytelling experience. 
+slides in a presentation. There's no partial scrolling; you're always viewing exactly one section at 
+W hen the user scrolls, the page snaps to the next full-screen section — like flipping between 
+Each section of the website fills the entire screen (100% of the viewport height, called 100vh). 
+What it is 
+3.5 Full-Page Scroll Sections 
+ 
+examples  (masonry  .desandro.com)    
+→ Masonry.js documentation — The classic JavaScript masonry library with demos and code 
+together  (unsplash.com)    
+→ Unsplash.com — Beautiful masonry photo grid — notice how differently-sized photos flow 
+(pinterest.com)
+ 
+→ Pinterest.com — The masonry layout — this is exactly where the style became mainstream  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+----------------Page (21) Break----------------
+ 
+(adminlte.io)
+ 
+→ AdminLTE Demo — Open-source admin dashboard template showing complex sidebar layouts  
+(tailwindui.com/components#application-ui)
+ 
+→ Tailwind UI — Application UI — Pre-built sidebar dashboard components showing all variations  
+perfectly  (vercel.com/dashboard)     
+→ Vercel Dashboard — The reference for modern SaaS dashboards — sidebar + content done 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+menu." 
+Revenue, Orders, Growth), then a data table. On mobile, sidebar collapses behind a hamburger 
+header bar with page title and action buttons. Content below shows: 4 stat cards in a row (Users, 
+avatar + name at bottom. Main content area: flex-1, light gray background (#F9FAFB), has a top 
+icons (Dashboard, Analytics, Projects, Settings, Team) with active state highlighted in blue, and user 
+background (#111827), fixed to left side, height:100vh. Contains: logo at top, navigation links with 
+"Build a SaaS dashboard layout with a sidebar + content structure. Sidebar: 240px wide, dark 
+AI PROMPT TO USE
+ 
+ 
+bottom. The content area has its own internal scrolling. 
+contains the logo at top, navigation links in the middle (with icons), and user profile at the 
+position:sticky top:0 with height:100vh so it stays visible while the content scrolls. The sidebar 
+(240-280px) and a flex-1 or fr content area that fills the remaining space. The sidebar gets 
+The outer container uses display:flex or CSS Grid with two columns: a fixed-width sidebar 
+How it works 
+main navigation, while the content area shows whatever page is currently selected. 
+sidebar stays fixed as the main content area scrolls. The sidebar typically contains the app's 
+right. This is the universal layout for web applications, dashboards, and admin interfaces. The 
+A persistent navigation panel on the left side of the screen, with the main working area on the 
+What it is 
+----------------Page (22) Break----------------
+its resemblance to a hamburger when viewed from the side: bun, patty, bun = three horizontal 
+On mobile screens, there isn't room for all navigation links. The hamburger menu (named after 
+What it is 
+4.2 Hamburger / Mobile Menu 
+ 
+→ Framer.com — Beautiful sticky nav with a smooth scroll-based transparency effect  (framer .com)  
+→ GitHub.com — Clean sticky navbar with excellent mobile behavior  (github.com)   
+(apple.com)
+ 
+→ Apple.com — The sticky frosted-glass navbar — the most copied navbar design in the world  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+the center links and show a hamburger menu icon instead." 
+right. Add a 0.3s transition on background-color and backdrop-filter. On mobile (under 768px), hide 
+rgba(0,0,0,0.08)). Navigation has: logo on the left, 5 nav links in the center, and a CTA button on the 
+(background:rgba(255,255,255,0.85), backdrop-filter:blur(12px), box-shadow: 0 1px 20px 
+transitions to a white frosted-glass background when the user scrolls past 60px 
+"Create a sticky navbar that is transparent at the very top of the page (background:transparent) and 
+AI PROMPT TO USE
+ 
+ 
+some threshold like 80). 
+detected by listening to the scroll event and checking if window.scrollY is greater than 0 (or 
+as the user scrolls even a few pixels, it transitions to a solid or frosted-glass background. This is 
+popular enhancement: the navbar starts transparent (showing the hero content behind it), and 
+position:sticky top:0 keeps the navbar at the top of the viewport when within its parent. A 
+How it works 
+websites and landing pages. 
+user has scrolled. This is the most common and expected navigation pattern for marketing 
+that scrolls away with the page, a sticky nav is always accessible no matter how far down the 
+A navigation bar that stays fixed to the top of the viewport as the user scrolls. Unlike a static nav 
+What it is 
+4.1 Sticky Navbar 
+ 
+pattern you choose depends on the complexity of your site and the devices it's used on. 
+Bad navigation is noticed immediately because users get lost or frustrated. The navigation 
+users don't notice it because they always know where they are and how to get where they want. 
+Navigation is how users find their way around your website. Good navigation is invisible — 
+4. Navigation 
+----------------Page (23) Break----------------
+ 
+slide-in animation. On desktop it's hover-triggered; on mobile, a click/tap opens it. 
+panel with an image and a highlighted promotion. The panel appears with a subtle fade or 
+each containing a category heading and 4-8 links below it. One column might be a 'Featured' 
+or wide panel appears below the nav bar. This panel is typically organized into 3-5 columns, 
+W hen the user hovers a navigation link (or clicks on mobile), an absolutely-positioned full-width 
+How it works 
+and large corporate websites. 
+common on e-commerce sites ('Shop' opens a panel with all categories), documentation sites, 
+They're used on complex websites where a single nav item leads to many sub-pages — 
+columns of links, featured images, highlighted promotions, icons, and even mini descriptions. 
+navigation item. Unlike a simple dropdown with a list of links, a mega menu can contain multiple 
+A mega menu is a large dropdown panel that appears when you hover over (or click) a 
+What it is 
+4.3 Mega Menu 
+ 
+ 
+(cuberto.com)
+ 
+→ Cuberto.com — Russian agency with beautiful fullscreen hamburger menu animations  
+with code  (tympanus.net/codrops)     
+→ Codrops — Menu Animations — Collection of creative hamburger menu animation techniques 
+'agency portfolio' on Awwwards  (awwwards.com/websites/portfolio)      
+→ Many agency websites — Most creative agency sites use fullscreen hamburger menus — search 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+button (X) in top right. Body scroll should be locked when menu is open (overflow:hidden on body)." 
+links appear centered, large (40px), white, with a stagger fade-in (each link 0.05s later). Include close 
+fullscreen menu overlay uses position:fixed, inset:0, background:#0A0A0A, z-index:9999. Navigation 
+and translates down, middle line fades to opacity:0, bottom line rotates -45deg and translates up. The 
+2px tall, dark color, with 5px gap between them. W hen clicked, animate to X: top line rotates 45deg 
+"Build a fullscreen hamburger menu for mobile. Three-line hamburger icon: each line is 24px wide, 
+AI PROMPT TO USE
+ 
+ 
+fade or slide-in transition. 
+to opacity:0, the bottom line rotates -45 degrees. The overlay menu typically appears with a 
+animate into an X using CSS transforms: the top line rotates 45 degrees, the middle line fades 
+toggles a class on a fullscreen overlay element (display:none → display:flex). The three lines 
+Three horizontal div elements (or a custom SVG) form the icon. W hen clicked, JavaScript 
+How it works 
+a fullscreen overlay, a side drawer, or a dropdown panel. 
+lines) hides all navigation behind a single icon. Tapping it reveals the full navigation — either as 
+----------------Page (24) Break----------------
+plugin. 
+Clicking a dot triggers a smooth scroll to that section using scrollIntoView() or GSAP's scrollTo 
+IntersectionObserver or ScrollTrigger callbacks) and updates which dot has the 'active' class. 
+when active. As the user scrolls, JavaScript detects which section is currently in view (using 
+edge of the viewport. They're styled with a semi-transparent border by default and filled solid 
+The dots are small circular elements (8-12px diameter) positioned with position:fixed on the right 
+How it works 
+presentations where the page snaps from section to section. 
+This pattern is almost exclusively used on fullpage scroll websites and slideshow-style 
+section is filled or larger than the others. Clicking a dot instantly jumps the page to that section. 
+represents one section or slide of the website. The dot corresponding to the currently-visible 
+A small set of dots (usually 4-8) positioned on the right or bottom side of the screen. Each dot 
+What it is 
+4.4 Dot Navigation 
+ 
+their design system  (polaris.shopify  .com)  
+→ Shopify — Polaris Navigation docs — How Shopify designs and implements mega menus in 
+(apple.com)
+ 
+→ Apple.com navigation — Refined mega menu for a product company — minimal but effective  
+(asos.com)
+ 
+→ ASOS.com — One of the best mega menus on the web — clean, fast, multi-column with imagery  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+nav link and the panel." 
+Animate the panel: opacity 0 to 1, translateY(-8px) to 0, over 0.2s. Close when mouse leaves both the 
+featured image panel with a product photo, 'New Arrivals' label in a badge, and a 'Shop Now' button. 
+Jewelry, Scarves). Column 3 'By Occasion' with links (W ork, W eekend, Party, Holiday). Column 4: a 
+links (Dresses, Tops, Jeans, Jackets, Skirts). Column 2 'Accessories' with links (Bags, Shoes, 
+40px rgba(0,0,0,0.1), padding:40px). Panel contains a 4-column CSS grid: Column 1 'Clothing' with 
+Sale. W hen hovering 'W omen': a full-width panel drops down (background white, box-shadow: 0 20px 
+"Create a mega menu for an e-commerce fashion website. Navbar has links: W omen, Men, Kids, 
+AI PROMPT TO USE
+ 
+ 
+z-index       Mega menu must have high z-index (like 9000) to appear above all page content 
+column 
+Featured     One column with an image and CTA — draws attention to a promoted item 
+grid 
+Multi-column   Inside the panel, links are organized into 3-5 equal columns using CSS Grid 
+Hover trigger   Desktop: hover on nav link shows the panel. Mobile: tap/click instead. 
+e 
+position:absolutThe mega menu panel is absolutely positioned below the nav bar 
+----------------Page (25) Break----------------
+style is intentionally subtle — small font size (13-14px), muted color — so it doesn't compete 
+and is NOT a link (it's where you already are). All items before it are clickable links. The visual 
+usually a forward slash (/), chevron (›), or angle bracket (>). The current page is the last item 
+Breadcrumbs are an ordered list (HTML ol element) of links separated by a visual divider — 
+How it works 
+website with more than 2 levels of depth. 
+level with one click. They're essential on e-commerce sites, documentation portals, and any 
+Current Page. They let users understand exactly where they are and jump back to any parent 
+your way home), they appear as a horizontal trail of links: Home > Category > Subcategory > 
+website's hierarchy. Named after the Hansel and Gretel fairy tale (dropping breadcrumbs to find 
+Breadcrumbs are a secondary navigation element showing the user's current location within the 
+What it is 
+4.5 Breadcrumbs 
+ 
+styles  (dribbble.com/tags/dot-navigation)      
+→ Dribbble — Dot Navigation UI — Search 'dot navigation' for visual examples of different dot 
+fullpage sections  (apple.com/apple-events)     
+→ Apple — Special event pages — Apple's product keynote microsites use dot nav for their 
+behavior  (alvarotrigo.com/fullPage/examples)      
+→ FullPage.js examples — Every fullPage.js demo uses dot navigation — click the dots to see the 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+IntersectionObserver (threshold:0.5) to update active dot as sections scroll into view." 
+positioned, background:rgba(0,0,0,0.7), white text, padding:4px 10px, border-radius:4px). Use 
+rgba(255,255,255,0.5). On hover of any dot, show a tooltip to the left with the section name (absolute 
+12px width and height, background:white, border-color:white, box-shadow:0 0 8px 
+rgba(255,255,255,0.6), background:transparent, cursor:pointer, transition all 0.3s. Active dot style: 
+between dots. Default dot style: 8px width and height, border-radius:50%, border:2px solid 
+right:24px, top:50%, transform:translateY(-50%), displayed as a vertical column with 16px gap 
+"Add dot navigation to a 6-section fullpage scroll website. Create 6 dots using position:fixed, 
+AI PROMPT TO USE
+ 
+ 
+scrollIntoView()  JavaScript method to smoothly scroll to a specific element when a dot is clicked 
+jumping 
+Tooltip on hover  Hovering a dot shows the section name — helps users know where they're 
+erver 
+IntersectionObs Detects which section is currently most visible to update the active dot 
+Active state    Active dot: larger (12px vs 8px), fully filled. Others: outlined or semi-transparent. 
+right 
+position:fixed  Dots are fixed to the viewport so they stay visible as sections change 
+ 
+----------------Page (26) Break----------------
+visually: an underline border-bottom in the brand color, a filled background, bold text, or a 
+A row of button or anchor elements acts as the tab strip. The currently active tab is indicated 
+How it works 
+product page, or different dashboard views like Overview, Analytics, and Settings. 
+need to switch between without leaving the page: product specs vs reviews vs Q&A on a 
+a tab and you see what's in that folder. Tabs are perfect for organizing related content that users 
+swaps the content panel below it. Think of a physical filing cabinet with tabbed dividers — click 
+Tabs are a horizontal row of clickable labels at the top of a content area, where clicking a tab 
+What it is 
+4.6 Tab Navigation 
+ 
+(zalando.com)
+ 
+→ Zalando.com — E-commerce with excellent breadcrumb implementation and schema markup  
+hierarchies  (developer  .mozilla.org)  
+→ MDN Web Docs — Documentation portal with clean breadcrumb navigation showing deep page 
+implementation in the world  (amazon.com)    
+→ Amazon.com product pages — Every product page has breadcrumbs — the most-seen 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+SEO." 
+top and bottom padding. Also add JSON-LD schema.org BreadcrumbList markup in the head for 
+this page: Home → Men's Clothing → Outerwear → W inter Jackets. W rap in a container with 16px 
+Separator: CSS li + li::before { content: '›'; margin: 0 8px; color:#CCCCCC }. The breadcrumb path for 
+hover:color:#111 with 0.2s transition. Last item (current page): color:#111, font-weight:500, no link. 
+font-size:13px, color:#888888. Each link (except last): color:#888, text-decoration:none, 
+aria-label='Breadcrumb'><ol> with li items separated by CSS-generated dividers. Style: 
+"Add a breadcrumb navigation to a product detail page. HTML structure: <nav 
+AI PROMPT TO USE
+ 
+ 
+Separator     The divider between items — usually CSS ::after content: '/' or '›' 
+markup 
+schema.org   Structured data that makes breadcrumbs appear in Google search results 
+e 
+aria-current:pag Marks the current (last) item for screen readers — no link on this item 
+crumb 
+aria-label:bread Accessibility attribute that tells screen readers this is a breadcrumb navigation 
+ol element     Breadcrumbs use an ordered list (ol) for correct HTML semantics 
+ 
+understand and display breadcrumbs in search results. 
+with the main page heading. Adding schema.org BreadcrumbList markup helps Google 
+----------------Page (27) Break----------------
+ 
+implementation  (amazon.com)    
+→ Amazon product pages — Product Details / Reviews / Q&A tabs — high-traffic e-commerce tab 
+(radix-ui.com/primitives/docs/components/tabs)
+ 
+→ Radix UI — Tabs component — Fully accessible, animated tab component with code examples  
+millions of developers daily  (github.com)   
+→ GitHub repository pages — The Code / Issues / Pull Requests / Actions tab bar — used by 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+activation." 
+active panel is visible (others display:none). Each panel has fade-in: opacity 0 to 1 over 0.2s on 
+ease, width matches the active tab) that slides across when tabs are clicked. Content panels: only the 
+a sliding animated indicator: a 2px blue line (position:absolute, bottom:-1px, transition:transform 0.25s 
+border-bottom:2px solid #2563EB (brand blue), margin-bottom:-1px to overlap container border. Add 
+have padding:14px 24px, font-size:15px, font-weight:500, color:#6B7280. Active tab: color:#111, 
+(with count badge), FAQ. Tab strip styling: white background, bottom border 1px solid #E5E7EB, tabs 
+"Build a product detail page with tab navigation. Tab bar: 4 tabs — Overview, Specifications, Reviews 
+AI PROMPT TO USE
+ 
+ 
+when tabs are clicked. Calculate the target X position from the clicked tab's offsetLeft. 
+a separate underline element (position:absolute, bottom:0) that moves via transform:translateX() 
+TIP  The sliding animated tab indicator is a great detail that makes tabs feel premium. Achieve it with 
+ 
+indicator 
+Animated    A sliding underline that moves smoothly between tabs — very polished touch 
+navigation 
+Keyboard    Arrow keys should move between tabs — standard expected behavior 
+tabpanel 
+role:tab /     Accessibility attributes so keyboard and screen reader users can navigate 
+Panel swap    Other panels set to display:none or opacity:0 when their tab is inactive 
+Active indicator  Underline, filled background, or bold text showing the selected tab 
+ 
+aria-selected, role:tab, aria-controls and role:tabpanel attributes for accessibility. 
+toggling (instant) or an opacity/fade transition (smooth). Each tab and panel pair needs 
+content panel while hiding all others. Content panels swap with either display:none/block 
+combination. Clicking a tab adds an 'active' class to that tab and shows the corresponding 
+----------------Page (28) Break----------------
+Essential resource.  (typescale.com)   
+→ Typescale.com — Interactive tool — choose a scale ratio and see all the sizes generated. 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+hierarchy is immediately clear." 
+font-weight:400, color: muted gray. Apply this system consistently throughout the page so the visual 
+--font-h3: 24px, font-weight:600. --font-body: 17px, font-weight:400, line-height:1.7. --font-small: 14px, 
+font-weight:700, letter-spacing:-0.02em. --font-h2: clamp(28px, 3.5vw, 44px), font-weight:600. 
+96px), font-weight:800, letter-spacing:-0.04em, line-height:1.05. --font-h1: clamp(40px, 5vw, 64px), 
+"Define a complete typography system using CSS custom properties. --font-display: clamp(56px, 8vw, 
+AI PROMPT TO USE
+ 
+ 
+Line-height    1.1-1.2 for headings, 1.6-1.7 for body text — critical for readability 
+Letter-spacing   Negative values (-0.02em) on large headings makes them feel tighter and modern 
+Font weight    100=thin, 400=normal, 600=semibold, 700=bold, 900=black 
+preferred, max) 
+clamp(min,   Font size fluidly between min and max — clamp(40px, 6vw, 80px) 
+ 
+based on viewport width. 
+function creates fluid typography that smoothly scales between minimum and maximum sizes 
+landing pages, you can be more aggressive — H1 at 56-80px, H2 at 36-48px. The clamp() CSS 
+scale from 16px: body=16px, H4=20px, H3=25px, H2=31px, H1=39px, display=49px. For 
+Start with a base body size of 16px or 18px. Multiply by your ratio for each level up. At 1.25x 
+How it works 
+communicate importance: the biggest, boldest text is the most important. 
+mathematically related to the others. Hierarchy means using size, weight, and color to 
+and multiply up and down from a base size. This creates visual harmony because every size is 
+choosing random sizes (40px here, 22px there), you pick a scale ratio — like 1.25x or 1.414x — 
+A type scale is a system of predetermined font sizes that work harmoniously together. Instead of 
+What it is 
+5.1 Type Scale & Hierarchy 
+ 
+associations. 
+tradition. Color operates the same way — independently of content, color creates emotional 
+technology and confidence. The same headline in an elegant serif communicates luxury and 
+before a single word is read. A headline in a bold geometric sans-serif communicates 
+Typography and color are the DNA of a brand's visual identity. They communicate personality 
+5. Typography & Color 
+----------------Page (29) Break----------------
+ 
+(fontsinuse.com)
+ 
+→ Fonts In Use — Real-world examples of font usage across websites, posters, and branding  
+(fonts.google.com)
+ 
+→ Google Fonts — Pairings — Each font page suggests popular pairings. Free and reliable.  
+Google Fonts  (fontshare.com)   
+→ Fontshare.com — Free high-quality fonts specifically curated for web design — much better than 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+with letter-spacing:-0.03em. Apply Satoshi to body, p, button, input with line-height:1.6." 
+font-weight:400 for paragraphs and 500 for UI labels. Apply Clash Display to all h1, h2, h3 elements 
+(https://api.fontshare.com/v2/css?f[]=satoshi@ 400,500&display=swap) for body text at 
+font-weight:700. Import Satoshi from Fontshare 
+(https://api.fontshare.com/v2/css?f[]=clash-display@ 700&display=swap) for all headings at 
+"Use these font pairings for this website: import Clash Display from Fontshare CDN 
+AI PROMPT TO USE
+ 
+ 
+Consumer 
+Friendly /    Nunito or Poppins (headings) + Source Sans Pro (body) — approachable 
+Experimental   Monument Extended (headings) + Neue Haas Grotesk (body) — striking 
+Tech / SaaS    Syne (headings) + Inter (body) — clean and functional 
+Modern Startup  Clash Display (headings) + Satoshi (body) — bold and contemporary 
+Luxury 
+Editorial /    Playfair Display (headings) + DM Sans (body) — classic and refined 
+ 
+Recommended pairings for different vibes 
+not clash. Using more than two fonts on a website almost always looks amateur. 
+should be highly readable at small sizes and in paragraphs. The two fonts should contrast but 
+and UI. The heading font should have strong personality and visual impact. The body font 
+Using two complementary fonts together — one for headings and display text, one for body text 
+What it is 
+5.2 Font Pairing 
+ 
+(typewolf.com)
+ 
+→ Typewolf.com — Daily typography inspiration from real websites, with font identification  
+(fontjoy .com)
+ 
+→ Fontjoy.com — AI-powered font pairing tool — generates complementary font combinations  
+----------------Page (30) Break----------------
+What it is 
+5.4 Gradient Text 
+ 
+(huemint.com)
+ 
+→ Huemint.com — AI-powered brand color palette generator — generates full palettes instantly  
+analogous colors  (paletton.com)   
+→ Paletton.com — Color theory-based palette builder showing complementary, triadic, and 
+(coolors.co)
+ 
+→ Coolors.co — Color palette generator — generate and lock colors until you find the perfect palette  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+important elements." 
+#888888 for captions. Never use the electric blue for anything decorative — only for actionable and 
+active navigation links, highlighted text, and icons. Text: #111111 for headings, #555555 for body text, 
+sections, and footer. Accent color (10%): #2563EB (electric blue) ONLY for primary CTA buttons, 
+page backgrounds. Secondary color (30%): #F0EDE8 (slightly warmer gray) for cards, alternate 
+"Design a website using the 60-30-10 color rule. Dominant color (60%): #FAFAF7 (warm off-white) for 
+AI PROMPT TO USE
+ 
+ 
+Tints & shades  Lighter/darker versions of one color — creates depth without adding new colors 
+Accent (10%)   Brand color — ONLY for CTAs, highlights, active states, key icons 
+(30%) 
+Secondary    Card backgrounds, alternate sections, sidebar backgrounds 
+Dominant (60%)  Your background color — neutral, sets the overall mood 
+ 
+its ability to draw attention. 
+button, important statistics, or links. If your accent appears more than 10% of the time, it loses 
+section differentiation. The accent 10% draws the eye to what matters — your call-to-action 
+near-black dominant color feels premium and serious. The secondary 30% creates depth and 
+The dominant 60% sets the overall mood. A near-white dominant color feels light and modern. A 
+How it works 
+important UI elements). 
+backgrounds). 10% uses the accent color (your brand color — for CTAs, highlights, icons, and 
+near-black). 30% uses the secondary color (slightly different tone for cards, sections, or 
+the visual area uses the dominant color (usually a neutral — white, off-white, light gray, or 
+The 60-30-10 rule is a simple color distribution formula borrowed from interior design. 60% of 
+What it is 
+5.3 Color Theory: The 60-30-10 Rule 
+----------------Page (31) Break----------------
+(-0.03em to -0.05em) which makes large display text feel more professional and modern — 
+(black/extra-bold) for maximum visual weight. Letter-spacing is tightened with a negative value 
+scales smoothly from mobile to desktop. Font-weight is usually 700 (bold) or 900 
+The key CSS property is font-size set very large — typically using clamp(60px, 9vw, 120px) so it 
+How it works 
+confidence and personality rather than a generic stock photo. 
+on portfolio sites, creative agencies, editorial brands, and tech products that want to lead with 
+100px, or even larger, a single headline becomes a visual experience. This approach is popular 
+headline is so large, so bold, and so beautifully set that no hero image is needed. At 80px, 
+Display typography means using text itself as the primary visual element of a design — the 
+What it is 
+5.5 Display / Hero Typography 
+ 
+ 
+ 
+ 
+copy and paste ready  (cssgradient.io)   
+→ Gradient text CSS generator (CSS Gradient) — Interactive generator for gradient text CSS — 
+(vercel.com)
+ 
+→ Vercel.com — Bold gradient text in the hero headline — electric and attention-grabbing  
+(stripe.com)
+ 
+→ Stripe.com — Masterful use of subtle gradient text in headings — restrained and effective  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+#38ef7d)." 
+Add a second gradient word in the subheading using a different gradient (green to cyan: #11998e to 
+specific word in a span with this class. The rest of the headline should be white (on dark background). 
+text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent. W rap that 
+(coral-red). CSS: background: linear-gradient(135deg, #667eea 0%, #f64f59 100%); background-clip: 
+that actually convert.' Make the word 'convert' a gradient from #667eea (purple-blue) to #f64f59 
+"Apply a gradient color effect to key words in the hero headline. The headline reads: 'Build websites 
+AI PROMPT TO USE
+ 
+ 
+three, it doesn't work. 
+color invisible, revealing the gradient background showing through the text shape. W ithout all 
+characters. Third, -webkit-text-fill-color: transparent (or color: transparent) makes the actual text 
+text element. Second, background-clip: text clips the gradient to the shape of the text 
+This is a CSS trick combining three properties. First, set background: linear-gradient(...) on the 
+How it works 
+words in a headline get the gradient treatment, while the rest of the heading stays solid. 
+visual interest to plain text without needing additional design elements. Often just one or two 
+flowing from one color to another. Extremely popular in AI/tech/SaaS websites because it adds 
+Instead of a solid color for a heading or key word, the text itself is rendered as a gradient — 
+----------------Page (32) Break----------------
+preference. Offering both modes shows attention to user needs and is now considered a 
+Many users prefer dark mode for night-time reading, reduced eye strain, or aesthetic 
+(white/off-white background, dark text) and a dark version (near-black background, light text). 
+A toggle that lets users switch between two complete visual themes — a light version 
+What it is 
+5.6 Dark / Light Mode Toggle 
+ 
+as hero  (semplice.com/inspiration)     
+→ Semplice portfolio builder — Portfolio sites built on Semplice frequently use display typography 
+system  (obys.agency)   
+→ Obys Agency — Ukrainian agency — incredible display typography used as the primary visual 
+main design element  (awwwards.com/websites/typography)        
+→ Awwwards — Typography category — Award-winning sites where display typography is the 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+top and bottom padding." 
+buttons stacked vertically. No image anywhere on this hero. Let the typography breathe with 120px 
+two-column layout — left: subtext paragraph (18px, muted #888, max-width:400px), right: two CTA 
+text (from #667eea to #f64f59). Below the headline: a 1px white horizontal rule at 20% opacity, then a 
+craft digital experiences that matter.' Make 'digital experiences' render in italic style AND a gradient 
+font-weight:800, letter-spacing:-0.04em, line-height:0.95, color:#F1F1EE. The headline reads: 'W e 
+Background: #0A0A0A (near-black). Main headline: font-size clamp(64px, 9vw, 112px), 
+"Create a typographic hero section where the headline IS the design — no hero image needed. 
+AI PROMPT TO USE
+ 
+ 
+important concept in your headline. 
+'Design with' (regular white) 'purpose.' (gradient color). The contrast word should be the most 
+gradient, or italic/outlined style. This creates a visual anchor and rhythm in the headline. Example: 
+TIP  One of the most powerful display typography techniques: set one key word in a different color, 
+ 
+Text wrapping   Let display headlines wrap naturally to 2-3 lines — don't force one line 
+Font-weight 900  Black or Extra Bold weight — maximum visual impact at large sizes 
+Line-height < 1  0.9 to 1.05 for display text — tighter than body text, creates a compact visual mass 
+letter-spacing 
+Negative     -0.03em to -0.05em on large headings — makes it feel tight and contemporary 
+fluid, max)     viewport 
+clamp(min,   clamp(60px, 9vw, 120px) — scales the font between min and max based on 
+ 
+display text wraps to fewer lines and tight line height creates a compact, powerful block. 
+loose letter-spacing on large text looks cheap. Line-height is reduced (0.9 to 1.1) because 
+----------------Page (33) Break----------------
+ 
+theme toggle  (rauno.me)   
+→ Rauno Freiberg's portfolio — Designer at Linear — his portfolio has a beautifully implemented 
+without the dreaded flash of wrong theme  (joshwcomeau.com/react/dark-mode)        
+→ Josh W Comeau — Dark Mode Guide — The most comprehensive guide to building dark mode 
+color adapts  (linear.app)  
+→ Linear.app — Excellent dark/light mode toggle — notice the smooth transition and how every 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+button shows sun icon in dark mode and moon icon in light mode." 
+page load: check localStorage first, then check prefers-color-scheme media query as fallback. Toggle 
+}. Toggle button: on click, toggle data-theme='dark' on the html element and save to localStorage. On 
+background:var(--bg), color:var(--text). Add body { transition: background 0.3s ease, color 0.3s ease 
+--text:#F1F1EE, --text-muted:#888888, --border:#2A2A2A, --accent:#3B82F6. Apply to all elements: 
+--accent:#2563EB. Define [data-theme='dark']: --bg:#0D0D0D, --bg-secondary:#1A1A1A, 
+--bg-secondary:#F5F5F5, --text:#111111, --text-muted:#666666, --border:#E5E7EB, 
+"Implement a complete dark/light mode system. In CSS, define on :root: --bg:#FFFFFF, 
+AI PROMPT TO USE
+ 
+ 
+jump 
+Transition     transition: background 0.3s, color 0.3s — smooth fade between modes, not instant 
+localStorage    Browser storage that saves the user's theme choice across sessions 
+heme 
+prefers-color-sc CSS media query detecting if the user's OS is set to dark or light mode 
+attribute 
+data-theme   <html data-theme='dark'> — the selector that triggers dark mode CSS values 
+properties 
+CSS custom   Variables like --color-bg, --color-text that change value when theme switches 
+ 
+query lets you set the default based on the user's OS setting. 
+user's preference to localStorage so it persists between visits. The prefers-color-scheme media 
+data-theme='dark'>), which triggers a different set of CSS variable values. JavaScript saves the 
+modes means updating the data-theme attribute on the HTML element (like <html 
+element. Two sets of values are defined — one for light mode, one for dark mode. Switching 
+The entire color system is built using CSS custom properties (variables) defined on the :root 
+How it works 
+through a CSS media query, which your site can respect automatically. 
+standard feature on quality websites. The browser/OS also signals the user's preferred mode 
+----------------Page (34) Break----------------
+(saaspo.com)
+ 
+→ Saaspo.com — SaaS landing page inspiration gallery — all hero sections catalogued  
+library  (landingfolio.com)   
+→ Landingfolio.com — Heroes — 500+ hero section designs filtered by style — the best reference 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+mockup with a subtle glow effect." 
+row '★★★★★ Loved by 10,000+ teams'. Below that: a product screenshot in a browser chrome 
+('Start for free', blue filled) and secondary ('See how it works →', text only). Below buttons: small trust 
+20px muted gray: 'The AI-powered workspace that thinks as fast as you do.' Two buttons: primary 
+bold: 'Do your best work,' — next line: 'in half the time.' with 'half the time' in gradient text. Subtext at 
+(#050505). Badge at top: small pill shape with text 'Now with AI • W hat's new →'. H1 headline at 72px 
+"Build a hero section for a productivity SaaS. Layout: centered, full-width, dark background 
+AI PROMPT TO USE
+ 
+ 
+Social proof    Small indicator of trust near the CTA: '2,000+ companies trust us' or star rating 
+Primary CTA    One main action button — 'Get Started', 'Try Free', 'Book Demo' 
+proposition 
+Value      The one sentence that explains what your product does and for whom 
+Above the fold   Everything visible before scrolling — this is your hero section's domain 
+ 
+abstract graphic) supports the message without competing with the text. 
+dominates, subtext supports, CTA stands out. A visual element (product screenshot, illustration, 
+the screen. Content is either centered or left-aligned. The visual hierarchy is strict: headline 
+Hero sections are typically full-width and either full-height (100vh) or tall enough to fill most of 
+How it works 
+the page), a supporting subheadline, and one clear call-to-action button. 
+why they should care. It typically contains a main headline (the biggest, most prominent text on 
+It's your 3-second pitch. A great hero immediately communicates: what this is, who it's for, and 
+The hero is the first thing a visitor sees when they land on your website — before any scrolling. 
+What it is 
+6.1 Hero Section 
+ 
+prompting an AI builder. 
+Learning these patterns means you can describe exactly what component you need when 
+a pricing table, an accordion — these patterns have established behaviors that users expect. 
+of users across thousands of websites, so users already know how they work. A card, a modal, 
+UI patterns are reusable solutions to common design problems. They've been tested by millions 
+6. UI Patterns 
+----------------Page (35) Break----------------
+they trust the company selling the product. The best testimonials are specific ('increased our 
+powerful conversion elements on a website — people trust other people's opinions more than 
+A section showing quotes from real users of your product. Social proof is one of the most 
+What it is 
+6.3 Testimonials / Social Proof 
+ 
+(linear.app/pricing)
+ 
+→ Linear.app/pricing — One of the cleanest pricing pages — study the layout and copy  
+→ Pricingpages.xyz — Gallery of real SaaS pricing page screenshots and designs  (pricingpages.xyz)    
+structures  (tailwindui.com/components/marketing/sections/pricing)         
+→ Tailwind UI — Pricing Sections — Multiple pre-built pricing table layouts showing different 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+next to the annual option." 
+excluded). The monthly/annual toggle animates the prices changing and shows 'Save 25%' badge 
+(bold), price (48px), feature checklist with checkmark icons (green checks, gray crosses for 
+button. Enterprise: white card, 'Custom pricing', 6 features, outlined button. All cards have: plan name 
+Popular' badge in blue at top, $29/month (annual) / $39/month (monthly), 12 features, filled CTA 
+outlined button. Pro tier (highlighted): colored border (#2563EB, 2px), transform:scale(1.04), 'Most 
+"Build a 3-tier pricing table with monthly/annual toggle. Free tier: white card, $0/month, 5 features, 
+AI PROMPT TO USE
+ 
+ 
+padding to make it literally bigger than the others. 
+badge at the top, and sometimes a slight scale-up (transform:scale(1.05)) or extra vertical 
+pro/featured plan card gets special visual treatment: a colored border (2px, not just 0.5px), a 
+billing period, 1-line description, a checklist of included features, and a CTA button. The 
+Three-column layout. Each column is a card containing: plan name, price (large and prominent), 
+How it works 
+'Most Popular' or 'Recommended' badge — to guide users toward it. 
+The pro plan is visually highlighted — larger, with a colored border, an elevated position, and a 
+free/starter plan, a paid pro plan (the one you want most people to buy), and an enterprise plan. 
+A structured comparison of your product's different pricing tiers. Almost always 3 columns: a 
+What it is 
+6.2 Pricing Table 
+ 
+structure  (tailwindui.com/components/marketing/sections/heroes)          
+→ Tailwind UI — Hero Sections — Pre-built hero section code in multiple styles — study the 
+----------------Page (36) Break----------------
+AI PROMPT TO USE
+ 
+ 
+JavaScript. 
+degrees (chevron flips). HTML also has a native details/summary element that does this without 
+panel reveals with a smooth CSS transition. The icon rotates 45 degrees (+ becomes ×) or 180 
+question is clicked, a class is toggled that changes max-height to a large value (or auto) and the 
+panel below it. The answer panel starts at max-height:0 and overflow:hidden. W hen the 
+Each item has a visible question row (with a + or chevron icon on the right) and a hidden answer 
+How it works 
+about. 
+shown at once. It lets users scan the questions quickly and only expand the ones they care 
+situation where you have many pieces of related content that would be overwhelming if all 
+again collapses it. This pattern is perfect for FAQ sections, help documentation, and any 
+A list of questions where clicking any question expands it to reveal the answer, then clicking 
+What it is 
+6.4 Accordion / FAQ 
+ 
+quotes, and case studies  (stripe.com/customers)     
+→ Stripe.com — Customers page — How a world-class company does social proof — mix of logos, 
+(testimonial.to)
+ 
+→ Testimonial.to — Another testimonial widget product — great reference for modern testimonial UI  
+(senja.io)
+ 
+→ Senja.io — Testimonial collection tool — their own website shows excellent testimonial patterns  
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+keyframes translating X by -50%). Section background: light gray #F5F5F5." 
+and company (12px gray). 8 cards per row duplicated for infinite loop (use CSS animation with 
+gold stars), quote text in quotes, horizontal divider, avatar circle (40px, initials), name (bold 14px), role 
+20px/s. Each card (280px wide, white background, 12px border-radius, subtle shadow): star rating (5 
+row auto-scrolling horizontally at different speeds. Row 1 scrolls left at 30px/s, Row 2 scrolls right at 
+"Create a testimonial section with a dual-row infinite marquee. Two rows of testimonial cards, each 
+AI PROMPT TO USE
+ 
+ 
+the scroll. Star ratings above the quote add credibility. 
+continuously from right to left, often with two rows moving in opposite directions. Clicking stops 
+marquee (infinite horizontal scroll). The marquee version is very popular currently — cards scroll 
+Can be laid out as: a 3-column grid of cards, a single large featured quote, or an auto-scrolling 
+How it works 
+the person's photo, name, job title, and company. 
+revenue by 40%') rather than generic ('great product, love it'). They should include: the quote, 
+----------------Page (37) Break----------------
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+Body scroll should lock when modal is open." 
+'Create your account', email input, password input, primary submit button, and a 'Sign in instead' link. 
+on: X button top-right, clicking overlay, pressing Escape key. Include a sign-up form inside: heading 
+rgba(0,0,0,0.25). Animate in: transform:scale(0.92) opacity:0 → scale(1) opacity:1, 0.25s ease. Close 
+border-radius:16px, padding:32px, max-width:480px, width:90%, box-shadow:0 25px 50px 
+background:rgba(0,0,0,0.6), backdrop-filter:blur(4px), z-index:1000. Modal panel: background:white, 
+"Build a modal component that opens when a button is clicked. Overlay: position:fixed, inset:0, 
+AI PROMPT TO USE
+ 
+ 
+modal while it's open. 
+Clicking the overlay or pressing Escape closes the modal. Focus should be trapped inside the 
+with padding, shadow, and border-radius. It animates in with a scale + opacity transition. 
+align-items:center, justify-content:center on the overlay. The modal panel itself is a white card 
+modal panel sits centered on top of the overlay, usually achieved with display:flex, 
+An overlay div covers the entire screen (position:fixed, inset:0, background:rgba(0,0,0,0.5)). The 
+How it works 
+modal. 
+larger), video players, and onboarding flows. The background is darkened to direct focus to the 
+you sure you want to delete this?'), forms (sign up, log in), image lightboxes (viewing a photo 
+interact with it or dismiss it before returning to the main page. It's used for: confirmations ('Are 
+A modal (or dialog) is a popup overlay that appears over the page content, requiring the user to 
+What it is 
+6.5 Modal / Dialog 
+ 
+(linear.app/pricing)
+ 
+→ Linear.app/pricing FAQ — Simple, clean FAQ implementation at the bottom of their pricing page  
+examples  (headlessui.com)    
+→ Headless UI (by Tailwind Labs) — Accessible accordion components with animations — code 
+guidance  (university .webflow  .com)  
+→ Webflow University — FAQ Templates — No-code accordion FAQ examples with styling 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+top of the FAQ that filters questions as the user types." 
+question can be open at a time (opening a new one closes the previous). Add a search input at the 
+to auto height in 0.3s ease. Answer text is muted gray (#6B7280), 16px, with 20px padding. Only one 
+the right that rotates 45deg to × when open. Answer panel: starts height:0 overflow:hidden, transitions 
+1px #E5E7EB border. Question row: padding 20px, question text in font-weight:500, and a + icon on 
+"Build an FAQ section with 8 questions. Each FAQ item: full-width, white background, separated by a 
+----------------Page (38) Break----------------
+solid #E5E7EB, border-radius:12px, overflow:hidden, cursor:pointer. Hover state: 
+"Build a blog post card grid with 3 columns. Each card: white background (#FFFFFF), border:1px 
+AI PROMPT TO USE
+ 
+ 
+A subtle lift + border highlight is usually enough. 
+and a clear hover state. W ithout a hover state, cards feel static and users don't know they're clickable. 
+4/3 on the image container, not the image itself), comfortable internal padding (20-24px is standard), 
+TIP  Three things make or break a card grid: consistent image aspect ratios (use aspect-ratio:16/9 or 
+ 
+of image 
+aspect-ratio    e.g. aspect-ratio:16/9 on the image area keeps cards consistent height regardless 
+overflow:hidden  Applied to the card container — clips the image to the card's border-radius 
+clickable 
+Hover lift      transform:translateY(-4px) + increased box-shadow on hover — signals the card is 
+Content area    Padded section below the visual: title, description, meta info, CTA 
+Visual area     Top section of card: image, video thumbnail, illustration, or solid color block 
+ 
+signals interactivity. The card itself is either fully clickable or has a specific CTA link. 
+often have a hover state — a subtle lift effect (translateY(-4px) with increased shadow) that 
+sometimes a call-to-action (link, button). Cards are grouped in grids (2, 3, or 4 columns) and 
+below with a title, description, optional metadata (date, author, tags, reading time), and 
+A basic card has: a visual area at the top (image, illustration, or colored block), a content area 
+How it works 
+portable, self-explanatory information unit. 
+unit of content. The pattern comes from physical index cards and playing cards — a bounded, 
+hard dividers, and they make complex pages scannable because each card is its own focused 
+building block of web UI design. They create visual separation between items without requiring 
+subject — a blog post, a product, a team member, a project. Cards are the most universal 
+A card is a self-contained rectangular container that groups related information about a single 
+What it is 
+6.6 Card Component 
+ 
+ 
+(dribbble.com/tags/modal)
+ 
+→ Dribbble — Modal Design — Visual inspiration for creative modal and dialog designs  
+(flowbite.com/docs/components/modal)
+ 
+→ Flowbite — Modal Examples — Multiple modal styles and variations with copy-paste code  
+examples  (radix-ui.com/primitives/docs/components/dialog)        
+→ Radix UI — Dialog — The most accessible, well-implemented modal component with animation 
+----------------Page (39) Break----------------
+ 
+→ Read.cv — Portfolio platform with beautifully crafted card-based profile and post layouts  (read.cv)  
+markup and padding choices  (tailwindui.com/components/marketing/elements/cards)          
+→ Tailwind UI — Card Components — Pre-built card components in multiple styles — study the 
+meta  (dribbble.com)   
+→ Dribbble.com — Dribbble's own project cards are a reference — hover effect, image, title, author 
+EXAMPLE WEBSITES TO STUDY
+ 
+ 
+tag. On mobile (under 768px): 1 column. Tablet (768-1024px): 2 columns." 
+avatar 28px circle + name + date + reading time, all 13px muted). Entire card is wrapped in an <a> 
+-webkit-line-clamp:2), excerpt paragraph (14px, muted gray, 3-line clamp), bottom meta row (author 
+background, 11px uppercase text), H3 title (18px, font-weight:600, 2-line clamp with 
+placeholder) → content area with padding:20px containing: category tag (small pill, colored 
+transitions: 0.25s ease. Card structure: image container (aspect-ratio:16/9, background:#F0F0F0 as 
+transform:translateY(-4px), box-shadow:0 12px 30px rgba(0,0,0,0.1), border-color:#D0D0D0. All 
+----------------Page (40) Break----------------
+— End of Guide — 
+ 
+glass cards, and Clash Display font for the headline.' 
+feature cards fade up on scroll (animation), using a purple-to-blue gradient background, white frosted 
+Example: 'Build a glassmorphism (aesthetic) hero section with a centered layout (layout) where 
+TIP  The perfect AI prompt combines: 1 aesthetic + 1 layout + 1 animation + specific colors and fonts. 
+ 
+monochromatic 
+For color      60-30-10 rule / near-black dark mode / single accent color / gradient background / 
+For typography  display headline / type scale / gradient text / font pairing / tight letter-spacing 
+components    feature / hero section / card grid 
+For       pricing table with toggle / testimonial marquee / FAQ accordion / sticky scroll 
+navigation 
+For navigation   sticky frosted navbar / hamburger fullscreen / mega menu / dot navigation / tab 
+smooth lenis 
+For animation   scroll-triggered fade-up / parallax / sticky scroll / text reveal / horizontal scroll / 
+asymmetric 
+For layout     hero + feature grid / bento / masonry / fullpage scroll / sidebar+content / split 
+For feel      premium / editorial / playful / corporate / warm / clean / bold / refined / futuristic 
+claymorphism / Y2K 
+For aesthetics   glassmorphism / neumorphism / brutalism / minimalism / dark luxury / bento grid / 
+ 
+describe what you want with precision: 
+W hen prompting any AI tool (Stitch, Framer AI, v0.dev, Bolt, or similar), use this vocabulary to 
+Quick Reference: Prompting Vocabulary 
+----------------Page (41) Break----------------
