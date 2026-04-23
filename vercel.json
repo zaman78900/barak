@@ -2,5 +2,11 @@
   "buildCommand": "cd barak-tea-app/frontend && npm install && npm run build",
   "outputDirectory": "barak-tea-app/frontend/dist",
   "installCommand": "npm install",
-  "framework": "vite"
+  "framework": "vite",
+  "routes": [
+    {
+      "src": "^/(?!.*\\.).*$",
+      "dest": "/index.html"
+    }
+  ]
 }
