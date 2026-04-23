@@ -110,11 +110,11 @@ function Modal({ title, onClose, children, width=600 }) {
   );
 }
 
-function Input({ label, value, onChange, type="text", placeholder="", disabled=false }) {
+function Input({ label, value, onChange, type="text", placeholder="", disabled=false, step }) {
   return (
     <div style={{ marginBottom:14 }}>
       {label && <label style={{ display:"block", color:C.muted, fontSize:11, fontWeight:600, marginBottom:5, textTransform:"uppercase", letterSpacing:"0.06em" }}>{label}</label>}
-      <input type={type} value={value} onChange={onChange} placeholder={placeholder} disabled={disabled}
+      <input type={type} value={value} onChange={onChange} placeholder={placeholder} disabled={disabled} step={step}
         style={{ width:"100%", background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, color:C.cream, padding:"10px 12px", fontSize:14, outline:"none", boxSizing:"border-box", opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "text" }} />
     </div>
   );
@@ -304,7 +304,7 @@ function ProductsPage() {
         setForm(f => ({ ...f, images: [...(f.images || []), result.url] }));
       } else if (target === 'variant') {
         const newVariants = [...form.variants];
-        newVariants[index].image_url = result.url;
+        newVariants[index] = { ...newVariants[index], image_url: result.url };
         setForm(f => ({ ...f, variants: newVariants }));
       }
     } catch (err) {
@@ -329,7 +329,7 @@ function ProductsPage() {
 
   const updateVariant = (idx, key, val) => {
     const v = [...form.variants];
-    v[idx][key] = val;
+    v[idx] = { ...v[idx], [key]: val };
     setForm(f => ({ ...f, variants: v }));
   };
 
@@ -446,8 +446,8 @@ function ProductsPage() {
                 <div style={{gridColumn:"1/-1"}}><Input label="Product Name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/></div>
                 <Select label="Category" value={form.category} onChange={e=>setForm({...form,category:e.target.value})} options={["Everyday","Premium","Blends","Gifts"].map(v=>({value:v,label:v}))}/>
                 <Select label="Status" value={form.status} onChange={e=>setForm({...form,status:e.target.value})} options={[{value:"active",label:"Active"},{value:"inactive",label:"Inactive"}]}/>
-                <Input label="Selling Price (₹)" type="number" value={form.price} onChange={e=>setForm({...form,price:e.target.value})}/>
-                <Input label="MRP (₹)" type="number" value={form.mrp} onChange={e=>setForm({...form,mrp:e.target.value})}/>
+                <Input label="Selling Price (₹)" type="number" step="any" value={form.price} onChange={e=>setForm({...form,price:e.target.value})}/>
+                <Input label="MRP (₹)" type="number" step="any" value={form.mrp} onChange={e=>setForm({...form,mrp:e.target.value})}/>
                 <Input label="Stock Quantity" type="number" value={form.stock_quantity} onChange={e=>setForm({...form,stock_quantity:e.target.value})}/>
               </div>
 
@@ -470,7 +470,7 @@ function ProductsPage() {
                         style={{background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px", color:C.cream, fontSize:13, outline:"none"}}/>
                       <div style={{display:"flex", alignItems:"center", gap:4, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px"}}>
                         <span style={{color:C.muted, fontSize:12}}>₹</span>
-                        <input value={v.price} onChange={e => updateVariant(idx, 'price', e.target.value)} type="number" placeholder="Price" 
+                        <input value={v.price} onChange={e => updateVariant(idx, 'price', e.target.value)} type="number" step="any" placeholder="Price" 
                           style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", outline:"none"}}/>
                       </div>
                       <div style={{display:"flex", alignItems:"center", gap:4, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px"}}>
