@@ -30,16 +30,15 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'glass bg-[rgba(13,9,5,0.8)]' 
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'glass bg-[rgba(13,9,5,0.8)]'
           : 'bg-transparent'
-      }`}>
+        }`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-18 md:h-22">
+          <div className="flex items-center justify-between h-18 md:h-20">
             {/* Logo */}
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="flex items-center"
             >
               <img src={logo} alt="BARAK Tea" className="h-12 md:h-16 w-auto object-contain" />
@@ -65,7 +64,7 @@ export default function Navbar() {
               <button className="p-2 hover:text-barak-gold transition-colors" aria-label="Search">
                 <MagnifyingGlass size={20} />
               </button>
-              <button 
+              <button
                 onClick={() => navigate('/cart')}
                 className="relative p-2 hover:text-barak-gold transition-colors"
                 aria-label="Shopping cart"
@@ -84,7 +83,7 @@ export default function Navbar() {
               </button>
 
               {/* Mobile Menu Toggle */}
-              <button 
+              <button
                 className="md:hidden p-2"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Menu"
@@ -102,7 +101,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: 300 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 300 }}
