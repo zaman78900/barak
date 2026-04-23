@@ -1,27 +1,22 @@
 {
-  "buildCommand": "cd frontend && npm run build",
+  "buildCommand": "npm install --prefix frontend && npm run build --prefix frontend",
   "outputDirectory": "frontend/dist",
-  "installCommand": "cd frontend && npm install",
-  "env": {
-    "VITE_API_URL": "@vite-api-url",
-    "VITE_STRIPE_PUBLIC_KEY": "@vite-stripe-public-key"
-  },
   "headers": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, s-maxage=3600"
-        }
-      ]
-    },
-    {
-      "source": "/assets/.*",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
         }
       ]
     }
