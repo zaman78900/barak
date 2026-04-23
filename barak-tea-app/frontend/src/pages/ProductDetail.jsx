@@ -38,12 +38,15 @@ export default function ProductDetail() {
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [openAccordion, setOpenAccordion] = useState('brew'); // 'brew', 'desc', or null
+  const [isAdded, setIsAdded] = useState(false);
 
   // Scroll to top on load or ID change
   useEffect(() => {
     window.scrollTo(0, 0);
     setActiveImage(0);
     setSelectedVariant(null);
+    setQuantity(1);
+    setIsAdded(false);
   }, [id]);
 
   // Setup Gallery Images (Main + Gallery + Variant Images)
@@ -54,20 +57,31 @@ export default function ProductDetail() {
       ...(product.images || []),
       ...(product.variants?.map(v => v.image_url) || [])
     ].filter(Boolean);
-    // Unique images only
     return [...new Set(images)];
   }, [product]);
 
-  // Initialize variant when product loads
+  // Smart Variant Initialization (First In-Stock Variant)
   useEffect(() => {
     if (product && product.variants?.length > 0 && !selectedVariant) {
-      setSelectedVariant(product.variants[0]);
+      const firstInStock = product.variants.find(v => v.stock > 0) || product.variants[0];
+      setSelectedVariant(firstInStock);
     }
   }, [product]);
+
+  // Stock Calculation
+  const currentStock = useMemo(() => {
+    if (!product) return 0;
+    if (selectedVariant) return selectedVariant.stock;
+    return product.stock_quantity;
+  }, [product, selectedVariant]);
+
+  // Price Formatting
+  const fmt = (val) => `₹${Number(val).toLocaleString('en-IN')}`;
 
   // Handle Variant Selection
   const handleVariantSelect = (v) => {
     setSelectedVariant(v);
+    setQuantity(1); // Reset quantity on variant change
     if (v.image_url) {
       const idx = gallery.indexOf(v.image_url);
       if (idx !== -1) {
@@ -85,25 +99,28 @@ export default function ProductDetail() {
   };
 
   const handleAddToCart = () => {
-    if (!product) return;
+    if (!product || currentStock <= 0) return;
     const variantLabel = selectedVariant ? selectedVariant.variant_name : 'Standard';
     const price = selectedVariant ? selectedVariant.price : product.price;
 
     addItem({
       id: product.id,
       name: product.name,
-      price: price,
+      price: Number(price),
       image: product.image_url,
       variant: variantLabel,
       quantity
     });
+
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
   };
 
   const handleWhatsAppBuy = () => {
     if (!product) return;
     const variantLabel = selectedVariant ? selectedVariant.variant_name : 'Standard';
     const price = selectedVariant ? selectedVariant.price : product.price;
-    const msg = `Hi, I would like to order:\n\n*${product.name}*\nVariant: ${variantLabel}\nQuantity: ${quantity}\nTotal: ₹${price * quantity}\n\nPlease let me know how to proceed.`;
+    const msg = `Hi, I would like to order:\n\n*${product.name}*\nVariant: ${variantLabel}\nQuantity: ${quantity}\nTotal: ${fmt(price * quantity)}\n\nPlease let me know how to proceed.`;
     const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(msg)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -111,7 +128,10 @@ export default function ProductDetail() {
   if (productLoading) {
     return (
       <div className="min-h-screen bg-barak-bg pt-24 px-4 flex items-center justify-center">
-        <div className="text-barak-cream text-xl animate-pulse">Brewing details...</div>
+        <div className="flex flex-col items-center gap-4">
+          <FiRefreshCw className="text-barak-gold text-4xl animate-spin" />
+          <div className="text-barak-cream text-lg font-medium animate-pulse">Brewing your tea...</div>
+        </div>
       </div>
     );
   }
@@ -119,11 +139,18 @@ export default function ProductDetail() {
   if (productError || !product) {
     return (
       <div className="min-h-screen bg-barak-bg pt-24 px-4 flex flex-col items-center justify-center">
-        <h1 className="text-4xl text-barak-cream font-bold">Product not found</h1>
-        <button onClick={() => navigate('/shop')} className="mt-6 text-barak-gold underline">Return to Shop</button>
+        <h1 className="text-4xl text-barak-cream font-black font-playfair mb-4">Tea Not Found</h1>
+        <p className="text-barak-muted mb-8 text-center max-w-md">This specific blend might have been retired or moved to another category.</p>
+        <button onClick={() => navigate('/shop')} className="px-8 py-3 bg-barak-gold text-barak-bg font-bold rounded-lg hover:bg-barak-gold-light transition-all">
+          Explore Other Blends
+        </button>
       </div>
     );
   }
+
+  const mainPrice = selectedVariant?.price || product.price;
+  const mainMrp = selectedVariant?.mrp || product.mrp;
+  const showMrp = mainMrp && Number(mainMrp) > Number(mainPrice);
 
   return (
     <div className="min-h-screen bg-barak-bg text-barak-cream pb-24 overflow-hidden pt-28 md:pt-32">
@@ -167,6 +194,11 @@ export default function ProductDetail() {
                 className={`w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-150' : 'scale-100'}`}
                 style={isZoomed ? { transformOrigin: `${mousePos.x}% ${mousePos.y}%` } : {}}
               />
+              {currentStock <= 0 && (
+                <div className="absolute top-4 left-4 bg-barak-error text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg">
+                  Out of Stock
+                </div>
+              )}
             </div>
           </motion.div>
 
@@ -187,10 +219,15 @@ export default function ProductDetail() {
             {/* Title & Price */}
             <motion.div variants={fadeUp}>
               <h1 className="text-4xl lg:text-5xl font-playfair font-black mb-4 leading-tight">{product.name}</h1>
-              <div className="flex items-center gap-4 mb-6">
-                <span className="text-3xl font-bebas tracking-wide">₹{selectedVariant?.price || product.price}</span>
-                {(selectedVariant?.mrp || product.mrp) && (
-                  <span className="text-xl text-barak-muted line-through font-bebas">₹{selectedVariant?.mrp || product.mrp}</span>
+              <div className="flex items-center gap-4 mb-2">
+                <span className="text-3xl font-bebas tracking-wide text-barak-gold">{fmt(mainPrice)}</span>
+                {showMrp && (
+                  <span className="text-xl text-barak-muted line-through font-bebas">{fmt(mainMrp)}</span>
+                )}
+              </div>
+              <div className="mb-6 h-6">
+                {currentStock > 0 && currentStock < 10 && (
+                  <span className="text-barak-warning text-xs font-bold uppercase tracking-widest">Only {currentStock} packs left!</span>
                 )}
               </div>
             </motion.div>
@@ -199,18 +236,22 @@ export default function ProductDetail() {
             {product.variants && product.variants.length > 0 && (
               <motion.div variants={fadeUp} className="mb-8">
                 <h3 className="text-sm text-barak-muted mb-3 uppercase tracking-wider font-semibold">Select Size</h3>
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   {product.variants.map(v => (
                     <button
                       key={v.id}
                       onClick={() => handleVariantSelect(v)}
-                      className={`px-5 py-3 rounded-lg border font-medium transition-all ${
+                      className={`px-5 py-3 rounded-lg border font-medium transition-all relative ${
                         selectedVariant?.id === v.id 
-                        ? 'border-barak-gold bg-barak-gold/10 text-barak-gold' 
+                        ? 'border-barak-gold bg-barak-gold/10 text-barak-gold shadow-[0_0_15px_rgba(200,146,42,0.1)]' 
+                        : v.stock <= 0 
+                        ? 'border-white/5 text-white/20 cursor-not-allowed'
                         : 'border-white/10 text-white/70 hover:border-white/30'
                       }`}
+                      disabled={v.stock <= 0}
                     >
                       {v.variant_name}
+                      {v.stock <= 0 && <span className="absolute -top-2 -right-2 bg-barak-error text-white text-[8px] px-1.5 py-0.5 rounded-full">SOLD</span>}
                     </button>
                   ))}
                 </div>
@@ -221,12 +262,19 @@ export default function ProductDetail() {
             <motion.div variants={fadeUp} className="mb-12 flex flex-col gap-4">
               <div className="flex items-center gap-4">
                 {/* Quantity */}
-                <div className="flex items-center bg-white/5 border border-white/10 rounded-lg p-1 h-14">
-                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <div className={`flex items-center bg-white/5 border border-white/10 rounded-lg p-1 h-14 ${currentStock <= 0 ? 'opacity-30 pointer-events-none' : ''}`}>
+                  <button 
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))} 
+                    className="w-10 h-full flex items-center justify-center text-white/70 hover:text-white transition-colors"
+                  >
                     <FiMinus />
                   </button>
                   <span className="w-10 text-center font-medium">{quantity}</span>
-                  <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-full flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                  <button 
+                    onClick={() => setQuantity(Math.min(currentStock, quantity + 1))} 
+                    disabled={quantity >= currentStock}
+                    className="w-10 h-full flex items-center justify-center text-white/70 hover:text-white transition-colors disabled:opacity-20"
+                  >
                     <FiPlus />
                   </button>
                 </div>
@@ -234,9 +282,22 @@ export default function ProductDetail() {
                 {/* Primary CTA */}
                 <button 
                   onClick={handleAddToCart}
-                  className="flex-1 h-14 bg-barak-cream text-barak-bg font-bold rounded-lg hover:bg-barak-gold hover:text-white transition-all transform hover:scale-[1.02] active:scale-95"
+                  disabled={currentStock <= 0 || isAdded}
+                  className={`flex-1 h-14 font-bold rounded-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 ${
+                    isAdded 
+                    ? 'bg-barak-success text-white' 
+                    : currentStock <= 0 
+                    ? 'bg-white/5 text-white/20 border border-white/10 cursor-not-allowed'
+                    : 'bg-barak-cream text-barak-bg hover:bg-barak-gold hover:text-white'
+                  }`}
                 >
-                  Add to Cart
+                  {isAdded ? (
+                    <><FiPlus className="rotate-45" /> Added to Cart</>
+                  ) : currentStock <= 0 ? (
+                    "Out of Stock"
+                  ) : (
+                    "Add to Cart"
+                  )}
                 </button>
               </div>
 
