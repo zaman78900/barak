@@ -11,7 +11,7 @@ Go to **Supabase → SQL Editor** and run:
 INSERT INTO users (email, password_hash, full_name, phone, role)
 VALUES (
   'barakadmin@gmail.com',
-  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/MFS',
+  '$2a$10$aK1dbz2JmHan3Qj5xmrch.1okJILINotJSBoA1XZnLivynZhNahpO',
   'BARAK Admin',
   '+91 9876543210',
   'admin'
