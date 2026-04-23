@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { InstagramLogo, TwitterLogo, LinkedinLogo } from 'phosphor-react';
 import { motion } from 'framer-motion';
+import logo from '../assets/logo.png';
 
 export default function Footer() {
   const footerLinks = {
@@ -14,8 +15,19 @@ export default function Footer() {
   return (
     <footer className="bg-barak-bg border-t border-barak-border">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-12 md:py-16">
+        {/* Logo Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-12"
+        >
+          <img src={logo} alt="BARAK Tea" className="h-12 w-auto object-contain" />
+        </motion.div>
+
         {/* Main Footer Content */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+
           {Object.entries(footerLinks).map(([category, links], i) => (
             <motion.div
               key={category}

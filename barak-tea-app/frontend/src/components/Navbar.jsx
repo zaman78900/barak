@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, MagnifyingGlass, List, X } from 'phosphor-react';
 import { motion } from 'framer-motion';
 import { useCartStore } from '../store';
+import logo from '../assets/logo.png';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -39,10 +40,11 @@ export default function Navbar() {
             {/* Logo */}
             <Link 
               to="/" 
-              className="text-2xl md:text-3xl font-black text-barak-gold hover:text-barak-gold-light transition-colors"
+              className="flex items-center"
             >
-              BARAK
+              <img src={logo} alt="BARAK Tea" className="h-10 md:h-12 w-auto object-contain" />
             </Link>
+
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex gap-8 items-center">
