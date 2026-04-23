@@ -1,16 +1,11 @@
 node_modules
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.DS_Store
-*.pem
 .git
 .gitignore
 README.md
 LICENSE
 design idea
+backend
+*.md
 .env.local
 .env.example
-*.md
-backend/node_modules
-backend/logs
