@@ -23,8 +23,8 @@ git push -u origin main
 |---------|-------|
 | **Name** | `barak-tea-api` |
 | **Environment** | `Node` |
-| **Build Command** | `cd backend && npm install` |
-| **Start Command** | `node backend/server.js` |
+| **Build Command** | `cd barak-tea-app/backend && npm install` |
+| **Start Command** | `node barak-tea-app/backend/server.js` |
 | **Region** | Choose closest to you |
 
 ## STEP 3: Set Environment Variables on Render

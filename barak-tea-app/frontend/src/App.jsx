@@ -14,10 +14,22 @@ import OurStory from './pages/OurStory';
 import Wholesale from './pages/Wholesale';
 import Blog from './pages/Blog';
 import AdminPanel from './pages/AdminPanel';
+import AdminLogin from './pages/AdminLogin';
 
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+
+// Protected Route Component
+function ProtectedAdminRoute({ element }) {
+  const token = localStorage.getItem('authToken');
+  
+  if (!token) {
+    return <AdminLogin />;
+  }
+
+  return element;
+}
 
 function App() {
   const lenisRef = useRef(null);
@@ -53,8 +65,9 @@ function App() {
     <Router>
       <div className="min-h-screen bg-barak-bg text-barak-cream overflow-x-hidden">
         <Routes>
-          {/* Admin Panel - No navbar/footer */}
-          <Route path="/admin" element={<AdminPanel />} />
+          {/* Admin Panel - Protected */}
+          <Route path="/admin" element={<ProtectedAdminRoute element={<AdminPanel />} />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           
           {/* Main Website */}
           <Route path="/" element={

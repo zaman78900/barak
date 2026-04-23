@@ -8,8 +8,8 @@ import logger from '../src/utils/logger.js';
 
 async function createAdmin() {
   try {
-    const adminEmail = 'admin@test.com'; // Simple valid email
-    const adminPassword = 'ChangeMe123!';
+    const adminEmail = 'admin@gmail.com';
+    const adminPassword = 'admin123';
 
     logger.info(`Creating admin user: ${adminEmail}`);
 
