@@ -31,7 +31,13 @@ export default function ProductDetail() {
   const { reviews } = useReviews(id);
   const addItem = useCartStore(state => state.addItem);
 
+  // Scroll to top on load or ID change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   // Local State
+
   const [activeImage, setActiveImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);

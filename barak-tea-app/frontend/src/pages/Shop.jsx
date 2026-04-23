@@ -16,7 +16,12 @@ export default function Shop() {
   const addItem = useCartStore((s) => s.addItem);
   const { products, loading, pagination } = useProducts(page, 12, filters);
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleAddToCart = (e, product) => {
+
     e.stopPropagation();
     addItem({
       id: product._id || product.id,
