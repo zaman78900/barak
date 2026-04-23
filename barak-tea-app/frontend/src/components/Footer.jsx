@@ -22,8 +22,9 @@ export default function Footer() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <img src={logo} alt="BARAK Tea" className="h-12 w-auto object-contain" />
+          <img src={logo} alt="BARAK Tea" className="h-20 w-auto object-contain" />
         </motion.div>
+
 
         {/* Main Footer Content */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
