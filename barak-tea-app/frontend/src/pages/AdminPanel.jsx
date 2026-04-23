@@ -484,16 +484,28 @@ function DashboardPage() {
 
   const loadDashboardStats = async () => {
     try {
-      const productsData = await adminAPI.products.getAll(1, 100);
-      const ordersData = await adminAPI.orders.getAll(1, 100, {});
+      // Load products and orders in parallel
+      const [productsData, ordersData] = await Promise.all([
+        adminAPI.products.getAll(1, 100).catch(err => {
+          console.error('Failed to load products:', err);
+          return { products: [] };
+        }),
+        adminAPI.orders.getAll(1, 100, {}).catch(err => {
+          console.error('Failed to load orders:', err);
+          return { orders: [] };
+        })
+      ]);
+
       setStats({
-        totalRevenue: ordersData.orders?.reduce((a,o)=>a+o.total_amount,0) || 0,
+        totalRevenue: ordersData.orders?.reduce((a, o) => a + (o.total_amount || 0), 0) || 0,
         orders: ordersData.orders?.length || 0,
-        activeCustomers: new Set(ordersData.orders?.map(o=>o.customer_id)).size || 0,
-        activeProducts: productsData.products?.filter(p=>p.status==="active").length || 0,
+        activeCustomers: new Set(ordersData.orders?.map(o => o.customer_id).filter(Boolean)).size || 0,
+        activeProducts: productsData.products?.filter(p => p.status === "active").length || 0,
       });
     } catch (err) {
-      console.error("Failed to load dashboard stats:", err);
+      console.error("🔴 Failed to load dashboard stats:", err);
+      // Keep default values and show warning
+      console.warn('Dashboard loaded with default values - backend may not be responding');
     }
   };
 

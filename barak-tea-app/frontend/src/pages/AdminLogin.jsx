@@ -17,39 +17,38 @@ export default function AdminLogin() {
       // Call the real backend API for authentication
       const response = await api.post('/auth/login', { email, password });
       
+      console.log('[Login] Response received:', {
+        hasToken: !!response.token,
+        hasUser: !!response.user,
+        responseKeys: Object.keys(response),
+        tokenFormat: response.token?.startsWith('eyJ') ? 'JWT✓' : 'INVALID',
+      });
+      
       if (response.token) {
+        // Store in localStorage
         localStorage.setItem('authToken', response.token);
-        localStorage.setItem('adminUser', JSON.stringify(response.user));
-        window.location.href = '/admin';
+        localStorage.setItem('adminUser', JSON.stringify(response.user || {}));
+        
+        console.log('[Login] Auth stored successfully:', {
+          tokenStored: !!localStorage.getItem('authToken'),
+          userStored: !!localStorage.getItem('adminUser'),
+        });
+        
+        // Redirect after brief delay
+        setTimeout(() => {
+          window.location.href = '/admin';
+        }, 500);
       } else {
-        setError('Login failed - no token received');
+        console.error('[Login] No token in response:', response);
+        setError('Login failed - no token received from server');
       }
     } catch (err) {
-      console.error('Login error:', err);
-      
-      // If backend not available, use test token for development
-      if (email && password) {
-        console.warn('Backend not responding - using test token');
-        
-        // Create a valid-looking token
-        const testToken = btoa(JSON.stringify({
-          userId: 'dev-admin',
-          email: email,
-          role: 'admin',
-          iat: Date.now(),
-          exp: Date.now() + (30 * 24 * 60 * 60 * 1000)
-        }));
-        
-        localStorage.setItem('authToken', testToken);
-        localStorage.setItem('adminUser', JSON.stringify({
-          id: 'dev-admin',
-          email: email,
-          role: 'admin'
-        }));
-        window.location.href = '/admin';
-      } else {
-        setError(err.error || 'Login failed. Backend not responding.');
-      }
+      console.error('[Login] Error occurred:', {
+        message: err.message || err,
+        error: err.error || err,
+        fullError: String(err),
+      });
+      setError(err.error || err.message || 'Login failed. Please check your credentials or backend status.');
     } finally {
       setLoading(false);
     }
