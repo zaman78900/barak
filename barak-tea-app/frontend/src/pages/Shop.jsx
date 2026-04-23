@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FunnelSimple, ShoppingCart, Check } from 'phosphor-react';
+import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../utils/hooks';
 import { useCartStore } from '../store';
 
 export default function Shop() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState('newest');
@@ -14,7 +16,8 @@ export default function Shop() {
   const addItem = useCartStore((s) => s.addItem);
   const { products, loading, pagination } = useProducts(page, 12, filters);
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation();
     addItem({
       id: product._id || product.id,
       name: product.name,
@@ -186,6 +189,7 @@ export default function Shop() {
                   {sortedProducts.map((product, i) => (
                     <motion.div
                       key={product.id}
+                      onClick={() => navigate(`/product/${product._id || product.id}`)}
                       variants={{
                         hidden: { opacity: 0, y: 20 },
                         visible: { opacity: 1, y: 0 },
@@ -235,7 +239,7 @@ export default function Shop() {
 
                         {/* Add to Cart Button */}
                         <button
-                          onClick={() => handleAddToCart(product)}
+                          onClick={(e) => handleAddToCart(e, product)}
                           disabled={product.stock_quantity <= 0}
                           className={`w-full glass px-4 py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
                             addedIds[product._id || product.id]

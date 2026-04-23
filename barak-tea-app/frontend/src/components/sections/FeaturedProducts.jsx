@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 export default function FeaturedProducts() {
   const navigate = useNavigate();
 
-  const addToCart = (product) => {
+  const addToCart = (e, product) => {
+    e.stopPropagation();
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const existing = cart.find((item) => item.id === product.id);
     
@@ -107,9 +108,10 @@ export default function FeaturedProducts() {
           {products.map((product) => (
             <motion.div
               key={product.id}
+              onClick={() => navigate(`/product/${product.id}`)}
               variants={cardVariants}
               whileHover={{ y: -8 }}
-              className="glass rounded-glass overflow-hidden group"
+              className="glass rounded-glass overflow-hidden group cursor-pointer"
             >
               {/* Product Image */}
               <div className="w-full aspect-square bg-barak-card flex items-center justify-center text-6xl hover:scale-110 transition-transform duration-500">
@@ -139,7 +141,7 @@ export default function FeaturedProducts() {
 
                 {/* Add to Cart Button */}
                 <button 
-                  onClick={() => addToCart({ 
+                  onClick={(e) => addToCart(e, { 
                     id: product.id, 
                     name: product.name, 
                     price: product.price, 
