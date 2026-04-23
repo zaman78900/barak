@@ -120,6 +120,19 @@ export const wholesaleAPI = {
   addNote: (id, note) => api.put(`/wholesale/${id}`, { notes: note }),
 };
 
+// ─── UPLOADS ───────────────────────────────────────────────────────────────
+export const uploadAPI = {
+  uploadImage: (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    return api.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+};
+
 export default {
   products: productsAPI,
   orders: ordersAPI,
@@ -128,4 +141,5 @@ export default {
   coupons: couponsAPI,
   reviews: reviewsAPI,
   wholesale: wholesaleAPI,
+  upload: uploadAPI,
 };

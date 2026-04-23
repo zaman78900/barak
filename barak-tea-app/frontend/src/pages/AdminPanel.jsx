@@ -231,7 +231,7 @@ function ProductsPage() {
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
-  const [form, setForm] = useState({ name:"", category:"Everyday", price:"", mrp:"", stock_quantity:"", status:"active" });
+  const [form, setForm] = useState({ name:"", category:"Everyday", price:"", mrp:"", stock_quantity:"", status:"active", image_url:"" });
 
   useEffect(() => {
     loadProducts();
@@ -257,7 +257,7 @@ function ProductsPage() {
   );
 
   const openAdd = () => { 
-    setForm({ name:"", category:"Everyday", price:"", mrp:"", stock_quantity:"", status:"active" }); 
+    setForm({ name:"", category:"Everyday", price:"", mrp:"", stock_quantity:"", status:"active", image_url:"" }); 
     setEditing(null); 
     setShowModal(true); 
   };
@@ -269,10 +269,30 @@ function ProductsPage() {
       price:p.price, 
       mrp:p.mrp, 
       stock_quantity:p.stock_quantity, 
-      status:p.status 
+      status:p.status,
+      image_url:p.image_url || ""
     }); 
     setEditing(p.id); 
     setShowModal(true); 
+  };
+
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      setError("");
+      const result = await adminAPI.upload.uploadImage(file);
+      setForm(f => ({ ...f, image_url: result.url }));
+    } catch (err) {
+      setError("Image upload failed");
+      console.error(err);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const save = async () => {
@@ -344,7 +364,12 @@ function ProductsPage() {
 
         <Table headers={["Product","Category","Price","MRP","Stock","Status","Actions"]}
           rows={filtered.map(p=>[
-            <div><div style={{fontWeight:600,color:C.cream}}>{p.name}</div><div style={{fontSize:11,color:C.muted}}>{p.id}</div></div>,
+            <div style={{display:"flex", alignItems:"center", gap:12}}>
+              <div style={{width:40, height:40, borderRadius:6, overflow:"hidden", background:C.bg, border:`1px solid ${C.border}`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0}}>
+                {p.image_url ? <img src={p.image_url} style={{width:"100%", height:"100%", objectFit:"cover"}}/> : <span style={{fontSize:18}}>🍵</span>}
+              </div>
+              <div><div style={{fontWeight:600,color:C.cream}}>{p.name}</div><div style={{fontSize:11,color:C.muted}}>{p.id}</div></div>
+            </div>,
             p.category,
             <span style={{fontWeight:600,color:C.gold}}>{fmt(p.price)}</span>,
             <span style={{color:C.muted,textDecoration:"line-through"}}>{fmt(p.mrp || p.price)}</span>,
@@ -363,6 +388,26 @@ function ProductsPage() {
         <Modal title={editing?"Edit Product":"Add New Product"} onClose={()=>setShowModal(false)}>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0 16px"}}>
             <div style={{gridColumn:"1/-1"}}><Input label="Product Name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/></div>
+            <div style={{gridColumn:"1/-1"}}>
+              <div style={{display:"flex", gap:12, alignItems:"flex-end"}}>
+                <div style={{flex:1}}>
+                  <Input label="Image URL" value={form.image_url} onChange={e=>setForm({...form,image_url:e.target.value})} placeholder="https://... or upload below"/>
+                </div>
+                <div style={{marginBottom:14}}>
+                  <label style={{
+                    background:C.border, color:C.cream, padding:"10px 14px", borderRadius:8, fontSize:13, fontWeight:600, cursor:uploading?"not-allowed":"pointer", display:"inline-flex", alignItems:"center", gap:6, opacity:uploading?0.5:1
+                  }}>
+                    <Upload size={14}/> {uploading ? "Uploading..." : "Upload"}
+                    <input type="file" hidden accept="image/*" onChange={handleFileUpload} disabled={uploading}/>
+                  </label>
+                </div>
+              </div>
+              {form.image_url && (
+                <div style={{marginBottom:14, borderRadius:8, overflow:"hidden", border:`1px solid ${C.border}`, background:C.bg, height:120, display:"flex", alignItems:"center", justifyContent:"center"}}>
+                  <img src={form.image_url} alt="Preview" style={{maxHeight:"100%", maxWidth:"100%", objectFit:"contain"}}/>
+                </div>
+              )}
+            </div>
             <Select label="Category" value={form.category} onChange={e=>setForm({...form,category:e.target.value})} options={["Everyday","Premium","Blends","Gifts"].map(v=>({value:v,label:v}))}/>
             <Select label="Status" value={form.status} onChange={e=>setForm({...form,status:e.target.value})} options={[{value:"active",label:"Active"},{value:"inactive",label:"Inactive"}]}/>
             <Input label="Selling Price (₹)" type="number" value={form.price} onChange={e=>setForm({...form,price:e.target.value})}/>
@@ -760,7 +805,9 @@ function InventoryPage() {
         <Table headers={["Product","Category","Current Stock","Status","Action"]}
           rows={products.map(p=>[
             <div style={{display:"flex",alignItems:"center",gap:10}}>
-              <span style={{fontSize:18}}>{p.img}</span>
+              <div style={{width:32, height:32, borderRadius:4, overflow:"hidden", background:C.bg, border:`1px solid ${C.border}`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0}}>
+                {p.image_url ? <img src={p.image_url} style={{width:"100%", height:"100%", objectFit:"cover"}}/> : <span style={{fontSize:14}}>🍵</span>}
+              </div>
               <div><div style={{fontWeight:600,color:C.cream}}>{p.name}</div></div>
             </div>,
             p.category,

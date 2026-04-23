@@ -16,6 +16,7 @@ import reviewRoutes from './src/routes/reviews.js';
 import wholesaleRoutes from './src/routes/wholesale.js';
 import shipmentRoutes from './src/routes/shipments.js';
 import paymentRoutes from './src/routes/payments.js';
+import uploadRoutes from './src/routes/upload.js';
 
 // Import middleware
 import errorHandler from './src/middleware/errorHandler.js';
@@ -72,6 +73,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/wholesale', wholesaleRoutes);
 app.use('/api/shipments', shipmentRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
