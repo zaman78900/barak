@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCartStore } from '../store';
+import api from '../utils/api.js';
+
 
 /* ─── Step indicator ──────────────────────────────────────────────── */
 function Steps({ current }) {
@@ -162,19 +164,61 @@ export default function Checkout() {
   };
 
   /* ── Place order ── */
-  const placeOrder = () => {
+  const placeOrder = async () => {
     if (!validate()) { showToast('Please fill all required fields', 'error'); return; }
     setProcessing(true);
 
-    const orderNum = 'BRK' + Date.now().toString().slice(-6);
+    const localOrderNum = 'BRK' + Date.now().toString().slice(-6);
+
+    // Build payload for the backend
+    const payload = {
+      order_number: localOrderNum,
+      items: items.map(i => ({
+        product_id: i.id || null,   // real product id if available
+        name:       i.name,
+        price:      i.price,
+        quantity:   i.quantity,
+        variant:    i.variant || 'Standard',
+        size:       i.variant || 'Standard',
+        image:      i.image,
+      })),
+      customer_info: {
+        name:  form.firstName + ' ' + form.lastName,
+        email: form.email,
+        phone: form.phone,
+      },
+      shipping_address: {
+        line1:  form.addr1,
+        line2:  form.addr2,
+        city:   form.city,
+        state:  form.state,
+        pin:    form.pincode,
+      },
+      payment_method: payMethod,
+      total_amount:   displayTotal,
+      coupon_code:    od.promo || null,
+    };
+
+    // ── Call the backend ──────────────────────────────────────────
+    let backendOrderNum = localOrderNum;
+    try {
+      const result = await api.post('/orders/guest', payload);
+      backendOrderNum = result.order_number || localOrderNum;
+      console.log('[Checkout] Order saved to DB:', result);
+    } catch (err) {
+      // Non-fatal — still proceed to confirmation but log the error
+      console.error('[Checkout] Failed to save order to backend:', err);
+    }
+
+    // ── Save for the Confirmation page ───────────────────────────
     const orderData = {
-      orderNumber: orderNum,
+      orderNumber: backendOrderNum,
       items: items.map(i => ({
         name: i.name, size: i.variant || 'Standard',
         price: i.price, qty: i.quantity, image: i.image,
       })),
       customer: {
-        name: form.firstName + ' ' + form.lastName,
+        name:  form.firstName + ' ' + form.lastName,
         email: form.email,
         phone: form.phone,
       },
@@ -186,14 +230,15 @@ export default function Checkout() {
       totals: { ...od, codFee, finalTotal: displayTotal },
       date: new Date().toISOString(),
     };
-
     localStorage.setItem('barak_last_order', JSON.stringify(orderData));
 
+    // Wait for the processing overlay then navigate
     setTimeout(() => {
       clearCart();
       navigate('/confirmation');
-    }, 2800);
+    }, 2000);
   };
+
 
   /* ─────────────────────────────────────────────────────────────── */
   return (

@@ -29,12 +29,13 @@ export const ordersAPI = {
   // Get single order
   getById: (id) => api.get(`/orders/${id}`),
 
-  // Update order status
-  updateStatus: (id, status) => api.put(`/orders/${id}`, { status }),
+  // Update order status — backend uses PATCH /:id/status
+  updateStatus: (id, status) => api.patch(`/orders/${id}/status`, { status }),
 
   // Get order analytics
   getAnalytics: () => api.get('/orders/admin/analytics'),
 };
+
 
 // ─── CUSTOMERS ────────────────────────────────────────────────────────────
 export const customersAPI = {
