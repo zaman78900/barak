@@ -231,7 +231,7 @@ function ProductsPage() {
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
-  const [form, setForm] = useState({ name:"", category:"Everyday", price:"", mrp:"", stock_quantity:"", status:"active", image_url:"" });
+  const [form, setForm] = useState({ name:"", category:"Everyday", price:"", mrp:"", stock_quantity:"", status:"active", image_url:"", images:[], variants:[] });
 
   useEffect(() => {
     loadProducts();
@@ -257,42 +257,80 @@ function ProductsPage() {
   );
 
   const openAdd = () => { 
-    setForm({ name:"", category:"Everyday", price:"", mrp:"", stock_quantity:"", status:"active", image_url:"" }); 
+    setForm({ name:"", category:"Everyday", price:"", mrp:"", stock_quantity:"", status:"active", image_url:"", images:[], variants:[] }); 
     setEditing(null); 
     setShowModal(true); 
   };
 
-  const openEdit = (p) => { 
-    setForm({ 
-      name:p.name, 
-      category:p.category, 
-      price:p.price, 
-      mrp:p.mrp, 
-      stock_quantity:p.stock_quantity, 
-      status:p.status,
-      image_url:p.image_url || ""
-    }); 
-    setEditing(p.id); 
-    setShowModal(true); 
+  const openEdit = async (p) => { 
+    try {
+      setLoading(true);
+      const fullProduct = await adminAPI.products.getById(p.id);
+      setForm({ 
+        name:fullProduct.name, 
+        category:fullProduct.category, 
+        price:fullProduct.price, 
+        mrp:fullProduct.mrp, 
+        stock_quantity:fullProduct.stock_quantity, 
+        status:fullProduct.status,
+        image_url:fullProduct.image_url || "",
+        images:fullProduct.images || [],
+        variants:fullProduct.variants || []
+      }); 
+      setEditing(p.id); 
+      setShowModal(true);
+    } catch (err) {
+      setError("Failed to load product details");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading] = useState(false); // false or target string
 
-  const handleFileUpload = async (e) => {
+  const handleFileUpload = async (e, target = 'image_url', index = null) => {
     const file = e.target.files[0];
     if (!file) return;
 
     try {
-      setUploading(true);
+      const targetKey = index !== null ? `${target}-${index}` : target;
+      setUploading(targetKey);
       setError("");
       const result = await adminAPI.upload.uploadImage(file);
-      setForm(f => ({ ...f, image_url: result.url }));
+      
+      if (target === 'image_url') {
+        setForm(f => ({ ...f, image_url: result.url }));
+      } else if (target === 'gallery') {
+        setForm(f => ({ ...f, images: [...(f.images || []), result.url] }));
+      } else if (target === 'variant') {
+        const newVariants = [...form.variants];
+        newVariants[index].image_url = result.url;
+        setForm(f => ({ ...f, variants: newVariants }));
+      }
     } catch (err) {
       setError("Image upload failed");
       console.error(err);
     } finally {
       setUploading(false);
     }
+  };
+
+  const removeGalleryImage = (idx) => {
+    setForm(f => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
+  };
+
+  const addVariant = () => {
+    setForm(f => ({ ...f, variants: [...(form.variants || []), { variant_name: "", price: "", stock: "", image_url: "" }] }));
+  };
+
+  const removeVariant = (idx) => {
+    setForm(f => ({ ...f, variants: form.variants.filter((_, i) => i !== idx) }));
+  };
+
+  const updateVariant = (idx, key, val) => {
+    const v = [...form.variants];
+    v[idx][key] = val;
+    setForm(f => ({ ...f, variants: v }));
   };
 
   const save = async () => {
@@ -385,36 +423,99 @@ function ProductsPage() {
       </div>
 
       {showModal && (
-        <Modal title={editing?"Edit Product":"Add New Product"} onClose={()=>setShowModal(false)}>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0 16px"}}>
-            <div style={{gridColumn:"1/-1"}}><Input label="Product Name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/></div>
-            <div style={{gridColumn:"1/-1"}}>
-              <div style={{display:"flex", gap:12, alignItems:"flex-end"}}>
-                <div style={{flex:1}}>
-                  <Input label="Image URL" value={form.image_url} onChange={e=>setForm({...form,image_url:e.target.value})} placeholder="https://... or upload below"/>
+        <Modal title={editing?"Edit Product":"Add New Product"} onClose={()=>setShowModal(false)} width={800}>
+          <div style={{display:"grid", gridTemplateColumns:"1fr 300px", gap:24}}>
+            {/* Left Column: Basic Info & Variants */}
+            <div>
+              <div style={{color:C.gold, fontSize:12, fontWeight:700, textTransform:"uppercase", marginBottom:16, display:"flex", alignItems:"center", gap:8}}><Layers size={14}/> Basic Information</div>
+              <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0 16px"}}>
+                <div style={{gridColumn:"1/-1"}}><Input label="Product Name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/></div>
+                <Select label="Category" value={form.category} onChange={e=>setForm({...form,category:e.target.value})} options={["Everyday","Premium","Blends","Gifts"].map(v=>({value:v,label:v}))}/>
+                <Select label="Status" value={form.status} onChange={e=>setForm({...form,status:e.target.value})} options={[{value:"active",label:"Active"},{value:"inactive",label:"Inactive"}]}/>
+                <Input label="Selling Price (₹)" type="number" value={form.price} onChange={e=>setForm({...form,price:e.target.value})}/>
+                <Input label="MRP (₹)" type="number" value={form.mrp} onChange={e=>setForm({...form,mrp:e.target.value})}/>
+                <Input label="Stock Quantity" type="number" value={form.stock_quantity} onChange={e=>setForm({...form,stock_quantity:e.target.value})}/>
+              </div>
+
+              {/* Variants Section */}
+              <div style={{marginTop:32, borderTop:`1px solid ${C.border}`, paddingTop:24}}>
+                <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:16}}>
+                  <div style={{color:C.gold, fontSize:12, fontWeight:700, textTransform:"uppercase", display:"flex", alignItems:"center", gap:8}}><Box size={14}/> Product Variants</div>
+                  <Btn size="sm" variant="secondary" icon={Plus} onClick={addVariant}>Add Variant</Btn>
                 </div>
-                <div style={{marginBottom:14}}>
-                  <label style={{
-                    background:C.border, color:C.cream, padding:"10px 14px", borderRadius:8, fontSize:13, fontWeight:600, cursor:uploading?"not-allowed":"pointer", display:"inline-flex", alignItems:"center", gap:6, opacity:uploading?0.5:1
-                  }}>
-                    <Upload size={14}/> {uploading ? "Uploading..." : "Upload"}
-                    <input type="file" hidden accept="image/*" onChange={handleFileUpload} disabled={uploading}/>
-                  </label>
+                
+                <div style={{display:"flex", flexDirection:"column", gap:12}}>
+                  {(form.variants || []).map((v, idx) => (
+                    <div key={idx} style={{background:C.bg, borderRadius:12, padding:16, border:`1px solid ${C.border}`, display:"grid", gridTemplateColumns:"40px 1fr 1fr 100px 40px", gap:12, alignItems:"center"}}>
+                      <div style={{width:40, height:40, borderRadius:6, background:C.card, border:`1px solid ${C.border}`, overflow:"hidden", cursor:"pointer", position:"relative"}} onClick={() => document.getElementById(`v-up-${idx}`).click()}>
+                        {v.image_url ? <img src={v.image_url} style={{width:"100%", height:"100%", objectFit:"cover"}}/> : <Upload size={14} style={{position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", color:C.muted}}/>}
+                        {uploading === `variant-${idx}` && <div style={{position:"absolute", inset:0, background:"rgba(0,0,0,0.5)", display:"flex", alignItems:"center", justifyContent:"center"}}><RefreshCw size={12} className="animate-spin"/></div>}
+                        <input type="file" id={`v-up-${idx}`} hidden accept="image/*" onChange={(e) => handleFileUpload(e, 'variant', idx)}/>
+                      </div>
+                      <input value={v.variant_name} onChange={e => updateVariant(idx, 'variant_name', e.target.value)} placeholder="e.g. 500g Pack" style={{background:"transparent", border:"none", color:C.cream, fontSize:13, outline:"none"}}/>
+                      <div style={{display:"flex", alignItems:"center", gap:4}}>
+                        <span style={{color:C.muted, fontSize:12}}>₹</span>
+                        <input value={v.price} onChange={e => updateVariant(idx, 'price', e.target.value)} type="number" placeholder="Price" style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", outline:"none"}}/>
+                      </div>
+                      <div style={{display:"flex", alignItems:"center", gap:4}}>
+                        <span style={{color:C.muted, fontSize:12}}>Qty:</span>
+                        <input value={v.stock} onChange={e => updateVariant(idx, 'stock', e.target.value)} type="number" placeholder="0" style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", outline:"none"}}/>
+                      </div>
+                      <button onClick={() => removeVariant(idx)} style={{background:"none", border:"none", color:C.error, cursor:"pointer", opacity:0.6}}><Trash2 size={16}/></button>
+                    </div>
+                  ))}
+                  {(!form.variants || form.variants.length === 0) && (
+                    <div style={{textAlign:"center", padding:20, color:C.muted, fontSize:12, border:`1px dashed ${C.border}`, borderRadius:12}}>No variants added.</div>
+                  )}
                 </div>
               </div>
-              {form.image_url && (
-                <div style={{marginBottom:14, borderRadius:8, overflow:"hidden", border:`1px solid ${C.border}`, background:C.bg, height:120, display:"flex", alignItems:"center", justifyContent:"center"}}>
-                  <img src={form.image_url} alt="Preview" style={{maxHeight:"100%", maxWidth:"100%", objectFit:"contain"}}/>
-                </div>
-              )}
             </div>
-            <Select label="Category" value={form.category} onChange={e=>setForm({...form,category:e.target.value})} options={["Everyday","Premium","Blends","Gifts"].map(v=>({value:v,label:v}))}/>
-            <Select label="Status" value={form.status} onChange={e=>setForm({...form,status:e.target.value})} options={[{value:"active",label:"Active"},{value:"inactive",label:"Inactive"}]}/>
-            <Input label="Selling Price (₹)" type="number" value={form.price} onChange={e=>setForm({...form,price:e.target.value})}/>
-            <Input label="MRP (₹)" type="number" value={form.mrp} onChange={e=>setForm({...form,mrp:e.target.value})}/>
-            <Input label="Stock Quantity" type="number" value={form.stock_quantity} onChange={e=>setForm({...form,stock_quantity:e.target.value})}/>
+
+            {/* Right Column: Images & Gallery */}
+            <div style={{borderLeft:`1px solid ${C.border}`, paddingLeft:24}}>
+              <div style={{color:C.gold, fontSize:12, fontWeight:700, textTransform:"uppercase", marginBottom:16, display:"flex", alignItems:"center", gap:8}}><Upload size={14}/> Product Images</div>
+              
+              {/* Main Image */}
+              <div style={{marginBottom:24}}>
+                <div style={{fontSize:11, color:C.muted, marginBottom:8}}>MAIN IMAGE</div>
+                <div style={{width:"100%", aspectRatio:"1", background:C.bg, borderRadius:12, border:`2px dashed ${C.border}`, overflow:"hidden", position:"relative", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", transition:"border-color 0.2s"}}
+                  onClick={() => document.getElementById('main-up').click()}>
+                  {form.image_url ? (
+                    <img src={form.image_url} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                  ) : (
+                    <div style={{textAlign:"center", color:C.muted}}><Plus size={24} style={{marginBottom:8}}/><div>Add Main Image</div></div>
+                  )}
+                  {uploading === 'image_url' && <div style={{position:"absolute", inset:0, background:"rgba(0,0,0,0.5)", display:"flex", alignItems:"center", justifyContent:"center"}}><RefreshCw size={24} className="animate-spin"/></div>}
+                  <input type="file" id="main-up" hidden accept="image/*" onChange={(e) => handleFileUpload(e, 'image_url')}/>
+                </div>
+              </div>
+
+              {/* Gallery */}
+              <div>
+                <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8}}>
+                  <div style={{fontSize:11, color:C.muted}}>GALLERY</div>
+                  <Btn size="sm" variant="ghost" onClick={() => document.getElementById('gal-up').click()} disabled={uploading==='gallery'}>
+                    {uploading === 'gallery' ? <RefreshCw size={12} className="animate-spin"/> : <Plus size={12}/>} Add
+                    <input type="file" id="gal-up" hidden accept="image/*" onChange={(e) => handleFileUpload(e, 'gallery')}/>
+                  </Btn>
+                </div>
+                <div style={{display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:8}}>
+                  {(form.images || []).map((img, idx) => (
+                    <div key={idx} style={{aspectRatio:"1", borderRadius:8, overflow:"hidden", border:`1px solid ${C.border}`, position:"relative", group:"true"}}>
+                      <img src={img} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                      <button onClick={() => removeGalleryImage(idx)} style={{position:"absolute", top:4, right:4, background:"rgba(255,255,255,0.2)", backdropFilter:"blur(4px)", border:"none", borderRadius:4, color:"#fff", padding:4, cursor:"pointer"}}><X size={12}/></button>
+                      <button onClick={() => setForm({...form, image_url:img})} style={{position:"absolute", bottom:0, left:0, right:0, background:"rgba(0,0,0,0.5)", color:"#fff", fontSize:9, border:"none", padding:4, cursor:"pointer"}}>Set Main</button>
+                    </div>
+                  ))}
+                  {[...Array(Math.max(0, 6 - (form.images?.length || 0)))].map((_, i) => (
+                    <div key={i} style={{aspectRatio:"1", borderRadius:8, border:`1px dashed ${C.border}`, background:`${C.border}22`}}/>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          <div style={{display:"flex",gap:10,justifyContent:"flex-end",marginTop:20}}>
+
+          <div style={{display:"flex", gap:10, justifyContent:"flex-end", marginTop:32, borderTop:`1px solid ${C.border}`, paddingTop:24}}>
             <Btn variant="secondary" onClick={()=>setShowModal(false)}>Cancel</Btn>
             <Btn onClick={save} loading={loading}>{editing?"Save Changes":"Add Product"}</Btn>
           </div>

@@ -68,7 +68,7 @@ router.get('/:id', async (req, res) => {
 // Create product (admin only)
 router.post('/', authenticate, authorize(['admin']), async (req, res) => {
   try {
-    const { name, category, description, price, mrp, stock_quantity, image_url, status } = req.body;
+    const { name, category, description, price, mrp, stock_quantity, image_url, images, status, variants } = req.body;
 
     if (!name || !category || !price) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -88,9 +88,10 @@ router.post('/', authenticate, authorize(['admin']), async (req, res) => {
     
     if (description !== undefined) payload.description = description;
     if (image_url !== undefined) payload.image_url = image_url;
+    if (images !== undefined) payload.images = images;
     if (status !== undefined) payload.status = status;
 
-    const { data, error } = await supabase
+    const { data: product, error } = await supabase
       .from('products')
       .insert([payload])
       .select()
@@ -98,8 +99,25 @@ router.post('/', authenticate, authorize(['admin']), async (req, res) => {
 
     if (error) throw error;
 
+    // Handle variants if provided
+    if (variants && Array.isArray(variants) && variants.length > 0) {
+      const variantsPayload = variants.map(v => ({
+        product_id: product.id,
+        variant_name: v.variant_name,
+        price: parseFloat(v.price) || product.price,
+        stock: parseInt(v.stock, 10) || 0,
+        image_url: v.image_url || null
+      }));
+
+      const { error: variantError } = await supabase
+        .from('product_variants')
+        .insert(variantsPayload);
+      
+      if (variantError) logger.error(`Error inserting variants: ${variantError.message}`);
+    }
+
     logger.info(`Product created: ${name}`);
-    res.status(201).json(data);
+    res.status(201).json(product);
   } catch (error) {
     logger.error(`Create product error: ${error.message}`);
     res.status(500).json({ error: error.message });
@@ -110,7 +128,7 @@ router.post('/', authenticate, authorize(['admin']), async (req, res) => {
 router.put('/:id', authenticate, authorize(['admin']), async (req, res) => {
   try {
     const { id } = req.params;
-    const updates = { ...req.body };
+    const { variants, ...updates } = req.body;
 
     // Sanitize numeric fields to prevent empty string cast errors
     if (updates.price !== undefined) updates.price = parseFloat(updates.price) || 0;
@@ -120,7 +138,7 @@ router.put('/:id', authenticate, authorize(['admin']), async (req, res) => {
     if (updates.stock_quantity === "") updates.stock_quantity = 0;
     else if (updates.stock_quantity !== undefined) updates.stock_quantity = parseInt(updates.stock_quantity, 10) || 0;
 
-    const { data, error } = await supabase
+    const { data: product, error } = await supabase
       .from('products')
       .update({
         ...updates,
@@ -132,8 +150,27 @@ router.put('/:id', authenticate, authorize(['admin']), async (req, res) => {
 
     if (error) throw error;
 
+    // Handle variants update (simple delete and re-insert approach)
+    if (variants !== undefined && Array.isArray(variants)) {
+      // Delete existing variants
+      await supabase.from('product_variants').delete().eq('product_id', id);
+
+      // Insert new variants if any
+      if (variants.length > 0) {
+        const variantsPayload = variants.map(v => ({
+          product_id: id,
+          variant_name: v.variant_name,
+          price: parseFloat(v.price) || product.price,
+          stock: parseInt(v.stock, 10) || 0,
+          image_url: v.image_url || null
+        }));
+
+        await supabase.from('product_variants').insert(variantsPayload);
+      }
+    }
+
     logger.info(`Product updated: ${id}`);
-    res.json(data);
+    res.json(product);
   } catch (error) {
     logger.error(`Update product error: ${error.message}`);
     res.status(500).json({ error: error.message });

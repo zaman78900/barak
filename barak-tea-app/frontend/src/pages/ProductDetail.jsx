@@ -45,27 +45,33 @@ export default function ProductDetail() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [openAccordion, setOpenAccordion] = useState('brew'); // 'brew', 'desc', or null
 
-  // Setup Gallery Images (using main + placeholders for the 3-5 images requirement)
-  const images = product ? [
+  // Setup Gallery Images
+  const gallery = product ? [
     product.image_url,
-    'https://images.unsplash.com/photo-1594225439401-44754a654cd9?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1576092762791-dd9e2220afa1?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=800'
-  ] : [];
-
-  // Variants fallback
-  const variants = [
-    { name: '250g', price: product?.price || 0, mrp: product?.mrp },
-    { name: '500g', price: (product?.price || 0) * 1.9, mrp: (product?.mrp || 0) * 1.9 },
-    { name: '1kg', price: (product?.price || 0) * 3.7, mrp: (product?.mrp || 0) * 3.7 }
-  ];
+    ...(product.images || [])
+  ].filter(Boolean) : [];
 
   // Initialize variant when product loads
   useEffect(() => {
-    if (product && !selectedVariant) {
-      setSelectedVariant(variants[0]);
+    if (product && product.variants?.length > 0 && !selectedVariant) {
+      setSelectedVariant(product.variants[0]);
     }
   }, [product]);
+
+  // Handle Variant Selection
+  const handleVariantSelect = (v) => {
+    setSelectedVariant(v);
+    // If variant has a specific image, find it in gallery or set it
+    if (v.image_url) {
+      const idx = gallery.indexOf(v.image_url);
+      if (idx !== -1) {
+        setActiveImage(idx);
+      } else {
+        // If not in gallery, we could temporarily add it or just show it
+        // For simplicity, we'll assume it's either in gallery or we just use it
+      }
+    }
+  };
 
   // Handlers
   const handleMouseMove = (e) => {
@@ -76,21 +82,25 @@ export default function ProductDetail() {
   };
 
   const handleAddToCart = () => {
-    if (!product || !selectedVariant) return;
+    if (!product) return;
+    const variantLabel = selectedVariant ? selectedVariant.variant_name : 'Standard';
+    const price = selectedVariant ? selectedVariant.price : product.price;
+
     addItem({
       id: product.id,
       name: product.name,
-      price: selectedVariant.price,
+      price: price,
       image: product.image_url,
-      variant: selectedVariant.name,
+      variant: variantLabel,
       quantity
     });
-    // Optional: show toast or open cart
   };
 
   const handleWhatsAppBuy = () => {
-    if (!product || !selectedVariant) return;
-    const msg = `Hi, I would like to order:\n\n*${product.name}*\nVariant: ${selectedVariant.name}\nQuantity: ${quantity}\n\nPlease let me know how to proceed.`;
+    if (!product) return;
+    const variantLabel = selectedVariant ? selectedVariant.variant_name : 'Standard';
+    const price = selectedVariant ? selectedVariant.price : product.price;
+    const msg = `Hi, I would like to order:\n\n*${product.name}*\nVariant: ${variantLabel}\nQuantity: ${quantity}\nTotal: ₹${price * quantity}\n\nPlease let me know how to proceed.`;
     const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(msg)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -126,7 +136,7 @@ export default function ProductDetail() {
           >
             {/* Thumbnail Rail (Desktop left, Mobile bottom) */}
             <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible no-scrollbar pb-2 lg:pb-0">
-              {images.map((img, idx) => (
+              {gallery.map((img, idx) => (
                 <button 
                   key={idx}
                   onClick={() => setActiveImage(idx)}
@@ -149,7 +159,7 @@ export default function ProductDetail() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
-                src={images[activeImage]} 
+                src={gallery[activeImage]} 
                 alt={product.name}
                 className={`w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-150' : 'scale-100'}`}
                 style={isZoomed ? { transformOrigin: `${mousePos.x}% ${mousePos.y}%` } : {}}
@@ -176,31 +186,33 @@ export default function ProductDetail() {
               <h1 className="text-4xl lg:text-5xl font-playfair font-black mb-4 leading-tight">{product.name}</h1>
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-3xl font-bebas tracking-wide">₹{selectedVariant?.price || product.price}</span>
-                {selectedVariant?.mrp && (
-                  <span className="text-xl text-barak-muted line-through font-bebas">₹{selectedVariant.mrp}</span>
+                {(selectedVariant?.mrp || product.mrp) && (
+                  <span className="text-xl text-barak-muted line-through font-bebas">₹{selectedVariant?.mrp || product.mrp}</span>
                 )}
               </div>
             </motion.div>
 
             {/* Variants Selector */}
-            <motion.div variants={fadeUp} className="mb-8">
-              <h3 className="text-sm text-barak-muted mb-3 uppercase tracking-wider font-semibold">Select Size</h3>
-              <div className="flex gap-3">
-                {variants.map(v => (
-                  <button
-                    key={v.name}
-                    onClick={() => setSelectedVariant(v)}
-                    className={`px-5 py-3 rounded-lg border font-medium transition-all ${
-                      selectedVariant?.name === v.name 
-                      ? 'border-barak-gold bg-barak-gold/10 text-barak-gold' 
-                      : 'border-white/10 text-white/70 hover:border-white/30'
-                    }`}
-                  >
-                    {v.name}
-                  </button>
-                ))}
-              </div>
-            </motion.div>
+            {product.variants && product.variants.length > 0 && (
+              <motion.div variants={fadeUp} className="mb-8">
+                <h3 className="text-sm text-barak-muted mb-3 uppercase tracking-wider font-semibold">Select Size</h3>
+                <div className="flex gap-3">
+                  {product.variants.map(v => (
+                    <button
+                      key={v.id}
+                      onClick={() => handleVariantSelect(v)}
+                      className={`px-5 py-3 rounded-lg border font-medium transition-all ${
+                        selectedVariant?.id === v.id 
+                        ? 'border-barak-gold bg-barak-gold/10 text-barak-gold' 
+                        : 'border-white/10 text-white/70 hover:border-white/30'
+                      }`}
+                    >
+                      {v.variant_name}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
 
             {/* Quantity & CTAs */}
             <motion.div variants={fadeUp} className="mb-12 flex flex-col gap-4">
