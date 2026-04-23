@@ -148,9 +148,15 @@ export default function ProductDetail() {
     );
   }
 
-  const mainPrice = selectedVariant?.price || product.price;
-  const mainMrp = selectedVariant?.mrp || product.mrp;
-  const showMrp = mainMrp && Number(mainMrp) > Number(mainPrice);
+  const mainPrice = useMemo(() => {
+    return selectedVariant ? Number(selectedVariant.price) : Number(product?.price || 0);
+  }, [product, selectedVariant]);
+
+  const mainMrp = useMemo(() => {
+    return selectedVariant ? Number(selectedVariant.mrp) : Number(product?.mrp || 0);
+  }, [product, selectedVariant]);
+
+  const showMrp = mainMrp > mainPrice;
 
   return (
     <div className="min-h-screen bg-barak-bg text-barak-cream pb-24 overflow-hidden pt-28 md:pt-32">
@@ -280,25 +286,32 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Primary CTA */}
-                <button 
-                  onClick={handleAddToCart}
-                  disabled={currentStock <= 0 || isAdded}
-                  className={`flex-1 h-14 font-bold rounded-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 ${
-                    isAdded 
-                    ? 'bg-barak-success text-white' 
-                    : currentStock <= 0 
-                    ? 'bg-white/5 text-white/20 border border-white/10 cursor-not-allowed'
-                    : 'bg-barak-cream text-barak-bg hover:bg-barak-gold hover:text-white'
-                  }`}
-                >
-                  {isAdded ? (
-                    <><FiPlus className="rotate-45" /> Added to Cart</>
-                  ) : currentStock <= 0 ? (
-                    "Out of Stock"
-                  ) : (
-                    "Add to Cart"
+                <div className="flex-1 flex flex-col gap-2">
+                  <button 
+                    onClick={handleAddToCart}
+                    disabled={currentStock <= 0 || isAdded}
+                    className={`w-full h-14 font-bold rounded-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 ${
+                      isAdded 
+                      ? 'bg-barak-success text-white' 
+                      : currentStock <= 0 
+                      ? 'bg-white/5 text-white/20 border border-white/10 cursor-not-allowed'
+                      : 'bg-barak-cream text-barak-bg hover:bg-barak-gold hover:text-white'
+                    }`}
+                  >
+                    {isAdded ? (
+                      <><FiPlus className="rotate-45" /> Added to Cart</>
+                    ) : currentStock <= 0 ? (
+                      "Out of Stock"
+                    ) : (
+                      "Add to Cart"
+                    )}
+                  </button>
+                  {currentStock > 0 && (
+                    <div className="text-right text-xs text-barak-muted font-bebas tracking-wider">
+                      Total: {fmt(mainPrice * quantity)}
+                    </div>
                   )}
-                </button>
+                </div>
               </div>
 
               {/* Secondary CTA: WhatsApp */}
