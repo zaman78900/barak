@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, MagnifyingGlass, List, X } from 'phosphor-react';
 import { motion } from 'framer-motion';
+import { useCartStore } from '../store';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const cartCount = useCartStore((s) =>
+    s.items.reduce((sum, item) => sum + item.quantity, 0)
+  );
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 60);
@@ -59,13 +63,16 @@ export default function Navbar() {
                 <MagnifyingGlass size={20} />
               </button>
               <button 
+                onClick={() => navigate('/cart')}
                 className="relative p-2 hover:text-barak-gold transition-colors"
                 aria-label="Shopping cart"
               >
                 <ShoppingCart size={20} />
-                <span className="absolute -top-1 -right-1 bg-barak-gold text-barak-bg text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  0
-                </span>
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-barak-gold text-barak-bg text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </span>
+                )}
               </button>
 
               {/* WhatsApp Button - Desktop */}

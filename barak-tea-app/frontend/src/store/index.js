@@ -23,36 +23,46 @@ export const useCartStore = create((set, get) => ({
   total: 0,
 
   addItem: (product) => {
-    const items = get().items;
-    const existing = items.find((item) => item.id === product.id && item.variant === product.variant);
+    const current = get().items;
+    const existingIndex = current.findIndex(
+      (item) => item.id === product.id && item.variant === product.variant
+    );
 
-    if (existing) {
-      existing.quantity += product.quantity;
+    let newItems;
+    if (existingIndex !== -1) {
+      // Return a new array with the updated item
+      newItems = current.map((item, i) =>
+        i === existingIndex
+          ? { ...item, quantity: item.quantity + (product.quantity || 1) }
+          : item
+      );
     } else {
-      items.push({ ...product, quantity: product.quantity || 1 });
+      newItems = [...current, { ...product, quantity: product.quantity || 1 }];
     }
 
-    localStorage.setItem('cart', JSON.stringify(items));
-    get().calculateTotal();
-    set({ items });
+    const total = newItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    localStorage.setItem('cart', JSON.stringify(newItems));
+    set({ items: newItems, total });
   },
 
   removeItem: (id, variant) => {
-    const items = get().items.filter((item) => !(item.id === id && item.variant === variant));
-    localStorage.setItem('cart', JSON.stringify(items));
-    get().calculateTotal();
-    set({ items });
+    const newItems = get().items.filter(
+      (item) => !(item.id === id && item.variant === variant)
+    );
+    const total = newItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    localStorage.setItem('cart', JSON.stringify(newItems));
+    set({ items: newItems, total });
   },
 
   updateQuantity: (id, variant, quantity) => {
-    const items = get().items;
-    const item = items.find((item) => item.id === id && item.variant === variant);
-    if (item) {
-      item.quantity = Math.max(1, quantity);
-      localStorage.setItem('cart', JSON.stringify(items));
-      get().calculateTotal();
-      set({ items });
-    }
+    const newItems = get().items.map((item) =>
+      item.id === id && item.variant === variant
+        ? { ...item, quantity: Math.max(1, quantity) }
+        : item
+    );
+    const total = newItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    localStorage.setItem('cart', JSON.stringify(newItems));
+    set({ items: newItems, total });
   },
 
   clearCart: () => {
@@ -61,7 +71,7 @@ export const useCartStore = create((set, get) => ({
   },
 
   calculateTotal: () => {
-    const total = get().items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = get().items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     set({ total });
   },
 }));

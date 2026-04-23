@@ -1,15 +1,34 @@
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { FunnelSimple } from 'phosphor-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FunnelSimple, ShoppingCart, Check } from 'phosphor-react';
 import { useProducts } from '../utils/hooks';
+import { useCartStore } from '../store';
 
 export default function Shop() {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState('newest');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [addedIds, setAddedIds] = useState({});
 
+  const addItem = useCartStore((s) => s.addItem);
   const { products, loading, pagination } = useProducts(page, 12, filters);
+
+  const handleAddToCart = (product) => {
+    addItem({
+      id: product._id || product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image || '🍵',
+      category: product.category,
+      variant: product.variant || 'default',
+      quantity: 1,
+    });
+    setAddedIds((prev) => ({ ...prev, [product._id || product.id]: true }));
+    setTimeout(() => {
+      setAddedIds((prev) => ({ ...prev, [product._id || product.id]: false }));
+    }, 1800);
+  };
 
   const categories = ['All', 'Everyday', 'Premium', 'Blends', 'Gifts'];
 
@@ -215,8 +234,41 @@ export default function Shop() {
                         </p>
 
                         {/* Add to Cart Button */}
-                        <button className="w-full glass px-4 py-3 rounded-lg font-semibold text-barak-cream hover:text-barak-gold border border-barak-gold hover:border-barak-gold-light transition-all">
-                          Add to Cart
+                        <button
+                          onClick={() => handleAddToCart(product)}
+                          disabled={product.stock_quantity <= 0}
+                          className={`w-full glass px-4 py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
+                            addedIds[product._id || product.id]
+                              ? 'bg-barak-success/20 text-barak-success border border-barak-success'
+                              : product.stock_quantity <= 0
+                              ? 'opacity-50 cursor-not-allowed text-barak-muted border border-barak-border'
+                              : 'text-barak-cream hover:text-barak-gold border border-barak-gold hover:border-barak-gold-light'
+                          }`}
+                        >
+                          <AnimatePresence mode="wait">
+                            {addedIds[product._id || product.id] ? (
+                              <motion.span
+                                key="added"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="flex items-center gap-2"
+                              >
+                                <Check size={18} weight="bold" /> Added!
+                              </motion.span>
+                            ) : (
+                              <motion.span
+                                key="add"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="flex items-center gap-2"
+                              >
+                                <ShoppingCart size={18} />
+                                {product.stock_quantity <= 0 ? 'Out of Stock' : 'Add to Cart'}
+                              </motion.span>
+                            )}
+                          </AnimatePresence>
                         </button>
                       </div>
                     </motion.div>
