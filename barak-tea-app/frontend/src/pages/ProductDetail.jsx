@@ -25,13 +25,12 @@ export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  // Data Fetching
+  // 1. ALL HOOKS MUST BE AT THE TOP
   const { product, loading: productLoading, error: productError } = useProduct(id);
   const { products: relatedProducts } = useProducts(1, 4, product ? { category: product.category } : {});
   const { reviews } = useReviews(id);
   const addItem = useCartStore(state => state.addItem);
 
-  // Local State
   const [activeImage, setActiveImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -40,7 +39,6 @@ export default function ProductDetail() {
   const [openAccordion, setOpenAccordion] = useState('brew'); // 'brew', 'desc', or null
   const [isAdded, setIsAdded] = useState(false);
 
-  // Scroll to top on load or ID change
   useEffect(() => {
     window.scrollTo(0, 0);
     setActiveImage(0);
@@ -49,7 +47,6 @@ export default function ProductDetail() {
     setIsAdded(false);
   }, [id]);
 
-  // Setup Gallery Images (Main + Gallery + Variant Images)
   const gallery = useMemo(() => {
     if (!product) return [];
     const images = [
@@ -60,28 +57,35 @@ export default function ProductDetail() {
     return [...new Set(images)];
   }, [product]);
 
-  // Smart Variant Initialization (First In-Stock Variant)
   useEffect(() => {
     if (product && product.variants?.length > 0 && !selectedVariant) {
       const firstInStock = product.variants.find(v => v.stock > 0) || product.variants[0];
       setSelectedVariant(firstInStock);
     }
-  }, [product]);
+  }, [product, selectedVariant]);
 
-  // Stock Calculation
   const currentStock = useMemo(() => {
     if (!product) return 0;
     if (selectedVariant) return selectedVariant.stock;
     return product.stock_quantity;
   }, [product, selectedVariant]);
 
-  // Price Formatting
+  const mainPrice = useMemo(() => {
+    return selectedVariant ? Number(selectedVariant.price) : Number(product?.price || 0);
+  }, [product, selectedVariant]);
+
+  const mainMrp = useMemo(() => {
+    return selectedVariant ? Number(selectedVariant.mrp) : Number(product?.mrp || 0);
+  }, [product, selectedVariant]);
+
+  const showMrp = mainMrp > mainPrice;
+
+  // 2. LOGIC HELPERS
   const fmt = (val) => `₹${Number(val).toLocaleString('en-IN')}`;
 
-  // Handle Variant Selection
   const handleVariantSelect = (v) => {
     setSelectedVariant(v);
-    setQuantity(1); // Reset quantity on variant change
+    setQuantity(1);
     if (v.image_url) {
       const idx = gallery.indexOf(v.image_url);
       if (idx !== -1) {
@@ -90,7 +94,6 @@ export default function ProductDetail() {
     }
   };
 
-  // Handlers
   const handleMouseMove = (e) => {
     const { left, top, width, height } = e.target.getBoundingClientRect();
     const x = ((e.clientX - left) / width) * 100;
@@ -125,6 +128,7 @@ export default function ProductDetail() {
     window.open(whatsappUrl, '_blank');
   };
 
+  // 3. EARLY RETURNS (AFTER ALL HOOKS)
   if (productLoading) {
     return (
       <div className="min-h-screen bg-barak-bg pt-24 px-4 flex items-center justify-center">
@@ -147,16 +151,6 @@ export default function ProductDetail() {
       </div>
     );
   }
-
-  const mainPrice = useMemo(() => {
-    return selectedVariant ? Number(selectedVariant.price) : Number(product?.price || 0);
-  }, [product, selectedVariant]);
-
-  const mainMrp = useMemo(() => {
-    return selectedVariant ? Number(selectedVariant.mrp) : Number(product?.mrp || 0);
-  }, [product, selectedVariant]);
-
-  const showMrp = mainMrp > mainPrice;
 
   return (
     <div className="min-h-screen bg-barak-bg text-barak-cream pb-24 overflow-hidden pt-28 md:pt-32">
