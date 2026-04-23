@@ -28,7 +28,11 @@ export default {
         'glass': '12px',
       },
       fontFamily: {
-        'inter': ['Inter', 'sans-serif'],
+        'inter':      ['Inter', 'sans-serif'],
+        'playfair':   ['Playfair Display', 'Georgia', 'serif'],
+        'bebas':      ['Bebas Neue', 'Impact', 'sans-serif'],
+        'dmsans':     ['DM Sans', 'sans-serif'],
+        'cormorant':  ['Cormorant Garamond', 'Georgia', 'serif'],
       },
       fontSize: {
         'display': ['clamp(64px, 12vw, 120px)', { lineHeight: '0.95', letterSpacing: '-0.04em' }],

@@ -15,6 +15,7 @@ import Wholesale from './pages/Wholesale';
 import Blog from './pages/Blog';
 import AdminPanel from './pages/AdminPanel';
 import AdminLogin from './pages/AdminLogin';
+import Confirmation from './pages/Confirmation';
 
 // Components
 import Navbar from './components/Navbar';
@@ -102,6 +103,13 @@ function App() {
             <>
               <Navbar />
               <Checkout />
+              <Footer />
+            </>
+          } />
+          <Route path="/confirmation" element={
+            <>
+              <Navbar />
+              <Confirmation />
               <Footer />
             </>
           } />
