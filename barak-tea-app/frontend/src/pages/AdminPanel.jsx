@@ -820,9 +820,30 @@ function DashboardPage() {
 
 // ─── PAGE: Customers ──────────────────────────────────────────────────────────
 function CustomersPage() {
-  const [customers, setCustomers] = useState(MOCK_CUSTOMERS);
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const filtered = customers.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
+
+  useEffect(() => { loadCustomers(); }, []);
+
+  const loadCustomers = async () => {
+    try {
+      setLoading(true);
+      const data = await adminAPI.customers.getAll(1, 100);
+      setCustomers(data.customers || []);
+    } catch (err) {
+      console.error("Failed to load customers:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filtered = customers.filter(c => 
+    c.name?.toLowerCase().includes(search.toLowerCase()) || 
+    c.phone?.includes(search)
+  );
+
+  if (loading) return <div style={{textAlign:"center",padding:40,color:C.muted}}>Loading customers...</div>;
 
   return (
     <div>
@@ -837,10 +858,10 @@ function CustomersPage() {
           rows={filtered.map(c=>[
             <div><div style={{fontWeight:600}}>{c.name}</div><div style={{fontSize:11,color:C.muted}}>{c.email}</div></div>,
             c.phone,
-            c.city,
-            <span style={{fontWeight:600}}>{c.orders}</span>,
-            <span style={{color:C.gold,fontWeight:700}}>{fmt(c.spent)}</span>,
-            <Badge status={c.tier.toLowerCase()}/>,
+            c.city || "—",
+            <span style={{fontWeight:600}}>{c.orders_count || 0}</span>,
+            <span style={{color:C.gold,fontWeight:700}}>{fmt(c.total_spent || 0)}</span>,
+            <Badge status={(c.tier || "bronze").toLowerCase()}/>,
           ])}
         />
       </div>
@@ -850,17 +871,46 @@ function CustomersPage() {
 
 // ─── PAGE: Shipments ──────────────────────────────────────────────────────────
 function ShipmentsPage() {
-  const [shipments, setShipments] = useState(MOCK_SHIPMENTS);
+  const [shipments, setShipments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ orderId:"", customer:"", city:"", partner:"India Post", tracking:"" });
 
-  const save = () => {
-    setShipments(ss=>[...ss,{ id:`SHP-${Math.floor(Math.random()*900)+100}`, ...form, status:"in_transit", dispatched:new Date().toISOString().slice(0,10), eta:"" }]);
-    setShowModal(false);
-    setForm({ orderId:"", customer:"", city:"", partner:"India Post", tracking:"" });
+  useEffect(() => { loadShipments(); }, []);
+
+  const loadShipments = async () => {
+    try {
+      setLoading(true);
+      const data = await adminAPI.shipments.getAll(1, 100);
+      setShipments(data.shipments || []);
+    } catch (err) {
+      console.error("Failed to load shipments:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateStatus = (id,status) => setShipments(ss=>ss.map(s=>s.id===id?{...s,status}:s));
+  const save = async () => {
+    try {
+      await adminAPI.shipments.create(form);
+      setShowModal(false);
+      setForm({ orderId:"", customer:"", city:"", partner:"India Post", tracking:"" });
+      loadShipments();
+    } catch (err) {
+      console.error("Failed to create shipment:", err);
+    }
+  };
+
+  const updateStatus = async (id, status) => {
+    try {
+      await adminAPI.shipments.updateStatus(id, status);
+      loadShipments();
+    } catch (err) {
+      console.error("Failed to update shipment status:", err);
+    }
+  };
+
+  if (loading) return <div style={{textAlign:"center",padding:40,color:C.muted}}>Loading shipments...</div>;
 
   return (
     <div>
@@ -871,12 +921,12 @@ function ShipmentsPage() {
         <Table headers={["Ship ID","Order","Customer","City","Partner","Tracking","Status","Actions"]}
           rows={shipments.map(s=>[
             <span style={{color:C.gold,fontWeight:700}}>{s.id}</span>,
-            <span style={{color:C.muted}}>{s.orderId}</span>,
-            s.customer,
+            <span style={{color:C.muted}}>{s.orderId || s.order_id}</span>,
+            s.customer_name || s.customer,
             s.city,
             s.partner,
             <div style={{display:"flex",alignItems:"center",gap:6}}>
-              <span style={{fontSize:11,fontFamily:"monospace",color:C.cream}}>{s.tracking}</span>
+              <span style={{fontSize:11,fontFamily:"monospace",color:C.cream}}>{s.tracking_number || s.tracking}</span>
             </div>,
             <Badge status={s.status}/>,
             <div style={{display:"flex",gap:6}}>
@@ -906,16 +956,48 @@ function ShipmentsPage() {
 
 // ─── PAGE: Coupons ────────────────────────────────────────────────────────────
 function CouponsPage() {
-  const [coupons, setCoupons] = useState(MOCK_COUPONS);
+  const [coupons, setCoupons] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ code:"", type:"percent", value:"", minOrder:"", usageLimit:"", validUntil:"" });
 
-  const save = () => {
-    setCoupons(cs=>[...cs,{ id:`CP${Math.floor(Math.random()*900)+100}`, ...form, value:+form.value, minOrder:+form.minOrder, usageLimit:+form.usageLimit, used:0, status:"active" }]);
-    setShowModal(false);
+  useEffect(() => { loadCoupons(); }, []);
+
+  const loadCoupons = async () => {
+    try {
+      setLoading(true);
+      const data = await adminAPI.coupons.getAll(1, 100);
+      setCoupons(data.coupons || []);
+    } catch (err) {
+      console.error("Failed to load coupons:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const del = (id) => setCoupons(cs=>cs.filter(c=>c.id!==id));
+  const save = async () => {
+    try {
+      await adminAPI.coupons.create(form);
+      setShowModal(false);
+      setForm({ code:"", type:"percent", value:"", minOrder:"", usageLimit:"", validUntil:"" });
+      loadCoupons();
+    } catch (err) {
+      console.error("Failed to create coupon:", err);
+    }
+  };
+
+  const del = async (id) => {
+    if (window.confirm("Delete this coupon?")) {
+      try {
+        await adminAPI.coupons.delete(id);
+        loadCoupons();
+      } catch (err) {
+        console.error("Failed to delete coupon:", err);
+      }
+    }
+  };
+
+  if (loading) return <div style={{textAlign:"center",padding:40,color:C.muted}}>Loading coupons...</div>;
 
   return (
     <div>
@@ -928,8 +1010,8 @@ function CouponsPage() {
             <span style={{fontFamily:"monospace",fontWeight:700,color:C.goldLight,fontSize:13}}>{c.code}</span>,
             <Badge status={c.type}/>,
             <span style={{fontWeight:600,color:C.cream}}>{c.type==="percent"?`${c.value}%`:`₹${c.value}`}</span>,
-            `≥ ${fmt(c.minOrder)}`,
-            `${c.used}/${c.usageLimit}`,
+            `≥ ${fmt(c.minOrder || c.min_order)}`,
+            `${c.used || 0}/${c.usageLimit || c.usage_limit}`,
             <Badge status={c.status}/>,
             <Btn size="sm" variant="danger" icon={Trash2} onClick={()=>del(c.id)}/>
           ])}
@@ -958,11 +1040,45 @@ function CouponsPage() {
 
 // ─── PAGE: Reviews ────────────────────────────────────────────────────────────
 function ReviewsPage() {
-  const [reviews, setReviews] = useState(MOCK_REVIEWS);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+
+  useEffect(() => { loadReviews(); }, []);
+
+  const loadReviews = async () => {
+    try {
+      setLoading(true);
+      const data = await adminAPI.reviews.getAll(1, 100);
+      setReviews(data.reviews || []);
+    } catch (err) {
+      console.error("Failed to load reviews:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filtered = reviews.filter(r=>filter==="all"||r.status===filter);
-  const approve = (id) => setReviews(rs=>rs.map(r=>r.id===id?{...r,status:"approved"}:r));
-  const reject = (id) => setReviews(rs=>rs.map(r=>r.id===id?{...r,status:"rejected"}:r));
+  
+  const approve = async (id) => {
+    try {
+      await adminAPI.reviews.approve(id);
+      loadReviews();
+    } catch (err) {
+      console.error("Failed to approve review:", err);
+    }
+  };
+
+  const reject = async (id) => {
+    try {
+      await adminAPI.reviews.reject(id);
+      loadReviews();
+    } catch (err) {
+      console.error("Failed to reject review:", err);
+    }
+  };
+
+  if (loading) return <div style={{textAlign:"center",padding:40,color:C.muted}}>Loading reviews...</div>;
 
   return (
     <div>
@@ -976,20 +1092,23 @@ function ReviewsPage() {
         ))}
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:14}}>
+        {filtered.length === 0 && <div style={{textAlign:"center",padding:40,color:C.muted}}>No reviews found.</div>}
         {filtered.map(r=>(
           <div key={r.id} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:20}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
               <div>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
-                  <span style={{color:C.cream,fontWeight:700,fontSize:14}}>{r.headline}</span>
+                  <span style={{color:C.cream,fontWeight:700,fontSize:14}}>{r.headline || r.title}</span>
                   <Badge status={r.status}/>
                 </div>
+                <div style={{color:C.muted,fontSize:11}}>{r.product_name} · Rated {r.rating}/5</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{color:C.muted,fontSize:11}}>{r.customer}</div>
+                <div style={{color:C.muted,fontSize:11}}>{r.customer_name || r.customer}</div>
+                <div style={{color:C.muted,fontSize:10}}>{new Date(r.created_at).toLocaleDateString()}</div>
               </div>
             </div>
-            <p style={{color:C.muted,fontSize:13,margin:"0 0 14px"}}>{r.body}</p>
+            <p style={{color:C.muted,fontSize:13,margin:"0 0 14px"}}>{r.body || r.comment}</p>
             {r.status==="pending" && (
               <div style={{display:"flex",gap:10}}>
                 <Btn size="sm" variant="success" icon={Check} onClick={()=>approve(r.id)}>Approve</Btn>
@@ -1005,24 +1124,51 @@ function ReviewsPage() {
 
 // ─── PAGE: Wholesale ──────────────────────────────────────────────────────────
 function WholesalePage() {
-  const [enquiries, setEnquiries] = useState(MOCK_ENQUIRIES);
-  const updateStatus = (id,status) => setEnquiries(es=>es.map(e=>e.id===id?{...e,status}:e));
+  const [enquiries, setEnquiries] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => { loadEnquiries(); }, []);
+
+  const loadEnquiries = async () => {
+    try {
+      setLoading(true);
+      const data = await adminAPI.wholesale.getAll(1, 100);
+      setEnquiries(data.enquiries || []);
+    } catch (err) {
+      console.error("Failed to load wholesale enquiries:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id, status) => {
+    try {
+      await adminAPI.wholesale.updateStatus(id, status);
+      loadEnquiries();
+    } catch (err) {
+      console.error("Failed to update status:", err);
+    }
+  };
+
+  if (loading) return <div style={{textAlign:"center",padding:40,color:C.muted}}>Loading enquiries...</div>;
+
   return (
     <div>
       <SectionHeader title="Wholesale Enquiries" sub={`${enquiries.filter(e=>e.status==="new").length} new enquiries`} />
       <div style={{display:"flex",flexDirection:"column",gap:14}}>
+        {enquiries.length === 0 && <div style={{textAlign:"center",padding:40,color:C.muted}}>No enquiries found.</div>}
         {enquiries.map(e=>(
           <div key={e.id} style={{background:C.card,border:`1px solid ${e.status==="new"?C.gold:C.border}`,borderRadius:12,padding:20}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
               <div>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
-                  <span style={{color:C.cream,fontWeight:700,fontSize:15}}>{e.business}</span>
+                  <span style={{color:C.cream,fontWeight:700,fontSize:15}}>{e.business_name || e.business}</span>
                   <Badge status={e.status}/>
                 </div>
-                <div style={{color:C.muted,fontSize:12}}>{e.contact} · {e.phone} · {e.city}</div>
+                <div style={{color:C.muted,fontSize:12}}>{e.contact_person || e.contact} · {e.phone} · {e.city}</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{color:C.gold,fontWeight:700,fontSize:18}}>{e.monthlyKg} kg/mo</div>
+                <div style={{color:C.gold,fontWeight:700,fontSize:18}}>{e.monthly_kg || e.monthlyKg} kg/mo</div>
               </div>
             </div>
             <p style={{color:C.muted,fontSize:13,margin:"0 0 14px",background:C.bg,borderRadius:8,padding:"10px 14px"}}>{e.message}</p>
@@ -1039,50 +1185,249 @@ function WholesalePage() {
 
 // ─── PAGE: Inventory ──────────────────────────────────────────────────────────
 function InventoryPage() {
-  const [products, setProducts] = useState(MOCK_PRODUCTS);
-  const [editId, setEditId] = useState(null);
-  const [newStock, setNewStock] = useState("");
+  const [products, setProducts]   = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [saving, setSaving]       = useState(null);
+  const [error, setError]         = useState("");
+  const [success, setSuccess]     = useState("");
+  const [editMap, setEditMap]     = useState({});
+  const [search, setSearch]       = useState("");
 
-  const updateStock = (id) => {
-    setProducts(ps=>ps.map(p=>p.id===id?{...p,stock:p.stock+parseInt(newStock||0)}:p));
-    setEditId(null); 
-    setNewStock("");
+  useEffect(() => { loadProducts(); }, []);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await adminAPI.products.getAll(1, 200);
+      setProducts(data.products || []);
+      setError("");
+    } catch (err) {
+      setError("Failed to load products");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const startEdit = (p) => {
+    setEditMap(m => ({
+      ...m,
+      [p.id]: {
+        base: String(p.stock_quantity ?? ""),
+        variants: (p.variants || []).map(v => String(v.stock ?? "")),
+      }
+    }));
+  };
+
+  const cancelEdit = (id) => {
+    setEditMap(m => { const n = {...m}; delete n[id]; return n; });
+  };
+
+  const setBaseStock = (id, val) =>
+    setEditMap(m => ({ ...m, [id]: { ...m[id], base: val } }));
+
+  const setVariantStock = (id, idx, val) =>
+    setEditMap(m => ({
+      ...m,
+      [id]: {
+        ...m[id],
+        variants: m[id].variants.map((v, i) => i === idx ? val : v),
+      }
+    }));
+
+  const saveProduct = async (p) => {
+    const edits = editMap[p.id];
+    if (!edits) return;
+    try {
+      setSaving(p.id);
+      setError("");
+      const updatedVariants = (p.variants || []).map((v, i) => ({
+        ...v,
+        stock: parseInt(edits.variants[i] ?? v.stock) || 0,
+      }));
+      await adminAPI.products.update(p.id, {
+        stock_quantity: parseInt(edits.base) || 0,
+        variants: updatedVariants,
+      });
+      setSuccess(`Stock updated for "${p.name}"`);
+      setTimeout(() => setSuccess(""), 3000);
+      cancelEdit(p.id);
+      await loadProducts();
+    } catch (err) {
+      setError(`Failed to save stock for "${p.name}"`);
+      console.error(err);
+    } finally {
+      setSaving(null);
+    }
+  };
+
+  const stockLevel = (qty) => qty === 0 ? "inactive" : qty < 15 ? "processing" : "active";
+  const stockColor = (qty) => qty === 0 ? C.error : qty < 15 ? C.warning : C.success;
+
+  const filtered = products.filter(p =>
+    p.name?.toLowerCase().includes(search.toLowerCase()) ||
+    p.category?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const totalStock = products.reduce((a, p) => a + (p.stock_quantity || 0), 0);
+  const lowStock   = products.filter(p => (p.stock_quantity || 0) < 15 && (p.stock_quantity || 0) > 0).length;
+  const outOfStock = products.filter(p => (p.stock_quantity || 0) === 0).length;
+
+  if (loading) return <div style={{textAlign:"center",padding:40,color:C.muted}}>Loading inventory...</div>;
 
   return (
     <div>
-      <SectionHeader title="Inventory Management" sub="Track and update product stock levels" />
+      <SectionHeader
+        title="Inventory Management"
+        sub={`${products.length} products · ${totalStock} total units in stock`}
+        action={<Btn icon={RefreshCw} variant="secondary" onClick={loadProducts} disabled={loading}>Refresh</Btn>}
+      />
+
+      {/* Summary stats */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14,marginBottom:24}}>
+        {[
+          {label:"Total Units",  value:totalStock, color:C.gold},
+          {label:"Low Stock",    value:lowStock,   color:C.warning},
+          {label:"Out of Stock", value:outOfStock, color:C.error},
+        ].map(c => (
+          <div key={c.label} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"14px 18px"}}>
+            <div style={{color:C.muted,fontSize:11,fontWeight:600,textTransform:"uppercase",marginBottom:6}}>{c.label}</div>
+            <div style={{color:c.color,fontSize:28,fontWeight:800}}>{c.value}</div>
+          </div>
+        ))}
+      </div>
+
+      {error   && <div style={{background:"#2D0D0D",border:"1px solid #5A1A1A",color:"#F87171",padding:12,borderRadius:8,marginBottom:16}}>{error}</div>}
+      {success && <div style={{background:"#0D2B1A",border:"1px solid #1A5A35",color:"#34D399",padding:12,borderRadius:8,marginBottom:16}}>{success}</div>}
+
       <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:22}}>
-        <Table headers={["Product","Category","Current Stock","Status","Action"]}
-          rows={products.map(p=>[
-            <div style={{display:"flex",alignItems:"center",gap:10}}>
-              <div style={{width:32, height:32, borderRadius:4, overflow:"hidden", background:C.bg, border:`1px solid ${C.border}`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0}}>
-                {p.image_url ? <img src={p.image_url} style={{width:"100%", height:"100%", objectFit:"cover"}}/> : <span style={{fontSize:14}}>🍵</span>}
+        <div style={{position:"relative",marginBottom:18}}>
+          <Search size={14} style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",color:C.muted}}/>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search products or category..."
+            style={{width:"100%",background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.cream,padding:"9px 12px 9px 34px",fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+        </div>
+
+        {filtered.length === 0 && (
+          <div style={{textAlign:"center",padding:40,color:C.muted}}>No products found.</div>
+        )}
+
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+          {filtered.map(p => {
+            const isEditing   = !!editMap[p.id];
+            const isSaving    = saving === p.id;
+            const edits       = editMap[p.id];
+            const hasVariants = p.variants && p.variants.length > 0;
+            const baseQty     = p.stock_quantity || 0;
+
+            return (
+              <div key={p.id} style={{background:C.bg,border:`1px solid ${isEditing?C.gold:C.border}`,borderRadius:12,padding:18,transition:"border-color 0.2s"}}>
+                {/* Header row */}
+                <div style={{display:"flex",alignItems:"center",gap:14,marginBottom: hasVariants && isEditing ? 14 : 0}}>
+                  {/* Thumb */}
+                  <div style={{width:44,height:44,borderRadius:8,overflow:"hidden",background:C.card,border:`1px solid ${C.border}`,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    {p.image_url
+                      ? <img src={p.image_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                      : <span style={{fontSize:20}}>🍵</span>}
+                  </div>
+
+                  {/* Name + category */}
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontWeight:700,color:C.cream,fontSize:14}}>{p.name}</div>
+                    <div style={{color:C.muted,fontSize:11,marginTop:2}}>{p.category}</div>
+                  </div>
+
+                  {/* Base stock display / edit */}
+                  {!hasVariants && (
+                    <div style={{display:"flex",alignItems:"center",gap:10}}>
+                      <div style={{textAlign:"right"}}>
+                        <div style={{color:C.muted,fontSize:10,textTransform:"uppercase",marginBottom:2}}>Stock</div>
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            value={edits.base}
+                            onChange={e=>setBaseStock(p.id, e.target.value)}
+                            style={{width:80,background:C.card,border:`1px solid ${C.gold}`,borderRadius:6,color:C.cream,padding:"6px 10px",fontSize:14,fontWeight:700,outline:"none",textAlign:"center"}}
+                          />
+                        ) : (
+                          <div style={{color:stockColor(baseQty),fontWeight:800,fontSize:22}}>{baseQty}</div>
+                        )}
+                      </div>
+                      <Badge status={stockLevel(baseQty)}/>
+                    </div>
+                  )}
+
+                  {/* Actions */}
+                  <div style={{display:"flex",gap:8,flexShrink:0}}>
+                    {isEditing ? (
+                      <>
+                        <Btn size="sm" variant="secondary" onClick={()=>cancelEdit(p.id)} disabled={isSaving}>Cancel</Btn>
+                        <Btn size="sm" onClick={()=>saveProduct(p)} disabled={isSaving} icon={isSaving?RefreshCw:Check}>
+                          {isSaving?"Saving…":"Save"}
+                        </Btn>
+                      </>
+                    ) : (
+                      <Btn size="sm" variant="secondary" icon={Edit2} onClick={()=>startEdit(p)}>Edit Stock</Btn>
+                    )}
+                  </div>
+                </div>
+
+                {/* If product has variants, show them */}
+                {hasVariants && (
+                  <div style={{marginTop:12,display:"flex",flexDirection:"column",gap:8}}>
+                    {/* Base stock row for products with variants */}
+                    <div style={{display:"flex",alignItems:"center",gap:10,padding:"8px 12px",background:C.card,borderRadius:8,border:`1px solid ${C.border}`}}>
+                      <div style={{flex:1,color:C.cream,fontSize:13}}>Base stock (all variants)</div>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          value={edits.base}
+                          onChange={e=>setBaseStock(p.id, e.target.value)}
+                          style={{width:80,background:C.bg,border:`1px solid ${C.gold}`,borderRadius:6,color:C.cream,padding:"5px 8px",fontSize:13,fontWeight:700,outline:"none",textAlign:"center"}}
+                        />
+                      ) : (
+                        <div style={{color:stockColor(baseQty),fontWeight:700,fontSize:16,minWidth:40,textAlign:"right"}}>{baseQty}</div>
+                      )}
+                      <Badge status={stockLevel(baseQty)}/>
+                    </div>
+
+                    {/* Variant rows */}
+                    {p.variants.map((v, idx) => {
+                      const vQty = parseInt(isEditing ? edits.variants[idx] : v.stock) || 0;
+                      return (
+                        <div key={idx} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 12px",background:C.card,borderRadius:8,border:`1px solid ${C.border}`}}>
+                          {/* Variant thumb */}
+                          <div style={{width:28,height:28,borderRadius:4,overflow:"hidden",background:C.bg,border:`1px solid ${C.border}`,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                            {v.image_url
+                              ? <img src={v.image_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                              : <Box size={12} color={C.muted}/>}
+                          </div>
+                          <div style={{flex:1,color:C.cream,fontSize:13,fontWeight:500}}>{v.variant_name || "Unnamed Variant"}</div>
+                          <div style={{color:C.muted,fontSize:12}}>₹{v.price || 0}</div>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              value={edits.variants[idx]}
+                              onChange={e=>setVariantStock(p.id, idx, e.target.value)}
+                              style={{width:80,background:C.bg,border:`1px solid ${C.gold}`,borderRadius:6,color:C.cream,padding:"5px 8px",fontSize:13,fontWeight:700,outline:"none",textAlign:"center"}}
+                            />
+                          ) : (
+                            <div style={{color:stockColor(vQty),fontWeight:700,fontSize:16,minWidth:40,textAlign:"right"}}>{vQty}</div>
+                          )}
+                          <Badge status={stockLevel(vQty)}/>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-              <div><div style={{fontWeight:600,color:C.cream}}>{p.name}</div></div>
-            </div>,
-            p.category,
-            <div style={{color:p.stock===0?C.error:p.stock<15?C.warning:C.success,fontWeight:700,fontSize:18}}>{p.stock}</div>,
-            <Badge status={p.stock===0?"inactive":p.stock<15?"processing":"active"}/>,
-            editId===p.id ? (
-              <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                <input value={newStock} onChange={e=>setNewStock(e.target.value)} placeholder="Add qty"
-                  style={{width:70,background:C.bg,border:`1px solid ${C.gold}`,borderRadius:6,color:C.cream,padding:"6px 8px",fontSize:12,outline:"none"}}/>
-              </div>
-            ) : <span style={{color:C.muted,fontSize:12}}>—</span>,
-            editId===p.id ? (
-              <div style={{display:"flex",gap:6}}>
-                <Btn size="sm" onClick={()=>updateStock(p.id)}>Add Stock</Btn>
-              </div>
-            ) : (
-              <Btn size="sm" variant="secondary" icon={RefreshCw} onClick={()=>{setEditId(p.id);setNewStock("");}}>Restock</Btn>
-            )
-          ])}
-        />
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
+
 
 // ─── PAGE: Settings ───────────────────────────────────────────────────────────
 function SettingsPage() {
