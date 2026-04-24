@@ -134,3 +134,8 @@ select:focus-visible {
 html {
   overflow-y: scroll;
 }
+
+/* Fix for invisible select options in some browsers */
+select option {
+  @apply bg-barak-surface text-barak-cream;
+}
