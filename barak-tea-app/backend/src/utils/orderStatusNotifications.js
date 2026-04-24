@@ -73,10 +73,50 @@ function getStatusContent(status) {
 function normalizeWhatsappNumber(phone) {
   const digits = String(phone || '').replace(/\D/g, '');
   if (!digits) return null;
-  if (digits.length === 10) return `91${digits}`;
-  if (digits.length === 11 && digits.startsWith('0')) return `91${digits.slice(1)}`;
-  if (digits.length === 12 && digits.startsWith('91')) return digits;
-  return digits;
+  if (digits.length === 10) return `+91${digits}`;
+  if (digits.length === 11 && digits.startsWith('0')) return `+91${digits.slice(1)}`;
+  if (digits.length === 12 && digits.startsWith('91')) return `+${digits}`;
+  if (digits.startsWith('+')) return digits;
+  return `+${digits}`;
+}
+
+function getMetaWhatsappRecipient(phone) {
+  return normalizeWhatsappNumber(phone)?.replace(/^\+/, '') || null;
+}
+
+async function sendWhatsappViaMeta(to, content) {
+  const whatsappToken = process.env.WHATSAPP_API_TOKEN;
+  const whatsappPhoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+  if (!whatsappToken || !whatsappPhoneNumberId) {
+    return { attempted: false, sent: false, skipped: true, reason: 'meta_whatsapp_not_configured' };
+  }
+
+  const apiVersion = process.env.WHATSAPP_API_VERSION || 'v19.0';
+  const endpoint = `https://graph.facebook.com/${apiVersion}/${whatsappPhoneNumberId}/messages`;
+
+  await axios.post(
+    endpoint,
+    {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to,
+      type: 'text',
+      text: {
+        preview_url: false,
+        body: content.whatsappText,
+      },
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${whatsappToken}`,
+        'Content-Type': 'application/json',
+      },
+      timeout: 15000,
+    }
+  );
+
+  return { attempted: true, sent: true, skipped: false, reason: null };
 }
 
 function buildNotificationContent(order) {
@@ -192,43 +232,17 @@ async function sendEmailNotification(order, content) {
 async function sendWhatsappNotification(order, content) {
   const result = { attempted: false, sent: false, skipped: false, reason: null };
 
-  const whatsappToken = process.env.WHATSAPP_API_TOKEN;
-  const whatsappPhoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
-  const to = normalizeWhatsappNumber(order.customer_phone);
+  const metaRecipient = getMetaWhatsappRecipient(order.customer_phone);
 
-  if (!to) {
+  if (!metaRecipient) {
     return { ...result, skipped: true, reason: 'missing_customer_phone' };
   }
-  if (!whatsappToken || !whatsappPhoneNumberId) {
-    return { ...result, skipped: true, reason: 'whatsapp_not_configured' };
+
+  if (process.env.WHATSAPP_API_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID && metaRecipient) {
+    return sendWhatsappViaMeta(metaRecipient, content);
   }
 
-  const apiVersion = process.env.WHATSAPP_API_VERSION || 'v19.0';
-  const endpoint = `https://graph.facebook.com/${apiVersion}/${whatsappPhoneNumberId}/messages`;
-
-  result.attempted = true;
-  await axios.post(
-    endpoint,
-    {
-      messaging_product: 'whatsapp',
-      recipient_type: 'individual',
-      to,
-      type: 'text',
-      text: {
-        preview_url: false,
-        body: content.whatsappText,
-      },
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${whatsappToken}`,
-        'Content-Type': 'application/json',
-      },
-      timeout: 15000,
-    }
-  );
-
-  return { ...result, sent: true };
+  return { ...result, skipped: true, reason: 'whatsapp_not_configured' };
 }
 
 export async function sendOrderStatusNotifications(order, previousStatus) {
