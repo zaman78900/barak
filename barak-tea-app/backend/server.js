@@ -15,6 +15,8 @@ import wholesaleRoutes from './src/routes/wholesale.js';
 import shipmentRoutes from './src/routes/shipments.js';
 import paymentRoutes from './src/routes/payments.js';
 import uploadRoutes from './src/routes/upload.js';
+import settingsRoutes from './src/routes/settings.js';
+
 
 import errorHandler from './src/middleware/errorHandler.js';
 import logger from './src/utils/logger.js';
@@ -69,6 +71,8 @@ app.use('/api/wholesale', wholesaleRoutes);
 app.use('/api/shipments', shipmentRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/settings', settingsRoutes);
+
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

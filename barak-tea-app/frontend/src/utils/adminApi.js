@@ -139,7 +139,14 @@ export const uploadAPI = {
   },
 };
 
+// ─── SETTINGS ──────────────────────────────────────────────────────────────
+export const settingsAPI = {
+  getNotifications: () => api.get('/settings/notifications'),
+  updateNotifications: (data) => api.post('/settings/notifications', data),
+};
+
 export default {
+
   products: productsAPI,
   orders: ordersAPI,
   customers: customersAPI,
@@ -148,4 +155,6 @@ export default {
   reviews: reviewsAPI,
   wholesale: wholesaleAPI,
   upload: uploadAPI,
+  settings: settingsAPI,
 };
+

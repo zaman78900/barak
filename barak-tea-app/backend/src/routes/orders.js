@@ -3,6 +3,8 @@ import supabase from '../utils/supabase.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import logger from '../utils/logger.js';
 import { sendOrderStatusNotifications } from '../utils/orderStatusNotifications.js';
+import { handleNewOrder } from '../services/notificationService.js';
+
 
 const router = express.Router();
 
@@ -248,6 +250,12 @@ router.post('/guest', async (req, res) => {
 
     logger.info(`[Guest Order] Created: ${orderNum} | ₹${total_amount}`);
 
+    // Trigger Admin Notifications
+    handleNewOrder({ ...order, order_items: orderItems }).catch(err => 
+      logger.error(`Guest order admin notification failed: ${err.message}`)
+    );
+
+
     res.status(201).json({
       id:           order.id,
       order_number: order.order_number,
@@ -389,6 +397,12 @@ router.post('/', authenticate, async (req, res) => {
     if (itemsError) throw itemsError;
 
     logger.info(`Order created: ${orderNumber}`);
+
+    // Trigger Admin Notifications
+    handleNewOrder({ ...order, order_items: orderItems }).catch(err => 
+      logger.error(`Order admin notification failed: ${err.message}`)
+    );
+
 
     res.status(201).json(order);
   } catch (error) {

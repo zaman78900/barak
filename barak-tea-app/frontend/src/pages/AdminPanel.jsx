@@ -1462,6 +1462,206 @@ function SettingsPage() {
 }
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
+// --- PAGE: Notification Settings ---------------------------------------------
+function NotificationSettingsPage() {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [settings, setSettings] = useState({
+    email_enabled: true,
+    whatsapp_enabled: false,
+    email_recipients: [],
+    whatsapp_recipients: []
+  });
+
+  const [emailInput, setEmailInput] = useState("");
+  const [whatsappInput, setWhatsappInput] = useState("");
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      setLoading(true);
+      const data = await adminAPI.settings.getNotifications();
+      setSettings({
+        ...data,
+        email_recipients: data.email_recipients || [],
+        whatsapp_recipients: data.whatsapp_recipients || []
+      });
+      setError("");
+    } catch (err) {
+      setError("Failed to load notification settings");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      setSuccess("");
+      setError("");
+      await adminAPI.settings.updateNotifications(settings);
+      setSuccess("Settings saved successfully!");
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to save settings");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const addEmail = () => {
+    const email = emailInput.trim();
+    if (!email) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Invalid email format");
+      return;
+    }
+    if (settings.email_recipients.includes(email)) {
+      setError("Email already added");
+      return;
+    }
+    setSettings({ ...settings, email_recipients: [...settings.email_recipients, email] });
+    setEmailInput("");
+    setError("");
+  };
+
+  const removeEmail = (email) => {
+    setSettings({ ...settings, email_recipients: settings.email_recipients.filter(e => e !== email) });
+  };
+
+  const addWhatsapp = () => {
+    const phone = whatsappInput.trim();
+    if (!phone) return;
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length < 10) {
+      setError("Invalid phone number");
+      return;
+    }
+    if (settings.whatsapp_recipients.includes(phone)) {
+      setError("Number already added");
+      return;
+    }
+    setSettings({ ...settings, whatsapp_recipients: [...settings.whatsapp_recipients, phone] });
+    setWhatsappInput("");
+    setError("");
+  };
+
+  const removeWhatsapp = (phone) => {
+    setSettings({ ...settings, whatsapp_recipients: settings.whatsapp_recipients.filter(p => p !== phone) });
+  };
+
+  if (loading) return <div style={{ textAlign: "center", padding: 40, color: C.muted }}>Loading settings...</div>;
+
+  return (
+    <div>
+      <SectionHeader 
+        title="Notification Settings" 
+        sub="Configure real-time order alerts for admins" 
+        action={<Btn icon={saving ? RefreshCw : CheckCircle} onClick={handleSave} disabled={saving}>{saving ? "Saving..." : "Save Settings"}</Btn>}
+      />
+
+      {error && <div style={{ background: "#2D0D0D", border: "1px solid #5A1A1A", color: "#F87171", padding: 12, borderRadius: 8, marginBottom: 16 }}>{error}</div>}
+      {success && <div style={{ background: "#0D2B1A", border: "1px solid #1A5A35", color: "#34D399", padding: 12, borderRadius: 8, marginBottom: 16 }}>{success}</div>}
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 24 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ background: `${C.gold}20`, padding: 8, borderRadius: 8, color: C.gold }}><Mail size={20} /></div>
+              <div>
+                <div style={{ color: C.cream, fontWeight: 700, fontSize: 15 }}>Email Alerts</div>
+                <div style={{ color: C.muted, fontSize: 12 }}>Receive order details via email</div>
+              </div>
+            </div>
+            <button 
+              onClick={() => setSettings({ ...settings, email_enabled: !settings.email_enabled })}
+              style={{ background: settings.email_enabled ? C.gold : C.bg, border: `1px solid ${settings.email_enabled ? C.gold : C.border}`, width: 44, height: 22, borderRadius: 11, position: "relative", cursor: "pointer", transition: "all 0.2s" }}
+            >
+              <div style={{ position: "absolute", top: 2, left: settings.email_enabled ? 24 : 2, width: 16, height: 16, borderRadius: "50%", background: settings.email_enabled ? "#0D0905" : C.muted, transition: "all 0.2s" }} />
+            </button>
+          </div>
+
+          <div style={{ opacity: settings.email_enabled ? 1 : 0.5, pointerEvents: settings.email_enabled ? "auto" : "none" }}>
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", color: C.muted, fontSize: 11, fontWeight: 600, marginBottom: 8, textTransform: "uppercase" }}>Recipients</label>
+              <div style={{ display: "flex", gap: 8 }}>
+                <input 
+                  value={emailInput} 
+                  onChange={e => setEmailInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && addEmail()}
+                  placeholder="admin@example.com"
+                  style={{ flex: 1, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, color: C.cream, padding: "9px 12px", fontSize: 14, outline: "none" }}
+                />
+                <Btn size="sm" onClick={addEmail} icon={Plus}>Add</Btn>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {settings.email_recipients.map(email => (
+                <div key={email} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: C.bg, padding: "8px 12px", borderRadius: 8, border: `1px solid ${C.border}` }}>
+                  <span style={{ color: C.cream, fontSize: 13 }}>{email}</span>
+                  <button onClick={() => removeEmail(email)} style={{ background: "none", border: "none", color: C.error, cursor: "pointer", padding: 4 }}><Trash2 size={14} /></button>
+                </div>
+              ))}
+              {settings.email_recipients.length === 0 && <div style={{ textAlign: "center", padding: 12, color: C.muted, fontSize: 12, border: `1px dashed ${C.border}`, borderRadius: 8 }}>No recipients added.</div>}
+            </div>
+          </div>
+        </div>
+
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 24 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ background: `${C.success}20`, padding: 8, borderRadius: 8, color: C.success }}><MessageCircle size={20} /></div>
+              <div>
+                <div style={{ color: C.cream, fontWeight: 700, fontSize: 15 }}>WhatsApp Alerts</div>
+                <div style={{ color: C.muted, fontSize: 12 }}>Receive order summary on WhatsApp</div>
+              </div>
+            </div>
+            <button 
+              onClick={() => setSettings({ ...settings, whatsapp_enabled: !settings.whatsapp_enabled })}
+              style={{ background: settings.whatsapp_enabled ? C.success : C.bg, border: `1px solid ${settings.whatsapp_enabled ? C.success : C.border}`, width: 44, height: 22, borderRadius: 11, position: "relative", cursor: "pointer", transition: "all 0.2s" }}
+            >
+              <div style={{ position: "absolute", top: 2, left: settings.whatsapp_enabled ? 24 : 2, width: 16, height: 16, borderRadius: "50%", background: settings.whatsapp_enabled ? "#fff" : C.muted, transition: "all 0.2s" }} />
+            </button>
+          </div>
+
+          <div style={{ opacity: settings.whatsapp_enabled ? 1 : 0.5, pointerEvents: settings.whatsapp_enabled ? "auto" : "none" }}>
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", color: C.muted, fontSize: 11, fontWeight: 600, marginBottom: 8, textTransform: "uppercase" }}>Phone Numbers</label>
+              <div style={{ display: "flex", gap: 8 }}>
+                <input 
+                  value={whatsappInput} 
+                  onChange={e => setWhatsappInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && addWhatsapp()}
+                  placeholder="+91 98765 43210"
+                  style={{ flex: 1, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, color: C.cream, padding: "9px 12px", fontSize: 14, outline: "none" }}
+                />
+                <Btn size="sm" onClick={addWhatsapp} icon={Plus}>Add</Btn>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {settings.whatsapp_recipients.map(phone => (
+                <div key={phone} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: C.bg, padding: "8px 12px", borderRadius: 8, border: `1px solid ${C.border}` }}>
+                  <span style={{ color: C.cream, fontSize: 13 }}>{phone}</span>
+                  <button onClick={() => removeWhatsapp(phone)} style={{ background: "none", border: "none", color: C.error, cursor: "pointer", padding: 4 }}><Trash2 size={14} /></button>
+                </div>
+              ))}
+              {settings.whatsapp_recipients.length === 0 && <div style={{ textAlign: "center", padding: 12, color: C.muted, fontSize: 12, border: `1px dashed ${C.border}`, borderRadius: 8 }}>No numbers added.</div>}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const NAV = [
   { id:"dashboard", label:"Dashboard", icon:LayoutDashboard },
   { id:"products", label:"Products", icon:Package },
@@ -1472,6 +1672,7 @@ const NAV = [
   { id:"coupons", label:"Coupons", icon:Tag },
   { id:"reviews", label:"Reviews", icon:Star },
   { id:"wholesale", label:"Wholesale", icon:Inbox },
+  { id:"notification_settings", label:"Order Alerts", icon:Bell },
   { id:"settings", label:"Settings", icon:Settings },
 ];
 
@@ -1483,7 +1684,7 @@ export default function AdminPanel() {
     dashboard:<DashboardPage/>, products:<ProductsPage/>, orders:<OrdersPage/>,
     customers:<CustomersPage/>, inventory:<InventoryPage/>, shipments:<LiveShipmentsPage/>,
     coupons:<CouponsPage/>, reviews:<ReviewsPage/>, wholesale:<WholesalePage/>,
-    settings:<SettingsPage/>,
+    notification_settings:<NotificationSettingsPage/>, settings:<SettingsPage/>,
   };
 
   const SIDEBAR_W = collapsed ? 64 : 220;
@@ -1570,3 +1771,5 @@ export default function AdminPanel() {
     </div>
   );
 }
+
+
