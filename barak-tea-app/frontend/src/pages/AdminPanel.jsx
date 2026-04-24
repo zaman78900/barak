@@ -474,15 +474,15 @@ function ProductsPage() {
                 
                 <div style={{display:"flex", flexDirection:"column", gap:12}}>
                   {(form.variants || []).map((v, idx) => (
-                    <div key={idx} style={{background:C.bg, borderRadius:12, padding:16, border:`1px solid ${C.border}`, display:"grid", gridTemplateColumns:"40px minmax(0, 1.4fr) minmax(110px, 1fr) 100px 40px", gap:12, alignItems:"center"}}>
+                    <div key={idx} style={{background:C.bg, borderRadius:12, padding:16, border:`1px solid ${C.border}`, display:"grid", gridTemplateColumns:"40px minmax(120px, 1.7fr) minmax(120px, 1fr) 100px 40px", gap:12, alignItems:"center"}}>
                       <div style={{width:40, height:40, borderRadius:6, background:C.card, border:`1px solid ${C.border}`, overflow:"hidden", cursor:"pointer", position:"relative"}} onClick={() => document.getElementById(`v-up-${idx}`).click()}>
                         {v.image_url ? <img src={v.image_url} style={{width:"100%", height:"100%", objectFit:"cover"}}/> : <Upload size={14} style={{position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", color:C.muted}}/>}
                         {uploading === `variant-${idx}` && <div style={{position:"absolute", inset:0, background:"rgba(0,0,0,0.5)", display:"flex", alignItems:"center", justifyContent:"center"}}><RefreshCw size={12} className="animate-spin"/></div>}
                         <input type="file" id={`v-up-${idx}`} hidden accept="image/*" onChange={(e) => handleFileUpload(e, 'variant', idx)}/>
                       </div>
                       <input value={v.variant_name} onChange={e => updateVariant(idx, 'variant_name', e.target.value)} placeholder="e.g. 500g Pack" 
-                        style={{background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px", color:C.cream, fontSize:13, outline:"none", minWidth:0, boxSizing:"border-box"}}/>
-                      <div style={{display:"flex", alignItems:"center", gap:4, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px", minWidth:0, boxSizing:"border-box"}}>
+                        style={{background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"8px 12px", color:C.cream, fontSize:13, outline:"none", minWidth:0, boxSizing:"border-box"}}/>
+                      <div style={{display:"flex", alignItems:"center", gap:6, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"8px 12px", minWidth:0, boxSizing:"border-box"}}>
                         <span style={{color:C.muted, fontSize:12}}>₹</span>
                         <input value={v.price} onChange={e => updateVariant(idx, 'price', e.target.value)} type="number" step="any" placeholder="Price" 
                           style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", flex:1, minWidth:0, outline:"none"}}/>
