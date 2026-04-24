@@ -225,6 +225,7 @@ const MOCK_ENQUIRIES = [
 ];
 // ─── PAGE: Products ───────────────────────────────────────────────────────────
 function ProductsPage() {
+  const createEmptyVariant = () => ({ variant_name: "", price: "", stock: "", image_url: "" });
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -275,7 +276,14 @@ function ProductsPage() {
         status:fullProduct.status,
         image_url:fullProduct.image_url || "",
         images:fullProduct.images || [],
-        variants:fullProduct.variants || []
+        variants:(fullProduct.variants || []).map(v => ({
+          ...createEmptyVariant(),
+          ...v,
+          variant_name: v.variant_name || "",
+          price: v.price ?? "",
+          stock: v.stock ?? "",
+          image_url: v.image_url || ""
+        }))
       }); 
       setEditing(p.id); 
       setShowModal(true);
@@ -303,9 +311,12 @@ function ProductsPage() {
       } else if (target === 'gallery') {
         setForm(f => ({ ...f, images: [...(f.images || []), result.url] }));
       } else if (target === 'variant') {
-        const newVariants = [...form.variants];
-        newVariants[index] = { ...newVariants[index], image_url: result.url };
-        setForm(f => ({ ...f, variants: newVariants }));
+        setForm(f => ({
+          ...f,
+          variants: (f.variants || []).map((variant, variantIndex) =>
+            variantIndex === index ? { ...variant, image_url: result.url } : variant
+          )
+        }));
       }
     } catch (err) {
       setError("Image upload failed");
@@ -320,17 +331,20 @@ function ProductsPage() {
   };
 
   const addVariant = () => {
-    setForm(f => ({ ...f, variants: [...(form.variants || []), { variant_name: "", price: "", stock: "", image_url: "" }] }));
+    setForm(f => ({ ...f, variants: [...(f.variants || []), createEmptyVariant()] }));
   };
 
   const removeVariant = (idx) => {
-    setForm(f => ({ ...f, variants: form.variants.filter((_, i) => i !== idx) }));
+    setForm(f => ({ ...f, variants: (f.variants || []).filter((_, i) => i !== idx) }));
   };
 
   const updateVariant = (idx, key, val) => {
-    const v = [...form.variants];
-    v[idx] = { ...v[idx], [key]: val };
-    setForm(f => ({ ...f, variants: v }));
+    setForm(f => ({
+      ...f,
+      variants: (f.variants || []).map((variant, variantIndex) =>
+        variantIndex === idx ? { ...variant, [key]: val } : variant
+      )
+    }));
   };
 
   const save = async () => {
@@ -460,23 +474,23 @@ function ProductsPage() {
                 
                 <div style={{display:"flex", flexDirection:"column", gap:12}}>
                   {(form.variants || []).map((v, idx) => (
-                    <div key={idx} style={{background:C.bg, borderRadius:12, padding:16, border:`1px solid ${C.border}`, display:"grid", gridTemplateColumns:"40px 1fr 1fr 100px 40px", gap:12, alignItems:"center"}}>
+                    <div key={idx} style={{background:C.bg, borderRadius:12, padding:16, border:`1px solid ${C.border}`, display:"grid", gridTemplateColumns:"40px minmax(0, 1.4fr) minmax(110px, 1fr) 100px 40px", gap:12, alignItems:"center"}}>
                       <div style={{width:40, height:40, borderRadius:6, background:C.card, border:`1px solid ${C.border}`, overflow:"hidden", cursor:"pointer", position:"relative"}} onClick={() => document.getElementById(`v-up-${idx}`).click()}>
                         {v.image_url ? <img src={v.image_url} style={{width:"100%", height:"100%", objectFit:"cover"}}/> : <Upload size={14} style={{position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", color:C.muted}}/>}
                         {uploading === `variant-${idx}` && <div style={{position:"absolute", inset:0, background:"rgba(0,0,0,0.5)", display:"flex", alignItems:"center", justifyContent:"center"}}><RefreshCw size={12} className="animate-spin"/></div>}
                         <input type="file" id={`v-up-${idx}`} hidden accept="image/*" onChange={(e) => handleFileUpload(e, 'variant', idx)}/>
                       </div>
                       <input value={v.variant_name} onChange={e => updateVariant(idx, 'variant_name', e.target.value)} placeholder="e.g. 500g Pack" 
-                        style={{background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px", color:C.cream, fontSize:13, outline:"none"}}/>
-                      <div style={{display:"flex", alignItems:"center", gap:4, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px"}}>
+                        style={{background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px", color:C.cream, fontSize:13, outline:"none", minWidth:0, boxSizing:"border-box"}}/>
+                      <div style={{display:"flex", alignItems:"center", gap:4, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px", minWidth:0, boxSizing:"border-box"}}>
                         <span style={{color:C.muted, fontSize:12}}>₹</span>
                         <input value={v.price} onChange={e => updateVariant(idx, 'price', e.target.value)} type="number" step="any" placeholder="Price" 
-                          style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", outline:"none"}}/>
+                          style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", flex:1, minWidth:0, outline:"none"}}/>
                       </div>
-                      <div style={{display:"flex", alignItems:"center", gap:4, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px"}}>
+                      <div style={{display:"flex", alignItems:"center", gap:4, background:C.card, border:`1px solid ${C.border}`, borderRadius:6, padding:"6px 10px", minWidth:0, boxSizing:"border-box"}}>
                         <span style={{color:C.muted, fontSize:12}}>Qty:</span>
                         <input value={v.stock} onChange={e => updateVariant(idx, 'stock', e.target.value)} type="number" placeholder="0" 
-                          style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", outline:"none"}}/>
+                          style={{background:"transparent", border:"none", color:C.cream, fontSize:13, width:"100%", flex:1, minWidth:0, outline:"none"}}/>
                       </div>
                       <button onClick={() => removeVariant(idx)} style={{background:"none", border:"none", color:C.error, cursor:"pointer", opacity:0.6}}><Trash2 size={16}/></button>
                     </div>
