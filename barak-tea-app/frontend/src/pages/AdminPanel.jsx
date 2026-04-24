@@ -96,10 +96,10 @@ function Badge({ status }) {
   );
 }
 
-function Modal({ title, onClose, children, width=600 }) {
+function Modal({ title, onClose, children, width=600, maxHeight="90vh" }) {
   return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }} onClick={onClose}>
-      <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:16, width:"100%", maxWidth:width, maxHeight:"90vh", overflowY:"auto" }} onClick={e=>e.stopPropagation()}>
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:"16px 20px", overflowY:"auto" }} onClick={onClose}>
+      <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:16, width:"100%", maxWidth:width, maxHeight, overflowY:"auto", margin:"auto 0" }} onClick={e=>e.stopPropagation()}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 24px", borderBottom:`1px solid ${C.border}` }}>
           <span style={{ color:C.cream, fontWeight:700, fontSize:16 }}>{title}</span>
           <button onClick={onClose} style={{ background:"none", border:"none", color:C.muted, cursor:"pointer" }}><X size={18}/></button>
@@ -451,8 +451,8 @@ function ProductsPage() {
       </div>
 
       {showModal && (
-        <Modal title={editing?"Edit Product":"Add New Product"} onClose={()=>setShowModal(false)} width={800}>
-          <div style={{display:"grid", gridTemplateColumns:"1fr 300px", gap:24}}>
+        <Modal title={editing?"Edit Product":"Add New Product"} onClose={()=>setShowModal(false)} width={1120} maxHeight="calc(100vh - 24px)">
+          <div style={{display:"grid", gridTemplateColumns:"minmax(0, 1.75fr) 320px", gap:24}}>
             {/* Left Column: Basic Info & Variants */}
             <div>
               <div style={{color:C.gold, fontSize:12, fontWeight:700, textTransform:"uppercase", marginBottom:16, display:"flex", alignItems:"center", gap:8}}><Layers size={14}/> Basic Information</div>
@@ -1023,7 +1023,7 @@ export default function AdminPanel() {
   const SIDEBAR_W = collapsed ? 64 : 220;
 
   return (
-    <div style={{ display:"flex", minHeight:"100vh", background:C.bg, fontFamily:"'DM Sans', system-ui, sans-serif", color:C.cream }}>
+    <div style={{ display:"flex", height:"100vh", background:C.bg, fontFamily:"'DM Sans', system-ui, sans-serif", color:C.cream, overflow:"hidden" }}>
       {/* Sidebar */}
       <div style={{ width:SIDEBAR_W, background:C.surface, borderRight:`1px solid ${C.border}`, display:"flex", flexDirection:"column", transition:"width 0.25s ease", overflow:"hidden", flexShrink:0, position:"sticky", top:0, height:"100vh", overflowY:"auto" }}>
         {/* Logo */}
@@ -1043,7 +1043,7 @@ export default function AdminPanel() {
         </div>
 
         {/* Nav */}
-        <nav style={{ flex:1, padding:"12px 0", overflowY:"auto" }}>
+        <nav style={{ flex:1, padding:"12px 0", overflowY:"auto", minHeight:0 }}>
           {NAV.map(n => {
             const active = page === n.id;
             return (
@@ -1079,7 +1079,7 @@ export default function AdminPanel() {
       </div>
 
       {/* Main */}
-      <div style={{ flex:1,display:"flex", flexDirection:"column", overflow:"hidden" }}>
+      <div style={{ flex:1,display:"flex", flexDirection:"column", overflow:"hidden", minWidth:0, minHeight:0 }}>
         {/* Top bar */}
         <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:"14px 28px", display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:100 }}>
           <div style={{ display:"flex", alignItems:"center", gap:8 }}>
@@ -1097,7 +1097,7 @@ export default function AdminPanel() {
         </div>
 
         {/* Page Content */}
-        <div style={{ flex:1, padding:28, overflowY:"auto" }}>
+        <div style={{ flex:1, padding:28, overflowY:"auto", minHeight:0 }}>
           {pages[page]}
         </div>
       </div>
