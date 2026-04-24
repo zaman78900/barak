@@ -59,14 +59,20 @@ export const shipmentsAPI = {
   // Get single shipment
   getById: (id) => api.get(`/shipments/${id}`),
 
+  // Get recent orders that do not have an active shipment
+  getAvailableOrders: (limit = 50) => api.get('/shipments/available-orders', { params: { limit } }),
+
+  // Get supported couriers and realtime capabilities
+  getCouriers: () => api.get('/shipments/couriers'),
+
   // Create shipment
   create: (data) => api.post('/shipments', data),
 
-  // Update shipment
-  update: (id, data) => api.put(`/shipments/${id}`, data),
-
   // Update tracking status
-  updateStatus: (id, status) => api.put(`/shipments/${id}`, { status }),
+  updateStatus: (id, status) => api.patch(`/shipments/${id}/status`, { status }),
+
+  // Trigger a background sync cycle
+  checkNow: () => api.post('/shipments/check'),
 };
 
 // ─── COUPONS ────────────────────────────────────────────────────────────────

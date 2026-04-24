@@ -10,6 +10,7 @@ import {
   IndianRupee, ChevronLeft, Globe, Zap, ArrowUpRight, ArrowDownRight
 } from "lucide-react";
 import adminAPI from "../utils/adminApi";
+import LiveShipmentsPage from "../components/admin/LiveShipmentsPage";
 
 // ─── Brand Palette ────────────────────────────────────────────────────────────
 const C = {
@@ -68,6 +69,7 @@ function Badge({ status }) {
     processing: { bg:"#2D1B00", text:"#FBBF24", label:"Processing" },
     confirmed:  { bg:"#1A1A00", text:"#D4D400", label:"Confirmed" },
     cancelled:  { bg:"#2D0D0D", text:"#F87171", label:"Cancelled" },
+    returned:   { bg:"#2D0D0D", text:"#F87171", label:"Returned" },
     active:     { bg:"#0D2B1A", text:"#34D399", label:"Active" },
     inactive:   { bg:"#2D2D2D", text:"#9CA3AF", label:"Inactive" },
     pending:    { bg:"#2D1B00", text:"#FBBF24", label:"Pending" },
@@ -1479,7 +1481,7 @@ export default function AdminPanel() {
 
   const pages = {
     dashboard:<DashboardPage/>, products:<ProductsPage/>, orders:<OrdersPage/>,
-    customers:<CustomersPage/>, inventory:<InventoryPage/>, shipments:<ShipmentsPage/>,
+    customers:<CustomersPage/>, inventory:<InventoryPage/>, shipments:<LiveShipmentsPage/>,
     coupons:<CouponsPage/>, reviews:<ReviewsPage/>, wholesale:<WholesalePage/>,
     settings:<SettingsPage/>,
   };

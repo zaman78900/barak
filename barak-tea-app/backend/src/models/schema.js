@@ -100,9 +100,18 @@ CREATE TABLE IF NOT EXISTS order_items (
 CREATE TABLE IF NOT EXISTS shipments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  tracking_id TEXT UNIQUE,
   tracking_number TEXT UNIQUE,
   courier_partner TEXT,
-  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'picked_up', 'in_transit', 'out_for_delivery', 'delivered', 'returned')),
+  status TEXT DEFAULT 'shipped' CHECK (status IN ('pending', 'shipped', 'in_transit', 'out_for_delivery', 'delivered', 'cancelled', 'returned')),
+  last_checked_at TIMESTAMP,
+  last_raw_status TEXT,
+  status_message TEXT,
+  tracking_events JSONB DEFAULT '[]'::jsonb,
+  tracking_meta JSONB DEFAULT '{}'::jsonb,
+  notification_state JSONB DEFAULT '{}'::jsonb,
+  order_snapshot JSONB DEFAULT '{}'::jsonb,
+  failure_count INTEGER DEFAULT 0,
   dispatched_date TIMESTAMP,
   estimated_delivery TIMESTAMP,
   actual_delivery TIMESTAMP,
@@ -169,6 +178,8 @@ CREATE INDEX idx_orders_created_at ON orders(created_at);
 CREATE INDEX idx_products_category ON products(category);
 CREATE INDEX idx_reviews_product_id ON reviews(product_id);
 CREATE INDEX idx_shipments_order_id ON shipments(order_id);
+CREATE INDEX idx_shipments_status ON shipments(status);
+CREATE INDEX idx_shipments_last_checked_at ON shipments(last_checked_at);
 `;
 
 export default schema;

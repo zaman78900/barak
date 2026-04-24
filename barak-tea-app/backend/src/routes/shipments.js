@@ -1,125 +1,140 @@
 import express from 'express';
-import supabase from '../utils/supabase.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import logger from '../utils/logger.js';
+import { verifyToken } from '../utils/auth.js';
+import {
+  createShipment,
+  getShipmentById,
+  getShipmentByTrackingId,
+  getShipmentRealtimeConfig,
+  getSupportedCouriers,
+  listAvailableOrders,
+  listShipments,
+  updateShipmentStatus,
+} from '../services/shipmentService.js';
+import { triggerShipmentCheck } from '../services/shipmentScheduler.js';
 
 const router = express.Router();
 
-// Get all shipments (admin)
+function isCronAuthorized(req) {
+  const cronSecret = process.env.SHIPMENT_CRON_SECRET;
+  return Boolean(cronSecret) && req.headers['x-cron-secret'] === cronSecret;
+}
+
+function isAdminAuthorized(req) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return false;
+  }
+
+  const decoded = verifyToken(authHeader.slice(7));
+  return decoded?.role === 'admin';
+}
+
+router.get('/couriers', authenticate, authorize(['admin']), async (_req, res) => {
+  res.json({
+    couriers: getSupportedCouriers(),
+    realtime: getShipmentRealtimeConfig(),
+  });
+});
+
+router.get('/available-orders', authenticate, authorize(['admin']), async (req, res) => {
+  try {
+    const limit = Number(req.query.limit || 50);
+    const orders = await listAvailableOrders(limit);
+    res.json({ orders });
+  } catch (error) {
+    logger.error(`Available orders error: ${error.message}`);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get('/', authenticate, authorize(['admin']), async (req, res) => {
   try {
-    const { status, page = 1, limit = 20 } = req.query;
-    const offset = (page - 1) * limit;
-
-    let query = supabase.from('shipments').select('*, orders(order_number)', { count: 'exact' });
-
-    if (status) query = query.eq('status', status);
-
-    const { data, count, error } = await query
-      .range(offset, offset + limit - 1)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    res.json({
-      shipments: data,
-      pagination: { page: parseInt(page), limit: parseInt(limit), total: count },
-    });
+    const payload = await listShipments(req.query);
+    res.json(payload);
   } catch (error) {
     logger.error(`Get shipments error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Get shipment by tracking number
-router.get('/track/:tracking_number', async (req, res) => {
+router.get('/track/:trackingId', async (req, res) => {
   try {
-    const { tracking_number } = req.params;
+    const shipment = await getShipmentByTrackingId(req.params.trackingId);
+    res.json(shipment);
+  } catch (error) {
+    logger.error(`Track shipment error: ${error.message}`);
+    res.status(404).json({ error: 'Shipment not found' });
+  }
+});
 
-    const { data: shipment, error } = await supabase
-      .from('shipments')
-      .select('*, orders(order_number, customer_city)')
-      .eq('tracking_number', tracking_number)
-      .single();
-
-    if (error) {
-      return res.status(404).json({ error: 'Shipment not found' });
-    }
-
+router.get('/:id', authenticate, authorize(['admin']), async (req, res) => {
+  try {
+    const shipment = await getShipmentById(req.params.id);
     res.json(shipment);
   } catch (error) {
     logger.error(`Get shipment error: ${error.message}`);
-    res.status(500).json({ error: error.message });
+    res.status(404).json({ error: 'Shipment not found' });
   }
 });
 
-// Create shipment (admin)
 router.post('/', authenticate, authorize(['admin']), async (req, res) => {
   try {
-    const { order_id, tracking_number, courier_partner } = req.body;
+    const payload = {
+      order_id: req.body.order_id || req.body.orderId,
+      tracking_id: req.body.tracking_id || req.body.tracking_number || req.body.tracking,
+      courier: req.body.courier || req.body.courier_partner || req.body.partner,
+    };
 
-    if (!order_id || !tracking_number) {
-      return res.status(400).json({ error: 'Order ID and tracking number required' });
-    }
-
-    const { data, error } = await supabase
-      .from('shipments')
-      .insert([{
-        order_id,
-        tracking_number,
-        courier_partner,
-        status: 'pending',
-      }])
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    // Update order status
-    await supabase
-      .from('orders')
-      .update({ status: 'shipped' })
-      .eq('id', order_id);
-
-    logger.info(`Shipment created: ${tracking_number}`);
-    res.status(201).json(data);
+    const result = await createShipment(payload);
+    res.status(201).json(result);
   } catch (error) {
     logger.error(`Create shipment error: ${error.message}`);
+
+    if (error.message === 'active_shipment_already_exists') {
+      return res.status(409).json({ error: 'An active shipment already exists for this order' });
+    }
+
+    if (error.message === 'order_id_and_tracking_id_required') {
+      return res.status(400).json({ error: 'Order ID and tracking ID are required' });
+    }
+
     res.status(500).json({ error: error.message });
   }
 });
 
-// Update shipment status (admin)
 router.patch('/:id/status', authenticate, authorize(['admin']), async (req, res) => {
   try {
-    const { id } = req.params;
     const { status } = req.body;
-
-    const { data: shipment, error } = await supabase
-      .from('shipments')
-      .update({ 
-        status,
-        actual_delivery: status === 'delivered' ? new Date() : null,
-        updated_at: new Date(),
-      })
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    // Update order status if delivered
-    if (status === 'delivered') {
-      await supabase
-        .from('orders')
-        .update({ status: 'delivered' })
-        .eq('id', shipment.order_id);
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required' });
     }
 
-    logger.info(`Shipment status updated: ${id} -> ${status}`);
-    res.json(shipment);
+    const result = await updateShipmentStatus(req.params.id, status, {
+      source: 'admin_override',
+      rawStatus: `Admin updated shipment to ${status}`,
+    });
+
+    res.json(result);
   } catch (error) {
     logger.error(`Update shipment error: ${error.message}`);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/check', async (req, res) => {
+  try {
+    const adminAuthorized = isAdminAuthorized(req);
+
+    if (!adminAuthorized && !isCronAuthorized(req)) {
+      return res.status(401).json({ error: 'Unauthorized cron request' });
+    }
+
+    const summary = await triggerShipmentCheck(adminAuthorized ? 'admin_endpoint' : 'cron_endpoint');
+    res.json(summary);
+  } catch (error) {
+    logger.error(`Shipment check error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
