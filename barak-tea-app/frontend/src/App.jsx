@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import './styles/globals.css';
 
@@ -32,11 +32,20 @@ function ProtectedAdminRoute({ element }) {
   return element;
 }
 
-function App() {
+function AppRoutes() {
+  const location = useLocation();
   const lenisRef = useRef(null);
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   useEffect(() => {
-    // Initialize Lenis smooth scroll
+    if (isAdminRoute) {
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+      }
+      return undefined;
+    }
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => {
@@ -49,98 +58,109 @@ function App() {
     });
 
     lenisRef.current = lenis;
+    let rafId = null;
 
     function raf(time) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
     return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
       lenis.destroy();
+      lenisRef.current = null;
     };
-  }, []);
+  }, [isAdminRoute]);
 
   return (
+    <div className="min-h-screen bg-barak-bg text-barak-cream overflow-x-hidden">
+      <Routes>
+        {/* Admin Panel - Protected */}
+        <Route path="/admin" element={<ProtectedAdminRoute element={<AdminPanel />} />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        
+        {/* Main Website */}
+        <Route path="/" element={
+          <>
+            <Navbar />
+            <Homepage />
+            <Footer />
+          </>
+        } />
+        <Route path="/shop" element={
+          <>
+            <Navbar />
+            <Shop />
+            <Footer />
+          </>
+        } />
+        <Route path="/product/:id" element={
+          <>
+            <Navbar />
+            <ProductDetail />
+            <Footer />
+          </>
+        } />
+        <Route path="/cart" element={
+          <>
+            <Navbar />
+            <Cart />
+            <Footer />
+          </>
+        } />
+        <Route path="/checkout" element={
+          <>
+            <Checkout />
+            <Footer />
+          </>
+        } />
+        <Route path="/confirmation" element={
+          <>
+            <Confirmation />
+            <Footer />
+          </>
+        } />
+        <Route path="/brew-guide" element={
+          <>
+            <Navbar />
+            <BrewGuide />
+            <Footer />
+          </>
+        } />
+        <Route path="/our-story" element={
+          <>
+            <Navbar />
+            <OurStory />
+            <Footer />
+          </>
+        } />
+        <Route path="/wholesale" element={
+          <>
+            <Navbar />
+            <Wholesale />
+            <Footer />
+          </>
+        } />
+        <Route path="/blog" element={
+          <>
+            <Navbar />
+            <Blog />
+            <Footer />
+          </>
+        } />
+      </Routes>
+    </div>
+  );
+}
+
+function App() {
+  return (
     <Router>
-      <div className="min-h-screen bg-barak-bg text-barak-cream overflow-x-hidden">
-        <Routes>
-          {/* Admin Panel - Protected */}
-          <Route path="/admin" element={<ProtectedAdminRoute element={<AdminPanel />} />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          
-          {/* Main Website */}
-          <Route path="/" element={
-            <>
-              <Navbar />
-              <Homepage />
-              <Footer />
-            </>
-          } />
-          <Route path="/shop" element={
-            <>
-              <Navbar />
-              <Shop />
-              <Footer />
-            </>
-          } />
-          <Route path="/product/:id" element={
-            <>
-              <Navbar />
-              <ProductDetail />
-              <Footer />
-            </>
-          } />
-          <Route path="/cart" element={
-            <>
-              <Navbar />
-              <Cart />
-              <Footer />
-            </>
-          } />
-          <Route path="/checkout" element={
-            <>
-              <Checkout />
-              <Footer />
-            </>
-          } />
-          <Route path="/confirmation" element={
-            <>
-              <Confirmation />
-              <Footer />
-            </>
-          } />
-          <Route path="/brew-guide" element={
-            <>
-              <Navbar />
-              <BrewGuide />
-              <Footer />
-            </>
-          } />
-          <Route path="/our-story" element={
-            <>
-              <Navbar />
-              <OurStory />
-              <Footer />
-            </>
-          } />
-          <Route path="/wholesale" element={
-            <>
-              <Navbar />
-              <Wholesale />
-              <Footer />
-            </>
-          } />
-          <Route path="/blog" element={
-            <>
-              <Navbar />
-              <Blog />
-              <Footer />
-            </>
-          } />
-        </Routes>
-      </div>
+      <AppRoutes />
     </Router>
   );
 }
