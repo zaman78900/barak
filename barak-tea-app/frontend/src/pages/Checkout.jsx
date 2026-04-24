@@ -434,8 +434,23 @@ export default function Checkout() {
           <div className="flex flex-col gap-4 mb-6">
             {items.map(item => (
               <div key={`${item.id}-${item.variant}`} className="flex items-center gap-3.5">
-                <div className="w-12 h-14 flex items-center justify-center flex-shrink-0 bg-white/[0.03] border border-white/[0.06] text-2xl">
-                  {item.image || '🍵'}
+                <div className="w-12 h-14 flex items-center justify-center flex-shrink-0 bg-white/[0.03] border border-white/[0.06] overflow-hidden relative group">
+                  {item.image && item.image.length > 2 ? (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className={`${(item.image && item.image.length > 2) ? 'hidden' : 'flex'} w-full h-full items-center justify-center text-2xl transition-transform duration-500 group-hover:scale-110`}
+                  >
+                    {item.image || '🍵'}
+                  </div>
                 </div>
                 <div className="flex-1">
                   <div className="text-[13px] font-medium text-barak-cream leading-snug">{item.name}</div>

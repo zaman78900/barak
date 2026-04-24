@@ -153,10 +153,23 @@ export default function Cart() {
                   }}
                 >
                   {/* Image */}
-                  <div className="w-[100px] h-[120px] flex items-center justify-center bg-white/[0.02] p-4 flex-shrink-0">
-                    <span className="text-5xl drop-shadow-[0_8px_20px_rgba(139,0,0,0.4)]">
+                  <div className="w-[100px] h-[120px] flex items-center justify-center bg-white/[0.02] overflow-hidden flex-shrink-0 relative group">
+                    {item.image && item.image.length > 2 ? (
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div 
+                      className={`${(item.image && item.image.length > 2) ? 'hidden' : 'flex'} w-full h-full items-center justify-center text-5xl drop-shadow-[0_8px_20px_rgba(139,0,0,0.4)] transition-transform duration-500 group-hover:scale-110`}
+                    >
                       {item.image || '🍵'}
-                    </span>
+                    </div>
                   </div>
 
                   {/* Info */}

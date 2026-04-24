@@ -27,7 +27,7 @@ export default function Shop() {
       id: product._id || product.id,
       name: product.name,
       price: product.price,
-      image: product.image || '🍵',
+      image: product.image_url || product.image || '🍵',
       category: product.category,
       variant: product.variant || 'default',
       quantity: 1,
@@ -202,8 +202,23 @@ export default function Shop() {
                       className="glass rounded-glass overflow-hidden group cursor-pointer hover:shadow-gold-glow transition-all"
                     >
                       {/* Product Image */}
-                      <div className="w-full aspect-square bg-barak-card flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
-                        🍵
+                      <div className="w-full aspect-square bg-barak-card overflow-hidden flex items-center justify-center relative group">
+                        {product.image_url ? (
+                          <img
+                            src={product.image_url}
+                            alt={product.name}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
+                          />
+                        ) : null}
+                        <div 
+                          className={`${product.image_url ? 'hidden' : 'flex'} w-full h-full items-center justify-center text-6xl transition-transform duration-500 group-hover:scale-110`}
+                        >
+                          🍵
+                        </div>
                       </div>
 
                       {/* Product Info */}
