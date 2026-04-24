@@ -95,26 +95,31 @@ async function sendWhatsappViaMeta(to, content) {
   const apiVersion = process.env.WHATSAPP_API_VERSION || 'v19.0';
   const endpoint = `https://graph.facebook.com/${apiVersion}/${whatsappPhoneNumberId}/messages`;
 
-  await axios.post(
-    endpoint,
-    {
-      messaging_product: 'whatsapp',
-      recipient_type: 'individual',
-      to,
-      type: 'text',
-      text: {
-        preview_url: false,
-        body: content.whatsappText,
+  try {
+    await axios.post(
+      endpoint,
+      {
+        messaging_product: 'whatsapp',
+        recipient_type: 'individual',
+        to,
+        type: 'text',
+        text: {
+          preview_url: false,
+          body: content.whatsappText,
+        },
       },
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${whatsappToken}`,
-        'Content-Type': 'application/json',
-      },
-      timeout: 15000,
-    }
-  );
+      {
+        headers: {
+          Authorization: `Bearer ${whatsappToken}`,
+          'Content-Type': 'application/json',
+        },
+        timeout: 15000,
+      }
+    );
+  } catch (error) {
+    const details = error.response?.data?.error?.error_data?.details || error.response?.data?.error?.message || error.message;
+    throw new Error(`meta_whatsapp_failed: ${details}`);
+  }
 
   return { attempted: true, sent: true, skipped: false, reason: null };
 }

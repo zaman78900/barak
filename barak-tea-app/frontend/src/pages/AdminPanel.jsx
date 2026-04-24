@@ -602,8 +602,8 @@ function OrdersPage() {
   const formatNotificationResult = (label, result) => {
     if (!result) return `${label}: not attempted`;
     if (result.sent) return `${label}: sent`;
-    if (result.skipped) return `${label}: skipped`;
-    return `${label}: failed`;
+    if (result.skipped) return `${label}: skipped${result.reason ? ` (${result.reason})` : ""}`;
+    return `${label}: failed${result.reason ? ` (${result.reason})` : ""}`;
   };
 
   const buildStatusNotice = (status, notifications) => {
