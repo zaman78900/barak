@@ -123,6 +123,44 @@ function enrichOrder(order) {
   };
 }
 
+async function hydrateNotificationOrder(order) {
+  if (!order?.customer_id) {
+    return order;
+  }
+
+  const needsContactInfo = !order.customer_email || !order.customer_phone || !extractCustomerName(order);
+  if (!needsContactInfo) {
+    return order;
+  }
+
+  const { data: customer, error } = await supabase
+    .from('customers')
+    .select('email, phone, full_name')
+    .eq('id', order.customer_id)
+    .single();
+
+  if (error || !customer) {
+    if (error) {
+      logger.warn(`Customer lookup for order notifications failed: ${error.message}`);
+    }
+    return order;
+  }
+
+  const existingName = extractCustomerName(order);
+
+  return {
+    ...order,
+    customer_email: order.customer_email || customer.email || null,
+    customer_phone: order.customer_phone || customer.phone || null,
+    order_notes: existingName || !customer.full_name
+      ? order.order_notes
+      : JSON.stringify({
+          customer_name: customer.full_name,
+          source: 'customer_profile',
+        }),
+  };
+}
+
 // ─── PUBLIC: Guest order creation (no auth required) ──────────────────────
 router.post('/guest', async (req, res) => {
   try {
@@ -288,7 +326,7 @@ router.get('/:id', authenticate, async (req, res) => {
 router.post('/', authenticate, async (req, res) => {
   try {
     const { userId } = req.user;
-    const { items, total_amount, shipping_address, order_notes, coupon_code } = req.body;
+    const { items, total_amount, shipping_address, order_notes, coupon_code, payment_method } = req.body;
 
     if (!items || !items.length) {
       return res.status(400).json({ error: 'Order items required' });
@@ -297,7 +335,7 @@ router.post('/', authenticate, async (req, res) => {
     // Get customer ID
     const { data: customer } = await supabase
       .from('customers')
-      .select('id, phone')
+      .select('id, phone, email, full_name')
       .eq('user_id', userId)
       .single();
 
@@ -315,9 +353,16 @@ router.post('/', authenticate, async (req, res) => {
         order_number: orderNumber,
         customer_id: customer.id,
         customer_phone: customer.phone,
+        customer_email: customer.email || null,
         total_amount,
         shipping_address,
-        order_notes,
+        payment_method: payment_method || 'online',
+        order_notes: order_notes || (customer.full_name
+          ? JSON.stringify({
+              customer_name: customer.full_name,
+              source: 'customer_checkout',
+            })
+          : null),
         coupon_code,
         status: 'pending',
       }])
@@ -376,7 +421,8 @@ router.patch('/:id/status', authenticate, authorize(['admin']), async (req, res)
 
     if (error) throw error;
 
-    const notifications = await sendOrderStatusNotifications(order, currentOrder.status);
+    const notificationOrder = await hydrateNotificationOrder({ ...currentOrder, ...order });
+    const notifications = await sendOrderStatusNotifications(notificationOrder, currentOrder.status);
 
     logger.info(`Order status updated: ${id} -> ${status}`);
     res.json({ ...order, notifications });
