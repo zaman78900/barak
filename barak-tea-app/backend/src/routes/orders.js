@@ -5,6 +5,123 @@ import logger from '../utils/logger.js';
 
 const router = express.Router();
 
+const PAYMENT_METHOD_LABELS = {
+  upi: 'UPI',
+  card: 'Credit / Debit Card',
+  netbanking: 'Net Banking',
+  cod: 'Cash on Delivery',
+  online: 'Online Payment',
+};
+
+function extractCustomerName(order) {
+  if (!order?.order_notes) return null;
+
+  try {
+    const parsed = JSON.parse(order.order_notes);
+    if (parsed && typeof parsed === 'object') {
+      return parsed.customer_name || parsed.customerName || parsed.name || null;
+    }
+  } catch (_error) {
+    // Fall back to plain-text parsing for legacy values.
+  }
+
+  const match = String(order.order_notes).match(/Customer:\s*(.+)/i);
+  return match ? match[1].trim() : null;
+}
+
+function parseShippingAddress(shippingAddress) {
+  if (!shippingAddress) {
+    return {
+      line1: '',
+      line2: '',
+      city: '',
+      state: '',
+      pin: '',
+      country: 'India',
+      formatted: '',
+    };
+  }
+
+  if (typeof shippingAddress === 'object') {
+    return {
+      line1: shippingAddress.line1 || '',
+      line2: shippingAddress.line2 || '',
+      city: shippingAddress.city || '',
+      state: shippingAddress.state || '',
+      pin: shippingAddress.pin || '',
+      country: shippingAddress.country || 'India',
+      formatted: [
+        shippingAddress.line1,
+        shippingAddress.line2,
+        shippingAddress.city,
+        shippingAddress.state,
+        shippingAddress.pin,
+        shippingAddress.country || 'India',
+      ].filter(Boolean).join(', '),
+    };
+  }
+
+  const rawValue = String(shippingAddress).trim();
+
+  try {
+    const parsed = JSON.parse(rawValue);
+    if (parsed && typeof parsed === 'object') {
+      return parseShippingAddress(parsed);
+    }
+  } catch (_error) {
+    // Not JSON, continue with legacy comma-separated parsing.
+  }
+
+  const parts = rawValue.split(',').map(part => part.trim()).filter(Boolean);
+  if (parts[parts.length - 1]?.toLowerCase() === 'india') {
+    parts.pop();
+  }
+
+  let pin = '';
+  let state = '';
+  let city = '';
+
+  if (parts.length && /^\d{6}$/.test(parts[parts.length - 1])) {
+    pin = parts.pop();
+  }
+  if (parts.length) {
+    state = parts.pop();
+  }
+  if (parts.length) {
+    city = parts.pop();
+  }
+
+  const line1 = parts.shift() || rawValue;
+  const line2 = parts.join(', ');
+
+  return {
+    line1,
+    line2,
+    city,
+    state,
+    pin,
+    country: 'India',
+    formatted: rawValue,
+  };
+}
+
+function enrichOrder(order) {
+  const customerName = extractCustomerName(order);
+  const shippingDetails = parseShippingAddress(order.shipping_address);
+
+  return {
+    ...order,
+    customer_name: customerName,
+    contact_details: {
+      name: customerName,
+      email: order.customer_email || '',
+      phone: order.customer_phone || '',
+    },
+    shipping_address_details: shippingDetails,
+    payment_method_label: PAYMENT_METHOD_LABELS[order.payment_method] || order.payment_method || 'Not specified',
+  };
+}
+
 // ─── PUBLIC: Guest order creation (no auth required) ──────────────────────
 router.post('/guest', async (req, res) => {
   try {
@@ -131,7 +248,7 @@ router.get('/', authenticate, async (req, res) => {
     if (error) throw error;
 
     res.json({
-      orders: data,
+      orders: (data || []).map(enrichOrder),
       pagination: { page: parseInt(page), limit: parseInt(limit), total: count },
     });
   } catch (error) {
@@ -154,7 +271,7 @@ router.get('/:id', authenticate, async (req, res) => {
     if (error) throw error;
     if (!order) return res.status(404).json({ error: 'Order not found' });
 
-    res.json(order);
+    res.json(enrichOrder(order));
   } catch (error) {
     logger.error(`Get order error: ${error.message}`);
     res.status(500).json({ error: error.message });

@@ -583,7 +583,31 @@ function OrdersPage() {
     }
   };
 
-  const statuses = ["all","confirmed","processing","shipped","delivered","cancelled"];
+  const statuses = ["all","pending","confirmed","processing","shipped","delivered","cancelled"];
+
+  const getCustomerName = (order) =>
+    order?.contact_details?.name || order?.customer_name || "Guest Customer";
+
+  const getShippingDetails = (order) =>
+    order?.shipping_address_details || {
+      line1: "",
+      line2: "",
+      city: order?.customer_city || "",
+      state: "",
+      pin: "",
+      formatted: order?.shipping_address || "",
+    };
+
+  const openOrder = async (order) => {
+    setSelected(order);
+    try {
+      const fullOrder = await adminAPI.orders.getById(order.id);
+      setSelected(fullOrder);
+    } catch (err) {
+      setError("Failed to load complete order details");
+      console.error(err);
+    }
+  };
 
   const updateStatus = async (id, status) => {
     try {
@@ -619,28 +643,89 @@ function OrdersPage() {
         <Table headers={["Order ID","Customer","Total","Status","Date","Actions"]}
           rows={orders.map(o=>[
             <span style={{color:C.gold,fontWeight:700}}>{o.order_number || o.id}</span>,
-            <div>{o.customer_name || "—"}</div>,
+            <div>
+              <div style={{fontWeight:600}}>{getCustomerName(o)}</div>
+              <div style={{fontSize:11,color:C.muted}}>
+                {o.contact_details?.phone || o.customer_phone || o.contact_details?.email || o.customer_email || "—"}
+              </div>
+            </div>,
             <span style={{fontWeight:700,color:C.gold}}>{fmt(o.total_amount)}</span>,
             <Badge status={o.status}/>,
             <span style={{color:C.muted,fontSize:11}}>{new Date(o.created_at).toLocaleDateString()}</span>,
             <div style={{display:"flex",gap:6}}>
-              <Btn size="sm" variant="secondary" icon={Eye} onClick={()=>setSelected(o)}>View</Btn>
+              <Btn size="sm" variant="secondary" icon={Eye} onClick={()=>openOrder(o)}>View</Btn>
             </div>
           ])}
         />
       </div>
 
       {selected && (
-        <Modal title={`Order ${selected.order_number || selected.id}`} onClose={()=>setSelected(null)} width={680}>
-          <div style={{background:C.bg,borderRadius:10,padding:16,marginBottom:20}}>
-            <div style={{color:C.muted,fontSize:11,fontWeight:600,marginBottom:10,textTransform:"uppercase"}}>Order Info</div>
-            <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><span style={{color:C.muted,fontSize:12}}>Status</span><Badge status={selected.status}/></div>
-            <div style={{display:"flex",justifyContent:"space-between"}}><span style={{color:C.muted,fontSize:12}}>Total</span><span style={{color:C.gold,fontWeight:700}}>{fmt(selected.total_amount)}</span></div>
+        <Modal title={`Order ${selected.order_number || selected.id}`} onClose={()=>setSelected(null)} width={760}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:20}}>
+            <div style={{background:C.bg,borderRadius:10,padding:16}}>
+              <div style={{color:C.muted,fontSize:11,fontWeight:600,marginBottom:10,textTransform:"uppercase"}}>Order Info</div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}><span style={{color:C.muted,fontSize:12}}>Status</span><Badge status={selected.status}/></div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}><span style={{color:C.muted,fontSize:12}}>Total</span><span style={{color:C.gold,fontWeight:700}}>{fmt(selected.total_amount)}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between"}}><span style={{color:C.muted,fontSize:12}}>Placed</span><span style={{color:C.cream,fontSize:12}}>{selected.created_at ? new Date(selected.created_at).toLocaleString() : "—"}</span></div>
+            </div>
+            <div style={{background:C.bg,borderRadius:10,padding:16}}>
+              <div style={{color:C.muted,fontSize:11,fontWeight:600,marginBottom:10,textTransform:"uppercase"}}>Payment Method</div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}><span style={{color:C.muted,fontSize:12}}>Method</span><span style={{color:C.cream,fontSize:12,fontWeight:600}}>{selected.payment_method_label || selected.payment_method || "—"}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}><span style={{color:C.muted,fontSize:12}}>Payment Status</span><Badge status={selected.payment_status || "pending"}/></div>
+              <div style={{display:"flex",justifyContent:"space-between"}}><span style={{color:C.muted,fontSize:12}}>Channel</span><span style={{color:C.cream,fontSize:12,textTransform:"capitalize"}}>{selected.channel || "web"}</span></div>
+            </div>
           </div>
+
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:20}}>
+            <div style={{background:C.bg,borderRadius:10,padding:16}}>
+              <div style={{color:C.muted,fontSize:11,fontWeight:600,marginBottom:10,textTransform:"uppercase"}}>Contact Details</div>
+              <div style={{marginBottom:8}}><div style={{color:C.muted,fontSize:11,marginBottom:3}}>Customer</div><div style={{color:C.cream,fontSize:13,fontWeight:600}}>{getCustomerName(selected)}</div></div>
+              <div style={{marginBottom:8}}><div style={{color:C.muted,fontSize:11,marginBottom:3}}>Phone</div><div style={{color:C.cream,fontSize:13}}>{selected.contact_details?.phone || selected.customer_phone || "—"}</div></div>
+              <div><div style={{color:C.muted,fontSize:11,marginBottom:3}}>Email</div><div style={{color:C.cream,fontSize:13,wordBreak:"break-word"}}>{selected.contact_details?.email || selected.customer_email || "—"}</div></div>
+            </div>
+            <div style={{background:C.bg,borderRadius:10,padding:16}}>
+              <div style={{color:C.muted,fontSize:11,fontWeight:600,marginBottom:10,textTransform:"uppercase"}}>Shipping Address</div>
+              {(() => {
+                const shipping = getShippingDetails(selected);
+                return (
+                  <div style={{display:"flex",flexDirection:"column",gap:6,fontSize:13,color:C.cream}}>
+                    <div>{shipping.line1 || "—"}</div>
+                    {shipping.line2 && <div>{shipping.line2}</div>}
+                    {(shipping.city || shipping.state || shipping.pin) && (
+                      <div>{[shipping.city, shipping.state, shipping.pin].filter(Boolean).join(", ")}</div>
+                    )}
+                    {shipping.country && <div>{shipping.country}</div>}
+                    {!shipping.line1 && shipping.formatted && <div>{shipping.formatted}</div>}
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+
+          <div style={{background:C.bg,borderRadius:10,padding:16,marginBottom:20}}>
+            <div style={{color:C.muted,fontSize:11,fontWeight:600,marginBottom:10,textTransform:"uppercase"}}>Order Items</div>
+            <div style={{display:"flex",flexDirection:"column",gap:10}}>
+              {(selected.order_items || []).length === 0 ? (
+                <div style={{color:C.muted,fontSize:12}}>No order items available.</div>
+              ) : (
+                (selected.order_items || []).map((item, idx) => (
+                  <div key={`${item.id || item.product_id || item.product_name}-${idx}`} style={{display:"grid",gridTemplateColumns:"1fr auto auto",gap:12,alignItems:"center",padding:"10px 12px",border:`1px solid ${C.border}`,borderRadius:8}}>
+                    <div>
+                      <div style={{color:C.cream,fontWeight:600,fontSize:13}}>{item.product_name}</div>
+                      <div style={{color:C.muted,fontSize:11}}>{item.variant || "Standard"}</div>
+                    </div>
+                    <div style={{color:C.cream,fontSize:12}}>Qty: {item.quantity}</div>
+                    <div style={{color:C.gold,fontWeight:700,fontSize:13}}>{fmt(item.total_price || ((item.unit_price || 0) * (item.quantity || 1)))}</div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
           <div style={{marginBottom:20}}>
             <div style={{color:C.muted,fontSize:11,fontWeight:600,marginBottom:10,textTransform:"uppercase"}}>Update Status</div>
             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-              {["confirmed","processing","shipped","delivered","cancelled"].map(s=>(
+              {["pending","confirmed","processing","shipped","delivered","cancelled"].map(s=>(
                 <Btn key={s} size="sm" variant={selected.status===s?"primary":"secondary"} onClick={()=>updateStatus(selected.id,s)}>{s.charAt(0).toUpperCase()+s.slice(1)}</Btn>
               ))}
             </div>
