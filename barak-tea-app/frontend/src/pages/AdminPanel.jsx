@@ -661,7 +661,7 @@ function OrdersPage() {
           ))}
         </div>
 
-        <Table headers={["Order ID","Customer","Total","Status","Date","Actions"]}
+        <Table headers={["Order ID","Customer","Products","Total","Status","Date","Actions"]}
           rows={orders.map(o=>[
             <span style={{color:C.gold,fontWeight:700}}>{o.order_number || o.id}</span>,
             <div>
@@ -669,6 +669,19 @@ function OrdersPage() {
               <div style={{fontSize:11,color:C.muted}}>
                 {o.contact_details?.phone || o.customer_phone || o.contact_details?.email || o.customer_email || "—"}
               </div>
+            </div>,
+            <div style={{maxWidth:180}}>
+              {(o.order_items && o.order_items.length > 0) ? (
+                o.order_items.map((item, idx) => (
+                  <div key={idx} style={{fontSize:12, color:C.cream, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", fontWeight: idx===0?600:400}}>
+                    {item.product_name || "Unknown"}
+                    {item.variant && item.variant !== "Standard" ? <span style={{color:C.muted}}> · {item.variant}</span> : null}
+                    {o.order_items.length > 1 && <span style={{color:C.muted}}> ×{item.quantity}</span>}
+                  </div>
+                ))
+              ) : (
+                <span style={{color:C.muted,fontSize:12}}>—</span>
+              )}
             </div>,
             <span style={{fontWeight:700,color:C.gold}}>{fmt(o.total_amount)}</span>,
             <Badge status={o.status}/>,
