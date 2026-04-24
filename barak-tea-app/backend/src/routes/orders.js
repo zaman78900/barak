@@ -2,6 +2,7 @@ import express from 'express';
 import supabase from '../utils/supabase.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import logger from '../utils/logger.js';
+import { sendOrderStatusNotifications } from '../utils/orderStatusNotifications.js';
 
 const router = express.Router();
 
@@ -166,7 +167,12 @@ router.post('/guest', async (req, res) => {
         shipping_address: shippingStr,
         payment_method:   payment_method || 'online',
         coupon_code:      coupon_code   || null,
-        order_notes:      customer_info.name ? `Customer: ${customer_info.name}` : null,
+        order_notes:      customer_info.name
+          ? JSON.stringify({
+              customer_name: customer_info.name,
+              source: 'guest_checkout',
+            })
+          : null,
         status:           'pending',
         channel:          'web',
       }])
@@ -352,6 +358,15 @@ router.patch('/:id/status', authenticate, authorize(['admin']), async (req, res)
     const { id } = req.params;
     const { status } = req.body;
 
+    const { data: currentOrder, error: currentOrderError } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (currentOrderError) throw currentOrderError;
+    if (!currentOrder) return res.status(404).json({ error: 'Order not found' });
+
     const { data: order, error } = await supabase
       .from('orders')
       .update({ status, updated_at: new Date() })
@@ -361,8 +376,10 @@ router.patch('/:id/status', authenticate, authorize(['admin']), async (req, res)
 
     if (error) throw error;
 
+    const notifications = await sendOrderStatusNotifications(order, currentOrder.status);
+
     logger.info(`Order status updated: ${id} -> ${status}`);
-    res.json(order);
+    res.json({ ...order, notifications });
   } catch (error) {
     logger.error(`Update order error: ${error.message}`);
     res.status(500).json({ error: error.message });

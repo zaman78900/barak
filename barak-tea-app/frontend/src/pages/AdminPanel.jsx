@@ -563,6 +563,7 @@ function OrdersPage() {
   const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState("");
+  const [statusNotice, setStatusNotice] = useState("");
 
   useEffect(() => {
     loadOrders();
@@ -598,6 +599,22 @@ function OrdersPage() {
       formatted: order?.shipping_address || "",
     };
 
+  const formatNotificationResult = (label, result) => {
+    if (!result) return `${label}: not attempted`;
+    if (result.sent) return `${label}: sent`;
+    if (result.skipped) return `${label}: skipped`;
+    return `${label}: failed`;
+  };
+
+  const buildStatusNotice = (status, notifications) => {
+    const parts = [
+      `Order marked as ${status}.`,
+      formatNotificationResult("Email", notifications?.email),
+      formatNotificationResult("WhatsApp", notifications?.whatsapp),
+    ];
+    return parts.join(" ");
+  };
+
   const openOrder = async (order) => {
     setSelected(order);
     try {
@@ -611,11 +628,14 @@ function OrdersPage() {
 
   const updateStatus = async (id, status) => {
     try {
-      await adminAPI.orders.updateStatus(id, status);
+      const updatedOrder = await adminAPI.orders.updateStatus(id, status);
+      setStatusNotice(buildStatusNotice(status, updatedOrder.notifications));
       await loadOrders();
       setSelected(null);
+      setError("");
     } catch (err) {
       setError("Failed to update order status");
+      setStatusNotice("");
       console.error(err);
     }
   };
@@ -629,6 +649,7 @@ function OrdersPage() {
       <SectionHeader title="Orders" sub={`${orders.length} total orders`} />
 
       {error && <div style={{ background:"#2D0D0D", border:"1px solid #5A1A1A", color:"#F87171", padding:12, borderRadius:8, marginBottom:16 }}>{error}</div>}
+      {statusNotice && <div style={{ background:"#0D2B1A", border:"1px solid #1A5A35", color:"#34D399", padding:12, borderRadius:8, marginBottom:16 }}>{statusNotice}</div>}
 
       <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:12, padding:22 }}>
         <div style={{ display:"flex", gap:6, marginBottom:16, flexWrap:"wrap" }}>
