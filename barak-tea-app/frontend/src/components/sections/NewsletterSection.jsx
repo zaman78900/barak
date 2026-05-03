@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, AlertCircle, Spinner } from 'phosphor-react';
+import { CheckCircle, Warning, CaretDown } from 'phosphor-react';
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState('');
@@ -163,7 +163,7 @@ export default function NewsletterSection() {
                 exit={{ opacity: 0, y: -10 }}
                 className="flex items-start gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/30"
               >
-                <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" weight="fill" />
+                <Warning className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" weight="fill" />
                 <p className="text-sm text-red-300">{error}</p>
               </motion.div>
             )}
@@ -189,7 +189,7 @@ export default function NewsletterSection() {
             >
               {loading ? (
                 <>
-                  <Spinner className="w-5 h-5 animate-spin" weight="bold" />
+                  <div className="w-5 h-5 border-2 border-barak-bg border-t-transparent rounded-full animate-spin" />
                   Subscribing...
                 </>
               ) : (
