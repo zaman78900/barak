@@ -12,8 +12,8 @@ async function resetPassword() {
     .from('users')
     .update({ password_hash: hash })
     .eq('email', 'barakadmin@gmail.com');
-    
-  console.log('Result:', JSON.stringify({data, error}));
+
+  console.log('Result:', JSON.stringify({ data, error }));
 }
 
 resetPassword();
