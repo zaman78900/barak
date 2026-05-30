@@ -13,7 +13,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://barak-tea-api.onrender.com',
+        target: 'https://barak-tea.vercel.app',
         changeOrigin: true,
       },
     },

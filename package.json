@@ -3,9 +3,5 @@
   "version": "1.0.0",
   "description": "BARAK Tea - Premium CTC From Barak Valley",
   "private": true,
-  "scripts": {
-    "build": "cd barak-tea-app/frontend && npm install && npm run build",
-    "dev": "cd barak-tea-app/frontend && npm run dev",
-    "start": "cd barak-tea-app/frontend && npm run preview"
-  }
+  "scripts": {}
 }
