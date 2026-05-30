@@ -17,8 +17,19 @@ import { triggerShipmentCheck } from '../services/shipmentScheduler.js';
 const router = express.Router();
 
 function isCronAuthorized(req) {
-  const cronSecret = process.env.SHIPMENT_CRON_SECRET;
-  return Boolean(cronSecret) && req.headers['x-cron-secret'] === cronSecret;
+  const cronSecret = process.env.SHIPMENT_CRON_SECRET || process.env.CRON_SECRET;
+  if (!cronSecret) return false;
+
+  // Check header-based secret (Render style)
+  if (req.headers['x-cron-secret'] === cronSecret) return true;
+
+  // Check Authorization Bearer header (Vercel Cron style)
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    return authHeader.slice(7) === cronSecret;
+  }
+
+  return false;
 }
 
 function isAdminAuthorized(req) {
@@ -123,7 +134,7 @@ router.patch('/:id/status', authenticate, authorize(['admin']), async (req, res)
   }
 });
 
-router.post('/check', async (req, res) => {
+async function handleShipmentCheck(req, res) {
   try {
     const adminAuthorized = isAdminAuthorized(req);
 
@@ -137,6 +148,9 @@ router.post('/check', async (req, res) => {
     logger.error(`Shipment check error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
-});
+}
+
+router.get('/check', handleShipmentCheck);
+router.post('/check', handleShipmentCheck);
 
 export default router;

@@ -86,11 +86,13 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, '0.0.0.0', () => {
-  logger.info(`BARAK Tea API running on http://0.0.0.0:${PORT}`);
-  logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  logger.info(`Frontend URL: ${process.env.FRONTEND_URL || 'not configured'}`);
-  startShipmentScheduler();
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, '0.0.0.0', () => {
+    logger.info(`BARAK Tea API running on http://0.0.0.0:${PORT}`);
+    logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    logger.info(`Frontend URL: ${process.env.FRONTEND_URL || 'not configured'}`);
+    startShipmentScheduler();
+  });
+}
 
 export default app;
