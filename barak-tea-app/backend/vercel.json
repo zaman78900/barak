@@ -9,7 +9,7 @@
   "crons": [
     {
       "path": "/api/shipments/check",
-      "schedule": "*/30 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
