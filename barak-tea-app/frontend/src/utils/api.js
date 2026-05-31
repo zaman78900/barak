@@ -1,7 +1,7 @@
 // API request interceptor and helper functions
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://barak-tea-api.onrender.com/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://your-vercel-backend-domain.vercel.app/api';
 
 // Create axios instance
 const api = axios.create({
