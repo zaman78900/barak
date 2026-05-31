@@ -1693,27 +1693,127 @@ function InventoryPage() {
 function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [form, setForm] = useState({
-    storeName:"BARAK Tea", tagline:"Pure CTC Tea from Barak Valley", whatsapp:"+91 98765 43210",
-    email:"hello@baraktea.in", minOrder:"200"
+    storeName: "BARAK Tea",
+    tagline: "Pure CTC Tea from Barak Valley",
+    email: "hello@baraktea.in",
+    whatsapp: "+91 98765 43210",
+    originCity: "Silchar, Assam",
+    warehouseAddress: "Kalain Tea Estate Road, Silchar, Assam - 788025",
+    estateLocation: "Kalain & Silchar Tea Estates",
+    leadTime: "3",
+    minOrder: "200",
+    freeShippingMin: "499",
+    shippingFee: "50",
+    gstRate: "5",
+    storeStatus: "open",
+    wholesaleStatus: "active",
+    codStatus: "enabled",
+    paymentMode: "sandbox",
+    guestCheckout: "allowed"
   });
-  const save = () => { setSaved(true); setTimeout(()=>setSaved(false),2500); };
+
+  useEffect(() => {
+    const savedSettings = localStorage.getItem("barak_store_settings");
+    if (savedSettings) {
+      try {
+        setForm(JSON.parse(savedSettings));
+      } catch (err) {
+        console.error("Failed to parse store settings:", err);
+      }
+    }
+  }, []);
+
+  const save = () => {
+    localStorage.setItem("barak_store_settings", JSON.stringify(form));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  };
+
+  const statusOptions = [
+    { value: "open", label: "Accepting Orders (Online)" },
+    { value: "maintenance", label: "Maintenance Mode (View Only)" },
+    { value: "closed", label: "Store Paused (Holiday)" }
+  ];
+
+  const wholesaleOptions = [
+    { value: "active", label: "Accepting B2B Inquiries" },
+    { value: "paused", label: "B2B Inquiries Paused" }
+  ];
+
+  const codOptions = [
+    { value: "enabled", label: "Enabled (All regions)" },
+    { value: "disabled", label: "Disabled (Prepaid only)" }
+  ];
+
+  const paymentOptions = [
+    { value: "sandbox", label: "Test / Sandbox Mode" },
+    { value: "live", label: "Live Production Mode" }
+  ];
+
+  const guestOptions = [
+    { value: "allowed", label: "Allow Guest Checkout" },
+    { value: "required", label: "Require Account Creation" }
+  ];
 
   return (
     <div>
-      <SectionHeader title="Store Settings" sub="Configure your BARAK Tea store"
-        action={<Btn icon={saved?CheckCircle:ShieldCheck} onClick={save}>{saved?"Saved!":"Save Changes"}</Btn>} />
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20}}>
-        <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:22}}>
-          <div style={{color:C.gold,fontSize:12,fontWeight:700,textTransform:"uppercase",marginBottom:18}}>Store Identity</div>
-          <Input label="Store Name" value={form.storeName} onChange={e=>setForm({...form,storeName:e.target.value})}/>
-          <Input label="Tagline" value={form.tagline} onChange={e=>setForm({...form,tagline:e.target.value})}/>
-          <Input label="Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} type="email"/>
+      <SectionHeader 
+        title="Store Settings" 
+        sub="Configure your BARAK Tea global variables and e-commerce checkout rules"
+        action={
+          <Btn icon={saved ? CheckCircle : ShieldCheck} onClick={save}>
+            {saved ? "Saved Successfully!" : "Save Changes"}
+          </Btn>
+        } 
+      />
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 20, marginBottom: 28 }}>
+        
+        {/* Card 1: Brand Identity */}
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 22 }}>
+          <div style={{ color: C.gold, fontSize: 12, fontWeight: 700, textTransform: "uppercase", marginBottom: 18, display: "flex", alignItems: "center", gap: 6 }}>
+            <Globe size={14}/> Brand Identity & Info
+          </div>
+          <Input label="Store Name" value={form.storeName} onChange={e => setForm({ ...form, storeName: e.target.value })} />
+          <Input label="Tagline / Brand Hook" value={form.tagline} onChange={e => setForm({ ...form, tagline: e.target.value })} />
+          <Input label="Primary Support Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} type="email" />
+          <Input label="Support WhatsApp Number" value={form.whatsapp} onChange={e => setForm({ ...form, whatsapp: e.target.value })} />
         </div>
-        <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:22}}>
-          <div style={{color:C.gold,fontSize:12,fontWeight:700,textTransform:"uppercase",marginBottom:18}}>Contact & Order</div>
-          <Input label="WhatsApp Number" value={form.whatsapp} onChange={e=>setForm({...form,whatsapp:e.target.value})}/>
-          <Input label="Minimum Order (₹)" value={form.minOrder} onChange={e=>setForm({...form,minOrder:e.target.value})} type="number"/>
+
+        {/* Card 2: Logistics & Assam Origin */}
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 22 }}>
+          <div style={{ color: C.gold, fontSize: 12, fontWeight: 700, textTransform: "uppercase", marginBottom: 18, display: "flex", alignItems: "center", gap: 6 }}>
+            <MapPin size={14}/> Logistics & Sourcing Origin
+          </div>
+          <Input label="Sourcing Origin City" value={form.originCity} onChange={e => setForm({ ...form, originCity: e.target.value })} />
+          <Input label="Sourcing Tea Estate Location" value={form.estateLocation} onChange={e => setForm({ ...form, estateLocation: e.target.value })} />
+          <Input label="Est. Sourcing Lead Time (Days)" value={form.leadTime} onChange={e => setForm({ ...form, leadTime: e.target.value })} type="number" />
+          <Input label="Warehouse Physical Address" value={form.warehouseAddress} onChange={e => setForm({ ...form, warehouseAddress: e.target.value })} />
         </div>
+
+        {/* Card 3: Pricing, Shipping & Tax */}
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 22 }}>
+          <div style={{ color: C.gold, fontSize: 12, fontWeight: 700, textTransform: "uppercase", marginBottom: 18, display: "flex", alignItems: "center", gap: 6 }}>
+            <IndianRupee size={14}/> Pricing, Shipping & Tax
+          </div>
+          <Input label="Minimum Checkout Order (₹)" value={form.minOrder} onChange={e => setForm({ ...form, minOrder: e.target.value })} type="number" />
+          <Input label="Free Shipping Minimum Threshold (₹)" value={form.freeShippingMin} onChange={e => setForm({ ...form, freeShippingMin: e.target.value })} type="number" />
+          <Input label="Flat Shipping Fee (₹)" value={form.shippingFee} onChange={e => setForm({ ...form, shippingFee: e.target.value })} type="number" />
+          <Input label="Default Tax / GST Rate (%)" value={form.gstRate} onChange={e => setForm({ ...form, gstRate: e.target.value })} type="number" />
+        </div>
+
+        {/* Card 4: Operating Policies */}
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 22 }}>
+          <div style={{ color: C.gold, fontSize: 12, fontWeight: 700, textTransform: "uppercase", marginBottom: 18, display: "flex", alignItems: "center", gap: 6 }}>
+            <Settings size={14}/> Policies & Gateways
+          </div>
+          <Select label="Store Operating Status" value={form.storeStatus} onChange={e => setForm({ ...form, storeStatus: e.target.value })} options={statusOptions} />
+          <Select label="B2B Wholesale Channel Status" value={form.wholesaleStatus} onChange={e => setForm({ ...form, wholesaleStatus: e.target.value })} options={wholesaleOptions} />
+          <Select label="Cash On Delivery (COD)" value={form.codStatus} onChange={e => setForm({ ...form, codStatus: e.target.value })} options={codOptions} />
+          <Select label="Payment Gateway Mode" value={form.paymentMode} onChange={e => setForm({ ...form, paymentMode: e.target.value })} options={paymentOptions} />
+          <Select label="Guest Checkout Policy" value={form.guestCheckout} onChange={e => setForm({ ...form, guestCheckout: e.target.value })} options={guestOptions} />
+        </div>
+
       </div>
     </div>
   );
