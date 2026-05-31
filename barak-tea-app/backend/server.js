@@ -17,6 +17,7 @@ import paymentRoutes from './src/routes/payments.js';
 import uploadRoutes from './src/routes/upload.js';
 import settingsRoutes from './src/routes/settings.js';
 import newsletterRoutes from './src/routes/newsletter.js';
+import blogRoutes from './src/routes/blogs.js';
 
 
 import errorHandler from './src/middleware/errorHandler.js';
@@ -86,6 +87,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/blogs', blogRoutes);
 
 
 app.get('/health', (_req, res) => {

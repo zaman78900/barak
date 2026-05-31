@@ -1670,11 +1670,295 @@ const NAV = [
   { id:"inventory", label:"Inventory", icon:Layers },
   { id:"shipments", label:"Shipments", icon:Truck },
   { id:"coupons", label:"Coupons", icon:Tag },
+  { id:"blogs", label:"Blogs", icon:FileText },
   { id:"reviews", label:"Reviews", icon:Star },
   { id:"wholesale", label:"Wholesale", icon:Inbox },
   { id:"notification_settings", label:"Order Alerts", icon:Bell },
   { id:"settings", label:"Settings", icon:Settings },
 ];
+
+function BlogsPage() {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [search, setSearch] = useState("");
+  const [error, setError] = useState("");
+  const [dbSetupError, setDbSetupError] = useState(null);
+  const [form, setForm] = useState({ title: "", category: "Brewing", excerpt: "", content: "", image_url: "", read_time: "5 min read", status: "published" });
+
+  useEffect(() => {
+    loadBlogs();
+  }, []);
+
+  const loadBlogs = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      setDbSetupError(null);
+      const data = await adminAPI.blogs.getAll(1, 100, { status: "all" });
+      setBlogs(data.blogs || []);
+    } catch (err) {
+      if (err.status === 503 || (err.error && err.error.includes("blogs' is not set up")) || (err.message && err.message.includes("public.blogs")) || (err.details && err.details.includes("blogs"))) {
+        setDbSetupError(err);
+      } else {
+        setError(err.error || err.message || "Failed to load blogs");
+      }
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filtered = blogs.filter(b => 
+    b.title.toLowerCase().includes(search.toLowerCase()) || 
+    b.category.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const openAdd = () => {
+    setForm({ title: "", category: "Brewing", excerpt: "", content: "", image_url: "", read_time: "5 min read", status: "published" });
+    setEditing(null);
+    setShowModal(true);
+  };
+
+  const openEdit = (b) => {
+    setForm({
+      title: b.title,
+      category: b.category,
+      excerpt: b.excerpt || "",
+      content: b.content,
+      image_url: b.image_url || "",
+      read_time: b.read_time || "5 min read",
+      status: b.status || "published"
+    });
+    setEditing(b.id);
+    setShowModal(true);
+  };
+
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      setError("");
+      const result = await adminAPI.upload.uploadImage(file);
+      setForm(f => ({ ...f, image_url: result.url }));
+    } catch (err) {
+      setError("Image upload failed");
+      console.error(err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const save = async () => {
+    if (!form.title || !form.content || !form.category) {
+      setError("Title, Category, and Content are required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      if (editing) {
+        await adminAPI.blogs.update(editing, form);
+      } else {
+        await adminAPI.blogs.create(form);
+      }
+      await loadBlogs();
+      setShowModal(false);
+      setError("");
+    } catch (err) {
+      setError("Failed to save blog post");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const del = async (id) => {
+    if (confirm("Delete this blog post?")) {
+      try {
+        await adminAPI.blogs.delete(id);
+        await loadBlogs();
+      } catch (err) {
+        setError("Failed to delete blog post");
+        console.error(err);
+      }
+    }
+  };
+
+  if (dbSetupError) {
+    return (
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 30, maxWidth: 800, margin: "0 auto" }}>
+        <div style={{ display: "flex", gap: 16, alignItems: "flex-start", marginBottom: 20 }}>
+          <AlertTriangle size={36} color={C.warning} style={{ flexShrink: 0 }} />
+          <div>
+            <h3 style={{ color: C.cream, fontSize: 18, fontWeight: 700, margin: 0 }}>Database Setup Required</h3>
+            <p style={{ color: C.muted, fontSize: 13, marginTop: 6, lineHeight: 1.5 }}>
+              The <code>blogs</code> table does not exist in your Supabase database. You must execute the SQL query below in your Supabase console to enable blogs management.
+            </p>
+          </div>
+        </div>
+        <div style={{ position: "relative", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: 16, marginBottom: 20 }}>
+          <button 
+            onClick={() => {
+              const sqlQuery = dbSetupError.details || `CREATE TABLE IF NOT EXISTS blogs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  excerpt TEXT,
+  content TEXT NOT NULL,
+  image_url TEXT,
+  read_time TEXT DEFAULT '5 min read',
+  status TEXT DEFAULT 'published' CHECK (status IN ('draft', 'published', 'archived')),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`;
+              const queryOnly = sqlQuery.includes("CREATE TABLE") ? sqlQuery.substring(sqlQuery.indexOf("CREATE TABLE")) : sqlQuery;
+              navigator.clipboard.writeText(queryOnly);
+              alert("SQL copied to clipboard!");
+            }}
+            style={{ position: "absolute", top: 12, right: 12, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6, color: C.cream, padding: "5px 10px", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}
+          >
+            <Copy size={12} /> Copy SQL
+          </button>
+          <pre style={{ margin: 0, color: C.gold, fontSize: 12, overflowX: "auto", fontFamily: "monospace", lineHeight: 1.5 }}>
+            {dbSetupError.details || `CREATE TABLE IF NOT EXISTS blogs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  excerpt TEXT,
+  content TEXT NOT NULL,
+  image_url TEXT,
+  read_time TEXT DEFAULT '5 min read',
+  status TEXT DEFAULT 'published' CHECK (status IN ('draft', 'published', 'archived')),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`}
+          </pre>
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Btn onClick={loadBlogs} icon={RefreshCw}>I have executed the query (Retry)</Btn>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <SectionHeader 
+        title="Blogs" 
+        sub={`${blogs.length} total posts · ${blogs.filter(b=>b.status==="published").length} published`}
+        action={<Btn icon={Plus} onClick={openAdd}>Create Post</Btn>} 
+      />
+
+      {error && <div style={{ background: "#2D0D0D", border: "1px solid #5A1A1A", color: "#F87171", padding: 12, borderRadius: 8, marginBottom: 16 }}>{error}</div>}
+
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 22 }}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 18 }}>
+          <div style={{ flex: 1, position: "relative" }}>
+            <Search size={14} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: C.muted }}/>
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search articles..."
+              style={{ width: "100%", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, color: C.cream, padding: "9px 12px 9px 34px", fontSize: 13, outline: "none", boxSizing: "border-box" }}/>
+          </div>
+        </div>
+
+        <Table 
+          headers={["Article", "Category", "Read Time", "Status", "Created At", "Actions"]}
+          rows={filtered.map(b => [
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 50, height: 35, borderRadius: 4, overflow: "hidden", background: C.bg, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                {b.image_url ? <img src={b.image_url} style={{ width: "100%", height: "100%", objectFit: "cover" }}/> : <span style={{ fontSize: 14 }}>✍️</span>}
+              </div>
+              <div style={{ fontWeight: 600, color: C.cream }}>{b.title}</div>
+            </div>,
+            b.category,
+            b.read_time,
+            <Badge status={b.status} />,
+            <span style={{ color: C.muted, fontSize: 11 }}>{new Date(b.created_at).toLocaleDateString()}</span>,
+            <div style={{ display: "flex", gap: 6 }}>
+              <Btn size="sm" variant="secondary" icon={Edit2} onClick={() => openEdit(b)}>Edit</Btn>
+              <Btn size="sm" variant="danger" icon={Trash2} onClick={() => del(b.id)}/>
+            </div>
+          ])}
+        />
+      </div>
+
+      {showModal && (
+        <Modal title={editing ? "Edit Blog Post" : "Create Blog Post"} onClose={() => setShowModal(false)} width={800}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 240px", gap: 20 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <Input label="Title" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="e.g. The Art of Brewing CTC Tea" />
+              
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <Select 
+                  label="Category" 
+                  value={form.category} 
+                  onChange={e => setForm({ ...form, category: e.target.value })} 
+                  options={["Brewing", "Culture", "Terroir", "Community"].map(v => ({ value: v, label: v }))} 
+                />
+                <Input label="Read Time" value={form.read_time} onChange={e => setForm({ ...form, read_time: e.target.value })} placeholder="e.g. 5 min read" />
+              </div>
+
+              <div>
+                <label style={{ display: "block", color: C.muted, fontSize: 11, fontWeight: 600, marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>Excerpt</label>
+                <textarea 
+                  value={form.excerpt} 
+                  onChange={e => setForm({ ...form, excerpt: e.target.value })} 
+                  placeholder="Short summary for the blog feed card..."
+                  style={{ width: "100%", height: 60, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, color: C.cream, padding: "10px 12px", fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "none" }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", color: C.muted, fontSize: 11, fontWeight: 600, marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>Content (HTML support)</label>
+                <textarea 
+                  value={form.content} 
+                  onChange={e => setForm({ ...form, content: e.target.value })} 
+                  placeholder="<p>Write your article here...</p>"
+                  style={{ width: "100%", height: 260, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, color: C.cream, padding: "10px 12px", fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "monospace", resize: "vertical" }}
+                />
+              </div>
+            </div>
+
+            <div>
+              <Select 
+                label="Status" 
+                value={form.status} 
+                onChange={e => setForm({ ...form, status: e.target.value })} 
+                options={[{ value: "draft", label: "Draft" }, { value: "published", label: "Published" }, { value: "archived", label: "Archived" }]} 
+              />
+
+              <div style={{ marginTop: 20 }}>
+                <div style={{ fontSize: 11, color: C.muted, marginBottom: 8, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Cover Image</div>
+                <div 
+                  style={{ width: "100%", aspectRatio: "1.6", background: C.bg, borderRadius: 12, border: `2px dashed ${C.border}`, overflow: "hidden", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+                  onClick={() => document.getElementById('cover-up').click()}
+                >
+                  {form.image_url ? (
+                    <img src={form.image_url} style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+                  ) : (
+                    <div style={{ textAlign: "center", color: C.muted }}><Plus size={20} style={{ marginBottom: 6 }}/><div>Upload Cover</div></div>
+                  )}
+                  {uploading && <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center" }}><RefreshCw size={20} className="animate-spin"/></div>}
+                  <input type="file" id="cover-up" hidden accept="image/*" onChange={handleFileUpload}/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 24, borderTop: `1px solid ${C.border}`, paddingTop: 16 }}>
+            <Btn variant="secondary" onClick={() => setShowModal(false)}>Cancel</Btn>
+            <Btn onClick={save} disabled={loading}>{editing ? "Save Changes" : "Publish Post"}</Btn>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
 
 export default function AdminPanel() {
   const [page, setPage] = useState("dashboard");
@@ -1685,6 +1969,7 @@ export default function AdminPanel() {
     customers:<CustomersPage/>, inventory:<InventoryPage/>, shipments:<LiveShipmentsPage/>,
     coupons:<CouponsPage/>, reviews:<ReviewsPage/>, wholesale:<WholesalePage/>,
     notification_settings:<NotificationSettingsPage/>, settings:<SettingsPage/>,
+    blogs:<BlogsPage/>
   };
 
   const SIDEBAR_W = collapsed ? 64 : 220;

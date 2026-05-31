@@ -140,13 +140,23 @@ export const uploadAPI = {
 };
 
 // ─── SETTINGS ──────────────────────────────────────────────────────────────
+
 export const settingsAPI = {
   getNotifications: () => api.get('/settings/notifications'),
   updateNotifications: (data) => api.post('/settings/notifications', data),
 };
 
-export default {
+// ─── BLOGS ────────────────────────────────────────────────────────────────
+export const blogsAPI = {
+  getAll: (page = 1, limit = 12, filters = {}) =>
+    api.get('/blogs', { params: { page, limit, ...filters } }),
+  getById: (id) => api.get(`/blogs/${id}`),
+  create: (data) => api.post('/blogs', data),
+  update: (id, data) => api.put(`/blogs/${id}`, data),
+  delete: (id) => api.delete(`/blogs/${id}`),
+};
 
+export default {
   products: productsAPI,
   orders: ordersAPI,
   customers: customersAPI,
@@ -156,5 +166,5 @@ export default {
   wholesale: wholesaleAPI,
   upload: uploadAPI,
   settings: settingsAPI,
+  blogs: blogsAPI,
 };
-
