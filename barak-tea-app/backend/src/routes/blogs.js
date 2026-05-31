@@ -1,5 +1,5 @@
 import express from 'express';
-import supabase from '../utils/supabase.js';
+import { supabaseAdmin } from '../utils/supabase.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import logger from '../utils/logger.js';
 
@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
     const { category, search, status, page = 1, limit = 12 } = req.query;
     const offset = (page - 1) * limit;
 
-    let query = supabase.from('blogs').select('*', { count: 'exact' });
+    let query = supabaseAdmin.from('blogs').select('*', { count: 'exact' });
 
     if (category && category !== 'All') query = query.eq('category', category);
     if (status) {
@@ -75,7 +75,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { data: blog, error } = await supabase
+    const { data: blog, error } = await supabaseAdmin
       .from('blogs')
       .select('*')
       .eq('id', id)
@@ -105,7 +105,7 @@ router.post('/', authenticate, authorize(['admin']), async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const { data: blog, error } = await supabase
+    const { data: blog, error } = await supabaseAdmin
       .from('blogs')
       .insert([{
         title,
@@ -142,7 +142,7 @@ router.put('/:id', authenticate, authorize(['admin']), async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
-    const { data: blog, error } = await supabase
+    const { data: blog, error } = await supabaseAdmin
       .from('blogs')
       .update({
         ...updates,
@@ -172,7 +172,7 @@ router.delete('/:id', authenticate, authorize(['admin']), async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('blogs')
       .delete()
       .eq('id', id);
