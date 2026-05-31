@@ -5,12 +5,40 @@ import { motion } from 'framer-motion';
 import logo from '../assets/logo.png';
 
 export default function Footer() {
-  const footerLinks = {
-    'Brand': ['About', 'Blog', 'Careers'],
-    'Shop': ['All Products', 'Gift Sets', 'Brewing Equipment'],
-    'Resources': ['Brew Guide', 'Tea Education', 'Sustainability'],
-    'Contact': ['Email: hello@barak.tea', 'WhatsApp', 'Support'],
-  };
+  const footerSections = [
+    {
+      title: 'Brand',
+      links: [
+        { label: 'About', to: '/our-story' },
+        { label: 'Blog', to: '/blog' },
+        { label: 'Wholesale B2B', to: '/wholesale' },
+      ],
+    },
+    {
+      title: 'Shop',
+      links: [
+        { label: 'All Products', to: '/shop' },
+        { label: 'Gift Sets', to: '/shop' },
+        { label: 'Brewing Equipment', to: '/shop' },
+      ],
+    },
+    {
+      title: 'Resources',
+      links: [
+        { label: 'Brew Guide', to: '/brew-guide' },
+        { label: 'Tea Education', to: '/our-story' },
+        { label: 'Sustainability', to: '/our-story' },
+      ],
+    },
+    {
+      title: 'Contact',
+      links: [
+        { label: 'Email: hello@barak.tea', href: 'mailto:hello@barak.tea' },
+        { label: 'WhatsApp', href: 'https://wa.me/919999999999?text=Hello%20BARAK%20Tea' },
+        { label: 'Support', href: 'mailto:hello@barak.tea' },
+      ],
+    },
+  ];
 
   return (
     <footer className="bg-barak-bg border-t border-barak-border">
@@ -28,24 +56,29 @@ export default function Footer() {
 
         {/* Main Footer Content */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-
-          {Object.entries(footerLinks).map(([category, links], i) => (
+          {footerSections.map((section, i) => (
             <motion.div
-              key={category}
+              key={section.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
             >
               <h4 className="text-sm font-bold text-barak-gold mb-4 uppercase tracking-wider">
-                {category}
+                {section.title}
               </h4>
               <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-sm text-barak-muted hover:text-barak-cream transition-colors">
-                      {link}
-                    </a>
+                {section.links.map((link) => (
+                  <li key={link.label}>
+                    {link.to ? (
+                      <Link to={link.to} className="text-sm text-barak-muted hover:text-barak-cream transition-colors">
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a href={link.href} className="text-sm text-barak-muted hover:text-barak-cream transition-colors">
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -62,13 +95,15 @@ export default function Footer() {
           {/* Social Icons */}
           <div className="flex gap-4">
             {[
-              { Icon: TwitterLogo, href: '#' },
-              { Icon: InstagramLogo, href: '#' },
-              { Icon: LinkedinLogo, href: '#' },
+              { Icon: TwitterLogo, href: 'https://twitter.com' },
+              { Icon: InstagramLogo, href: 'https://instagram.com' },
+              { Icon: LinkedinLogo, href: 'https://linkedin.com' },
             ].map(({ Icon, href }, i) => (
               <a
                 key={i}
                 href={href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-8 h-8 glass rounded-full flex items-center justify-center text-barak-gold hover:text-barak-gold-light hover:shadow-gold-glow transition-all"
                 aria-label="Social link"
               >
