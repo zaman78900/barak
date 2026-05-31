@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import {
   LayoutDashboard, Package, ShoppingCart, Users, Truck, Tag,
   Star, FileText, Settings, ChevronDown, ChevronRight, Search,
@@ -1677,6 +1679,23 @@ const NAV = [
   { id:"settings", label:"Settings", icon:Settings },
 ];
 
+const quillModules = {
+  toolbar: [
+    [{ 'header': [1, 2, 3, false] }],
+    [{ 'size': ['small', false, 'large', 'huge'] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+    ['link', 'image', 'clean']
+  ],
+};
+
+const quillFormats = [
+  'header', 'size',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image'
+];
+
 function BlogsPage() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -1849,6 +1868,65 @@ function BlogsPage() {
 
   return (
     <div>
+      <style>{`
+        /* Quill Custom Dark Theme Styling */
+        .ql-toolbar.ql-snow {
+          border-color: #3A2415 !important;
+          background-color: #1A110A !important;
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+        }
+        .ql-container.ql-snow {
+          border-color: #3A2415 !important;
+          background-color: #0D0905 !important;
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
+        }
+        .ql-editor {
+          color: #FAF3E0 !important;
+          font-family: 'DM Sans', sans-serif !important;
+          font-size: 14px !important;
+          min-height: 200px;
+        }
+        .ql-editor.ql-blank::before {
+          color: #9E8C78 !important;
+          opacity: 0.5;
+          font-style: normal !important;
+        }
+        .ql-snow .ql-stroke {
+          stroke: #9E8C78 !important;
+        }
+        .ql-snow .ql-fill {
+          fill: #9E8C78 !important;
+        }
+        .ql-snow .ql-picker {
+          color: #9E8C78 !important;
+        }
+        .ql-snow .ql-picker-options {
+          background-color: #1A110A !important;
+          border-color: #3A2415 !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .ql-snow .ql-picker-item {
+          color: #9E8C78 !important;
+        }
+        .ql-snow .ql-picker-item:hover,
+        .ql-snow .ql-picker-item.ql-selected {
+          color: #C8922A !important;
+        }
+        .ql-snow.ql-toolbar button:hover .ql-stroke,
+        .ql-snow .ql-toolbar button:hover .ql-stroke,
+        .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+        .ql-snow .ql-toolbar button.ql-active .ql-stroke {
+          stroke: #C8922A !important;
+        }
+        .ql-snow.ql-toolbar button:hover .ql-fill,
+        .ql-snow .ql-toolbar button:hover .ql-fill,
+        .ql-snow.ql-toolbar button.ql-active .ql-fill,
+        .ql-snow .ql-toolbar button.ql-active .ql-fill {
+          fill: #C8922A !important;
+        }
+      `}</style>
       <SectionHeader 
         title="Blogs" 
         sub={`${blogs.length} total posts · ${blogs.filter(b=>b.status==="published").length} published`}
@@ -1913,14 +1991,19 @@ function BlogsPage() {
                 />
               </div>
 
-              <div>
-                <label style={{ display: "block", color: C.muted, fontSize: 11, fontWeight: 600, marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>Content (HTML support)</label>
-                <textarea 
-                  value={form.content} 
-                  onChange={e => setForm({ ...form, content: e.target.value })} 
-                  placeholder="<p>Write your article here...</p>"
-                  style={{ width: "100%", height: 260, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, color: C.cream, padding: "10px 12px", fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "monospace", resize: "vertical" }}
-                />
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: "block", color: C.muted, fontSize: 11, fontWeight: 600, marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>Content</label>
+                <div style={{ background: C.bg, borderRadius: 8 }}>
+                  <ReactQuill 
+                    theme="snow"
+                    value={form.content} 
+                    onChange={val => setForm({ ...form, content: val })} 
+                    modules={quillModules}
+                    formats={quillFormats}
+                    placeholder="Write your article here..."
+                    style={{ height: 200, marginBottom: 44 }}
+                  />
+                </div>
               </div>
             </div>
 
