@@ -877,12 +877,11 @@ function DashboardPage({ setPage }) {
         }
       />
 
-      {/* Top 6 Summary Cards */}
+      {/* Top 5 Summary Cards */}
       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:16, marginBottom:28 }}>
         <StatCard icon={IndianRupee} label="Revenue" value={fmt(stats.totalRevenue)} sub="Total customer sales" trend={12.4} />
         <StatCard icon={ShoppingCart} label="Orders" value={stats.orders} sub="Total completed checkouts" trend={8.2} color="#2563EB" />
         <StatCard icon={Users} label="Customers" value={stats.activeCustomers} sub="Registered user base" trend={18.5} color="#9333EA" />
-        <StatCard icon={Package} label="Active Products" value={stats.activeProducts} sub="Available in store catalog" color={stats.activeProducts>0?C.gold:C.warning} />
         <StatCard icon={Globe} label="Site Views" value={stats.siteViews.toLocaleString()} sub="Unique visitors (this month)" trend={15.3} color="#10B981" />
         <StatCard icon={Inbox} label="Wholesale Leads" value={stats.wholesaleLeads} sub="B2B bulk partnership leads" color="#F59E0B" />
       </div>
