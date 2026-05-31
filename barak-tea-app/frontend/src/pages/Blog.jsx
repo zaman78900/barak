@@ -394,6 +394,7 @@ export default function Blog() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex justify-center p-4 md:p-8"
+            data-lenis-prevent
           >
             <motion.div 
               initial={{ scale: 0.95, y: 30 }}
