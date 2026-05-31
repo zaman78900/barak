@@ -20,6 +20,7 @@ import Confirmation from './pages/Confirmation';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { analyticsAPI } from './utils/adminApi';
 
 // Protected Route Component
 function ProtectedAdminRoute({ element }) {
@@ -36,6 +37,14 @@ function AppRoutes() {
   const location = useLocation();
   const lenisRef = useRef(null);
   const isAdminRoute = location.pathname.startsWith('/admin');
+
+  useEffect(() => {
+    if (!isAdminRoute) {
+      analyticsAPI.logHit(location.pathname).catch(err => {
+        // Fail silently until database is set up
+      });
+    }
+  }, [location.pathname, isAdminRoute]);
 
   useEffect(() => {
     if (isAdminRoute) {

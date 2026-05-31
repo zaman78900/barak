@@ -18,6 +18,7 @@ import uploadRoutes from './src/routes/upload.js';
 import settingsRoutes from './src/routes/settings.js';
 import newsletterRoutes from './src/routes/newsletter.js';
 import blogRoutes from './src/routes/blogs.js';
+import analyticsRoutes from './src/routes/analytics.js';
 
 
 import errorHandler from './src/middleware/errorHandler.js';
@@ -88,6 +89,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/blogs', blogRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 
 app.get('/health', (_req, res) => {

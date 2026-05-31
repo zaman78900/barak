@@ -789,6 +789,14 @@ function DashboardPage({ setPage }) {
     lowStockProducts: []
   });
   const [loading, setLoading] = useState(true);
+  const [analytics, setAnalytics] = useState({
+    totalViews: 0,
+    pageViews: [],
+    weeklyTraffic: [],
+    tableMissing: false,
+    sql: '',
+    live: false
+  });
 
   useEffect(() => {
     loadDashboardStats();
@@ -797,8 +805,8 @@ function DashboardPage({ setPage }) {
   const loadDashboardStats = async () => {
     try {
       setLoading(true);
-      // Load products, orders, and wholesale in parallel
-      const [productsData, ordersData, wholesaleData] = await Promise.all([
+      // Load products, orders, wholesale, and analytics in parallel
+      const [productsData, ordersData, wholesaleData, analyticsData] = await Promise.all([
         adminAPI.products.getAll(1, 100).catch(err => {
           console.error('Failed to load products:', err);
           return { products: [] };
@@ -810,6 +818,13 @@ function DashboardPage({ setPage }) {
         adminAPI.wholesale.getAll(1, 100).catch(err => {
           console.error('Failed to load wholesale:', err);
           return { enquiries: [] };
+        }),
+        adminAPI.analytics.getStats().catch(err => {
+          console.error('Failed to load analytics stats:', err);
+          if (err.response?.status === 503 && err.response?.data?.table_missing) {
+            return { error: 'table_missing', table_missing: true, sql: err.response.data.sql };
+          }
+          return { error: err.message };
         })
       ]);
 
@@ -826,17 +841,39 @@ function DashboardPage({ setPage }) {
       const activeProdCount = productsList.filter(p => p.status === "active").length || 3;
       const wholesaleCount = wholesaleList.length || 3;
 
+      let isMissing = false;
+      let dbSql = '';
+      let views = 12482; // Fallback default
+      let liveViewsActive = false;
+
+      if (analyticsData && analyticsData.table_missing) {
+        isMissing = true;
+        dbSql = analyticsData.sql || '';
+      } else if (analyticsData && typeof analyticsData.totalViews === 'number') {
+        views = analyticsData.totalViews;
+        liveViewsActive = true;
+      }
+
       setStats({
         totalRevenue: totalRev,
         orders: ordersCount,
         activeCustomers: custCount,
         activeProducts: activeProdCount,
-        siteViews: 12482,
+        siteViews: views,
         wholesaleLeads: wholesaleCount,
-        conversionRate: ordersList.length > 0 ? ((ordersList.length / 12482) * 100).toFixed(2) : "2.4",
+        conversionRate: ordersList.length > 0 ? ((ordersList.length / views) * 100).toFixed(2) : "2.4",
         recentOrders: ordersList.slice(0, 4),
         recentWholesale: wholesaleList.slice(0, 4),
         lowStockProducts: lowStock
+      });
+
+      setAnalytics({
+        totalViews: views,
+        pageViews: analyticsData?.pageViews || [],
+        weeklyTraffic: analyticsData?.weeklyTraffic || [],
+        tableMissing: isMissing,
+        sql: dbSql,
+        live: liveViewsActive
       });
     } catch (err) {
       console.error("🔴 Failed to load dashboard stats:", err);
@@ -845,7 +882,7 @@ function DashboardPage({ setPage }) {
     }
   };
 
-  const weeklyTraffic = [
+  const defaultWeeklyTraffic = [
     { day: "Mon", count: 1420 },
     { day: "Tue", count: 1850 },
     { day: "Wed", count: 1680 },
@@ -855,15 +892,17 @@ function DashboardPage({ setPage }) {
     { day: "Sun", count: 2280 },
   ];
 
-  const maxTraffic = Math.max(...weeklyTraffic.map(t => t.count));
-
-  const pageViews = [
+  const defaultPageViews = [
     { url: "/", label: "Home Page", views: 4820, pct: "38.6" },
     { url: "/shop", label: "Shop Store", views: 3110, pct: "24.9" },
     { url: "/wholesale", label: "Wholesale Info", views: 1840, pct: "14.7" },
     { url: "/our-story", label: "Brand Story", views: 1620, pct: "13.0" },
     { url: "/blog", label: "Tea Journal", views: 1092, pct: "8.8" },
   ];
+
+  const activeWeekly = analytics.live ? analytics.weeklyTraffic : defaultWeeklyTraffic;
+  const activePageViews = analytics.live ? analytics.pageViews : defaultPageViews;
+  const maxTraffic = Math.max(...activeWeekly.map(t => t.count)) || 1;
 
   return (
     <div>
@@ -882,7 +921,14 @@ function DashboardPage({ setPage }) {
         <StatCard icon={IndianRupee} label="Revenue" value={fmt(stats.totalRevenue)} sub="Total customer sales" trend={12.4} />
         <StatCard icon={ShoppingCart} label="Orders" value={stats.orders} sub="Total completed checkouts" trend={8.2} color="#2563EB" />
         <StatCard icon={Users} label="Customers" value={stats.activeCustomers} sub="Registered user base" trend={18.5} color="#9333EA" />
-        <StatCard icon={Globe} label="Site Views" value={stats.siteViews.toLocaleString()} sub="Unique visitors (this month)" trend={15.3} color="#10B981" />
+        <StatCard 
+          icon={Globe} 
+          label="Site Views" 
+          value={stats.siteViews.toLocaleString()} 
+          sub={analytics.live ? "Live visitor logs" : "Demo unique visitors"} 
+          trend={analytics.live ? undefined : 15.3} 
+          color="#10B981" 
+        />
         <StatCard icon={Inbox} label="Wholesale Leads" value={stats.wholesaleLeads} sub="B2B bulk partnership leads" color="#F59E0B" />
       </div>
 
@@ -894,43 +940,61 @@ function DashboardPage({ setPage }) {
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
             <div>
               <h3 style={{ color:C.cream, fontSize:15, fontStyle:"normal", fontWeight:700, margin:0 }}>Site Traffic</h3>
-              <p style={{ color:C.muted, fontSize:12, margin:"2px 0 0" }}>Visitor volumes over the last 7 days</p>
+              <p style={{ color:C.muted, fontSize:12, margin:"2px 0 0" }}>
+                {analytics.live ? "Live visitor tracking enabled" : "Demo visitor data (database not set up)"}
+              </p>
             </div>
-            <span style={{ background:`${C.success}20`, color:C.success, padding:"3px 8px", borderRadius:20, fontSize:11, fontWeight:600, display:"flex", alignItems:"center", gap:4 }}>
-              <TrendingUp size={12}/> Live
+            <span style={{ background: analytics.live ? `${C.success}20` : `${C.warning}20`, color: analytics.live ? C.success : C.warning, padding:"3px 8px", borderRadius:20, fontSize:11, fontWeight:600, display:"flex", alignItems:"center", gap:4 }}>
+              {analytics.live ? <><TrendingUp size={12}/> Live</> : <><AlertTriangle size={12}/> Demo</>}
             </span>
           </div>
 
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", height:160, padding:"0 10px", borderBottom:`1px solid ${C.border}`, marginBottom:12 }}>
-            {weeklyTraffic.map(t => {
-              const height = (t.count / maxTraffic) * 120;
-              return (
-                <div key={t.day} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, flex:1 }}>
-                  <div style={{ fontSize:10, fontWeight:700, color:C.cream, marginBottom:-2 }}>{t.count}</div>
-                  <div 
-                    style={{ 
-                      width:24, 
-                      height, 
-                      background:`linear-gradient(to top, ${C.goldDim}, ${C.gold})`, 
-                      borderTopLeftRadius:6, 
-                      borderTopRightRadius:6, 
-                      boxShadow:`0 0 10px ${C.gold}30`,
-                      transition:"transform 0.2s ease" 
-                    }} 
-                    onMouseEnter={e => {
-                      e.currentTarget.style.transform = "scaleY(1.05)";
-                      e.currentTarget.style.background = `linear-gradient(to top, ${C.gold}, ${C.goldLight})`;
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.transform = "scaleY(1)";
-                      e.currentTarget.style.background = `linear-gradient(to top, ${C.goldDim}, ${C.gold})`;
-                    }}
-                  />
-                  <div style={{ color:C.muted, fontSize:11, fontWeight:600 }}>{t.day}</div>
-                </div>
-              );
-            })}
-          </div>
+          {analytics.tableMissing ? (
+            <div style={{ padding:"12px 14px", background:C.bg, borderRadius:8, border:`1px dashed ${C.border}`, textAlign:"center" }}>
+              <div style={{ color:C.warning, fontWeight:600, fontSize:13, marginBottom:4 }}>Activate Real-Time Visitor Logging</div>
+              <p style={{ color:C.muted, fontSize:11, margin:"0 0 10px", lineHeight:1.4 }}>
+                Create the tracking table in your Supabase SQL Editor to start recording live site hits.
+              </p>
+              <textarea 
+                readOnly 
+                value={analytics.sql || `CREATE TABLE IF NOT EXISTS page_views (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  url TEXT NOT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);`}
+                style={{ width:"100%", height:70, background:C.bg, border:`1px solid ${C.border}`, color:C.cream, fontFamily:"monospace", fontSize:10, padding:6, borderRadius:6, resize:"none", outline:"none" }}
+              />
+              <Btn 
+                size="sm" 
+                onClick={() => {
+                  navigator.clipboard.writeText(analytics.sql || `CREATE TABLE IF NOT EXISTS page_views (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  url TEXT NOT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);`);
+                  alert("SQL command copied! Paste it in your Supabase SQL Editor and run it.");
+                }} 
+                style={{ marginTop:8 }}
+              >
+                Copy SQL Command
+              </Btn>
+            </div>
+          ) : (
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", height:160, padding:"0 10px", borderBottom:`1px solid ${C.border}`, marginBottom:12 }}>
+              {activeWeekly.map(t => {
+                const height = (t.count / maxTraffic) * 120;
+                return (
+                  <div key={t.day} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, flex:1 }}>
+                    <div style={{ fontSize:10, fontWeight:700, color:C.cream, marginBottom:-2 }}>{t.count}</div>
+                    <div 
+                      style={{ 
+                        width:24, 
+                        height: Math.max(height, 4), 
+                        background: analytics.live ? `linear-gradient(to top, ${C.success}, #34D399)` : `linear-gradient(to top, ${C.goldDim}, ${C.gold})`, 
+                        borderTopLeftRadius:6, 
+                        borderTopRightRadius:6, 
+                        boxShadow: analytics.live ? `0 0 10px ${C.success}20` : `0 0 10px ${C.gold}30`,
+                        transition:"transform 0.2s ease" 
+                      }} 
+                    />
+                    <div style={{ color:C.muted, fontSize:11, fontWeight:600 }}>{t.day}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Page Views & Channel Allocation */}
@@ -939,7 +1003,7 @@ function DashboardPage({ setPage }) {
           <p style={{ color:C.muted, fontSize:12, margin:"0 0 16px" }}>Page views percentage breakdown</p>
 
           <div style={{ display:"flex", flexDirection:"column", gap:12, marginBottom:16 }}>
-            {pageViews.map(pv => (
+            {activePageViews.map(pv => (
               <div key={pv.url}>
                 <div style={{ display:"flex", justifyContent:"space-between", fontSize:12, color:C.cream }}>
                   <span>{pv.label} <code style={{ color:C.gold, fontSize:11 }}>{pv.url}</code></span>

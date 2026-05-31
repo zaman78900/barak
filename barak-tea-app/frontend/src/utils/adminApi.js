@@ -159,6 +159,12 @@ export const blogsAPI = {
   delete: (id) => api.delete(`/blogs/${id}`),
 };
 
+// ─── ANALYTICS ────────────────────────────────────────────────────────────
+export const analyticsAPI = {
+  logHit: (url) => api.post('/analytics/hit', { url }),
+  getStats: () => api.get('/analytics/stats'),
+};
+
 export default {
   products: productsAPI,
   orders: ordersAPI,
@@ -170,4 +176,5 @@ export default {
   upload: uploadAPI,
   settings: settingsAPI,
   blogs: blogsAPI,
+  analytics: analyticsAPI,
 };
