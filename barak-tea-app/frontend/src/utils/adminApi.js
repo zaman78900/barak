@@ -124,6 +124,9 @@ export const wholesaleAPI = {
 
   // Add note to enquiry
   addNote: (id, note) => api.put(`/wholesale/${id}`, { notes: note }),
+
+  // Submit wholesale enquiry (public)
+  submit: (data) => api.post('/wholesale', data),
 };
 
 // ─── UPLOADS ───────────────────────────────────────────────────────────────

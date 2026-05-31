@@ -1165,20 +1165,40 @@ function WholesalePage() {
           <div key={e.id} style={{background:C.card,border:`1px solid ${e.status==="new"?C.gold:C.border}`,borderRadius:12,padding:20}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
               <div>
-                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
-                  <span style={{color:C.cream,fontWeight:700,fontSize:15}}>{e.business_name || e.business}</span>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
+                  <span style={{color:C.cream,fontWeight:700,fontSize:15}}>{e.business_name || e.company_name || e.business}</span>
                   <Badge status={e.status}/>
                 </div>
-                <div style={{color:C.muted,fontSize:12}}>{e.contact_person || e.contact} · {e.phone} · {e.city}</div>
+                <div style={{color:C.muted,fontSize:12,lineHeight:1.6}}>
+                  <strong style={{color:C.cream}}>{e.contact_name || e.contact_person || e.contact || "Business Partner"}</strong>
+                  {e.city && ` · ${e.city}`}
+                  {e.phone && ` · 📞 ${e.phone}`}
+                  {e.email && ` · ✉️ ${e.email}`}
+                </div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{color:C.gold,fontWeight:700,fontSize:18}}>{e.monthly_kg || e.monthlyKg} kg/mo</div>
+                <div style={{color:C.gold,fontWeight:700,fontSize:18}}>{e.monthly_quantity_kg || e.monthly_kg || e.monthlyKg || 0} kg/mo</div>
               </div>
             </div>
-            <p style={{color:C.muted,fontSize:13,margin:"0 0 14px",background:C.bg,borderRadius:8,padding:"10px 14px"}}>{e.message}</p>
-            <div style={{display:"flex",gap:10}}>
-              {e.status==="new" && <Btn size="sm" variant="secondary" onClick={()=>updateStatus(e.id,"contacted")}>Mark Contacted</Btn>}
-              {e.status==="contacted" && <Btn size="sm" variant="success" onClick={()=>updateStatus(e.id,"converted")}>Mark Converted</Btn>}
+            {e.message && (
+              <p style={{color:C.muted,fontSize:13,margin:"0 0 14px",background:C.bg,borderRadius:8,padding:"10px 14px",whiteSpace:"pre-wrap"}}>{e.message}</p>
+            )}
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {e.status === "new" && (
+                <Btn size="sm" variant="secondary" onClick={() => updateStatus(e.id, "contacted")}>Mark Contacted</Btn>
+              )}
+              {e.status === "contacted" && (
+                <>
+                  <Btn size="sm" variant="secondary" onClick={() => updateStatus(e.id, "quoted")}>Send Quote</Btn>
+                  <Btn size="sm" variant="success" onClick={() => updateStatus(e.id, "converted")}>Mark Converted</Btn>
+                </>
+              )}
+              {e.status === "quoted" && (
+                <Btn size="sm" variant="success" onClick={() => updateStatus(e.id, "converted")}>Mark Converted</Btn>
+              )}
+              {e.status !== "converted" && e.status !== "rejected" && (
+                <Btn size="sm" variant="danger" onClick={() => updateStatus(e.id, "rejected")}>Reject Inquiry</Btn>
+              )}
             </div>
           </div>
         ))}
