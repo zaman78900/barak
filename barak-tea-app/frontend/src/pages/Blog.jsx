@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, ArrowRight } from 'phosphor-react';
+import api from '../utils/api.js';
 
 // Asset imports
 import chaiBrewingImg from '../assets/blog_chai_brewing.png';
@@ -8,7 +9,7 @@ import teaCultureImg from '../assets/blog_tea_culture.png';
 import soilTerroirImg from '../assets/blog_soil_terroir.png';
 import pluckerHandsImg from '../assets/blog_plucker_hands.png';
 
-const blogPosts = [
+const STATIC_BLOG_POSTS = [
   {
     id: 1,
     title: 'The Art of Brewing the Perfect Barak Masala Chai',
@@ -135,24 +136,51 @@ const blogPosts = [
 const categories = ['All', 'Brewing', 'Culture', 'Terroir', 'Community'];
 
 export default function Blog() {
+  const [blogs, setBlogs] = useState(STATIC_BLOG_POSTS);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    const loadBlogs = async () => {
+      try {
+        setLoading(true);
+        const data = await api.get('/blogs', { params: { status: 'published', limit: 50 } });
+        if (data && data.blogs && data.blogs.length > 0) {
+          const mapped = data.blogs.map(b => ({
+            id: b.id,
+            title: b.title,
+            category: b.category,
+            date: new Date(b.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            readTime: b.read_time || '5 min read',
+            image: b.image_url || chaiBrewingImg,
+            excerpt: b.excerpt || '',
+            content: b.content
+          }));
+          setBlogs(mapped);
+        }
+      } catch (err) {
+        console.warn("Failed to load dynamic blogs, using static fallback:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadBlogs();
   }, []);
 
   // Filter posts based on search query and selected category
-  const filteredPosts = blogPosts.filter(post => {
+  const filteredPosts = blogs.filter(post => {
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
-  const featuredPost = blogPosts[0];
-  const gridPosts = filteredPosts.filter(post => post.id !== featuredPost.id || selectedCategory !== 'All' || searchQuery !== '');
+  const featuredPost = blogs[0] || null;
+  const gridPosts = filteredPosts.filter(post => !featuredPost || post.id !== featuredPost.id || selectedCategory !== 'All' || searchQuery !== '');
 
   // Safe SVG Icons
   const SearchIcon = () => (
