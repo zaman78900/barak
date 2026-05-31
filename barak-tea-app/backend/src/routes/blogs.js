@@ -38,7 +38,7 @@ router.get('/', async (req, res) => {
     let query = supabaseAdmin.from('blogs').select('*', { count: 'exact' });
 
     if (category && category !== 'All') query = query.eq('category', category);
-    if (status) {
+    if (status && status !== 'all') {
       query = query.eq('status', status);
     }
     if (search) {
