@@ -43,9 +43,9 @@ export default function OurStory() {
       <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
         {/* Background Image with Dark Overlay */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src={teaGardenImg} 
-            alt="Misty tea garden in Assam" 
+          <img
+            src={teaGardenImg}
+            alt="Misty tea garden in Assam"
             className="w-full h-full object-cover object-center scale-105 animate-[pulseGlow_12s_ease-in-out_infinite]"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-barak-bg" />
@@ -66,12 +66,12 @@ export default function OurStory() {
               <span className="gradient-gold">Brewed for the Soul</span>
             </h1>
             <p className="text-xl md:text-2xl text-barak-cream/80 max-w-3xl mx-auto font-light leading-relaxed">
-              Discover the heritage, geography, and passion that brings the finest Assam tea directly from Kalain, Silchar to your cup.
+              Discover the heritage, geography, and passion that brings the finest Assam tea directly from gardens to your cup.
             </p>
           </motion.div>
 
           {/* Quick Info Tags */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
@@ -84,7 +84,7 @@ export default function OurStory() {
                 <p className="text-sm text-barak-cream font-semibold font-playfair">2019</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3 bg-black/40 backdrop-blur-md px-5 py-3 rounded-full border border-barak-border/50">
               <MapPinIcon />
               <div className="text-left">
@@ -115,14 +115,14 @@ export default function OurStory() {
                 Our Story Began With A Simple Promise
               </h2>
               <div className="w-16 h-1 bg-barak-gold rounded-full" />
-              
+
               <p className="text-base md:text-lg text-barak-muted leading-relaxed">
                 Founded in <strong>2019</strong>, BARAK was born from a desire to celebrate the rich tea-growing heritage of the Barak Valley in southern Assam. We noticed that while the region produced some of the world's most robust, high-grade CTC teas, the complex middleman supply chains often delayed transit, diluting the flavor and leaving consumers with stale blends.
               </p>
               <p className="text-base md:text-lg text-barak-muted leading-relaxed">
                 By setting up our roots in <strong>Kalain, Silchar</strong>, we partnered directly with sustainable local estates. We designed a direct-to-cup path, ensuring that only the freshest, pure, unadulterated leaves reach your teapot.
               </p>
-              
+
               <blockquote className="border-l-4 border-barak-gold pl-6 py-2 my-4">
                 <p className="text-lg text-barak-cream font-playfair italic font-medium">
                   "We don't just sell tea. We preserve the integrity of the soil, the work of our pluckers, and the comfort of a warm brew."
@@ -139,9 +139,9 @@ export default function OurStory() {
               className="lg:col-span-6"
             >
               <div className="relative w-full aspect-[4/3] md:aspect-[16/10] lg:aspect-square bg-gradient-to-br from-barak-gold/10 to-barak-surface rounded-glass overflow-hidden shadow-glass group">
-                <img 
-                  src={teaPluckingImg} 
-                  alt="Plucking tea leaves in Barak Valley" 
+                <img
+                  src={teaPluckingImg}
+                  alt="Plucking tea leaves in Barak Valley"
                   className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -168,9 +168,9 @@ export default function OurStory() {
               className="lg:col-span-6 lg:order-last"
             >
               <div className="relative w-full aspect-[4/3] md:aspect-[16/10] lg:aspect-square bg-gradient-to-br from-barak-gold/10 to-barak-surface rounded-glass overflow-hidden shadow-glass group">
-                <img 
-                  src={brewedCupImg} 
-                  alt="A hot cup of brewed Barak Tea" 
+                <img
+                  src={brewedCupImg}
+                  alt="A hot cup of brewed Barak Tea"
                   className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -196,7 +196,7 @@ export default function OurStory() {
                 Deeply Rooted in Kalain & Silchar
               </h2>
               <div className="w-16 h-1 bg-barak-gold rounded-full" />
-              
+
               <p className="text-base md:text-lg text-barak-muted leading-relaxed">
                 The Barak Valley, situated in southern Assam, features a distinct geographical climate. Nestled alongside the Barak River, the tea estates of <strong>Kalain and Silchar</strong> thrive in rich, fertile clay soil, accompanied by heavy tropical rainfall and warm, humid seasons.
               </p>
@@ -234,7 +234,7 @@ export default function OurStory() {
 
           <div className="relative border-l border-barak-border/50 ml-4 md:ml-32 pl-8 md:pl-12 space-y-12 py-4">
             {/* 2019 */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -250,13 +250,13 @@ export default function OurStory() {
                 <span className="text-xl font-bold text-barak-gold font-playfair md:hidden block mb-1">2019</span>
                 <h3 className="text-xl md:text-2xl font-bold text-barak-cream font-playfair mb-3">The Seed is Sown</h3>
                 <p className="text-barak-muted text-sm md:text-base leading-relaxed">
-                  BARAK is founded in Kalain, Silchar. We started with a select partnership with a single private family estate to procure high-grade Assam CTC tea, establishing our direct-sourcing standard.
+                  BARAK is founded in Kalain, Assam. We started with a select partnership with a single private family estate to procure high-grade Assam CTC tea, establishing our direct-sourcing standard.
                 </p>
               </div>
             </motion.div>
 
             {/* 2020 */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -278,7 +278,7 @@ export default function OurStory() {
             </motion.div>
 
             {/* 2022 */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -300,7 +300,7 @@ export default function OurStory() {
             </motion.div>
 
             {/* Present */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -403,13 +403,13 @@ export default function OurStory() {
             <div className="flex justify-center mb-6">
               <QuotesIcon />
             </div>
-            
+
             <p className="text-xl md:text-3xl text-barak-cream font-playfair leading-relaxed italic relative z-10">
               "We created BARAK to build a bridge of trust. From the misty, clay-rich riverbanks of Kalain and Silchar straight to your teapot, we wanted to deliver Assam CTC tea in its truest, freshest, and most honest state."
             </p>
-            
+
             <div className="w-12 h-0.5 bg-barak-gold/50 mx-auto my-8" />
-            
+
             <div>
               <p className="text-barak-gold font-bold uppercase tracking-wider text-sm">The Founders of BARAK</p>
               <p className="text-xs text-barak-muted mt-1">EST. 2019 — Assam, India</p>
@@ -449,7 +449,7 @@ export default function OurStory() {
               Shop Our Tea Collection
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            
+
             <Link
               to="/brew-guide"
               className="glass text-barak-cream px-8 py-4 rounded-lg font-bold hover:bg-barak-gold/20 transition-all"
