@@ -821,10 +821,13 @@ function DashboardPage({ setPage }) {
         }),
         adminAPI.analytics.getStats().catch(err => {
           console.error('Failed to load analytics stats:', err);
-          if (err.response?.status === 503 && err.response?.data?.table_missing) {
+          if (err && err.table_missing) {
+            return { error: 'table_missing', table_missing: true, sql: err.sql };
+          }
+          if (err?.response?.status === 503 && err?.response?.data?.table_missing) {
             return { error: 'table_missing', table_missing: true, sql: err.response.data.sql };
           }
-          return { error: err.message };
+          return { error: err?.message || (typeof err === 'string' ? err : 'Unknown error') };
         })
       ]);
 

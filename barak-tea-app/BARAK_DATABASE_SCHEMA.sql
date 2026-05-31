@@ -186,6 +186,13 @@ CREATE INDEX IF NOT EXISTS idx_shipments_last_checked_at ON shipments(last_check
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);
 
+-- Page Views Table (for Site Traffic analytics)
+CREATE TABLE IF NOT EXISTS page_views (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  url TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- ================================================================
 -- SETUP COMPLETE
 -- All 11 tables created with indexes

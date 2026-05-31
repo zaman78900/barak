@@ -180,6 +180,13 @@ CREATE INDEX idx_reviews_product_id ON reviews(product_id);
 CREATE INDEX idx_shipments_order_id ON shipments(order_id);
 CREATE INDEX idx_shipments_status ON shipments(status);
 CREATE INDEX idx_shipments_last_checked_at ON shipments(last_checked_at);
+
+-- Page Views Table (for Site Traffic analytics)
+CREATE TABLE IF NOT EXISTS page_views (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  url TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 `;
 
 export default schema;
