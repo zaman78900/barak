@@ -57,6 +57,18 @@ app.use(
 app.use(express.json({ limit: '64kb' }));
 app.use(express.urlencoded({ limit: '64kb', extended: true }));
 
+// When running on Vercel, the /api prefix is stripped from paths
+// because our function lives at api/index.js. Re-add it so Express
+// route definitions like app.use('/api/auth', ...) continue to match.
+if (process.env.VERCEL) {
+  app.use((req, _res, next) => {
+    if (!req.url.startsWith('/api')) {
+      req.url = '/api' + req.url;
+    }
+    next();
+  });
+}
+
 app.use((req, _res, next) => {
   logger.info(`${req.method} ${req.path}`);
   next();
