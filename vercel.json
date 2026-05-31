@@ -1,0 +1,12 @@
+{
+  "installCommand": "cd barak-tea-app/frontend && npm install",
+  "buildCommand": "cd barak-tea-app/frontend && npm run build",
+  "outputDirectory": "barak-tea-app/frontend/dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
