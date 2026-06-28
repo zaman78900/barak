@@ -10,11 +10,11 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  
+
   const lastScrollY = useRef(0);
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const cartCount = useCartStore((s) =>
     s.items.reduce((sum, item) => sum + item.quantity, 0)
   );
@@ -22,17 +22,17 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Determine if scrolled past threshold
       setIsScrolled(currentScrollY > 50);
-      
+
       // Hide on scroll down, show on scroll up
       if (currentScrollY > lastScrollY.current && currentScrollY > 150) {
         setIsVisible(false);
       } else {
         setIsVisible(true);
       }
-      
+
       lastScrollY.current = currentScrollY;
     };
 
@@ -61,19 +61,18 @@ export default function Navbar() {
     <>
       <motion.header
         initial={{ y: -100, opacity: 0 }}
-        animate={{ 
-          y: isVisible ? 0 : -100, 
-          opacity: isVisible ? 1 : 0 
+        animate={{
+          y: isVisible ? 0 : -100,
+          opacity: isVisible ? 1 : 0
         }}
         transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
         className="fixed top-0 left-0 right-0 z-50 w-full px-4 sm:px-6 lg:px-8 py-4 pointer-events-none"
       >
-        <div 
-          className={`mx-auto max-w-7xl w-full transition-all duration-500 pointer-events-auto rounded-full border ${
-            isScrolled 
-              ? 'bg-[#050505]/75 backdrop-blur-xl border-barak-gold/15 shadow-[0_12px_40px_rgba(0,0,0,0.5)] py-2 px-6' 
-              : 'bg-transparent border-transparent py-4 px-4'
-          }`}
+        <div
+          className={`mx-auto max-w-7xl w-full transition-all duration-500 pointer-events-auto rounded-full border ${isScrolled
+            ? 'bg-[#050505]/75 backdrop-blur-xl border-barak-gold/15 shadow-[0_12px_40px_rgba(0,0,0,0.5)] py-2 px-6'
+            : 'bg-transparent border-transparent py-4 px-4'
+            }`}
         >
           <div className="flex items-center justify-between h-14">
             {/* Logo */}
@@ -81,10 +80,10 @@ export default function Navbar() {
               to="/"
               className="flex items-center relative z-50"
             >
-              <img 
-                src={logo} 
-                alt="BARAK Tea" 
-                className="h-10 md:h-12 w-auto object-contain transition-all duration-300 hover:scale-105" 
+              <img
+                src={logo}
+                alt="BARAK Tea"
+                className="h-10 md:h-12 w-auto object-contain transition-all duration-300 hover:scale-105"
               />
             </Link>
 
@@ -103,13 +102,13 @@ export default function Navbar() {
                   >
                     {/* Active Bottom Line */}
                     {isActive && (
-                      <motion.span 
+                      <motion.span
                         layoutId="activeNavLine"
                         className="absolute bottom-0 left-4 right-4 h-[2px] bg-barak-gold"
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                       />
                     )}
-                    
+
                     {/* Hover Capsule Background */}
                     {hoveredIndex === idx && (
                       <motion.span
@@ -118,7 +117,7 @@ export default function Navbar() {
                         transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                       />
                     )}
-                    
+
                     {link.label}
                   </Link>
                 );
@@ -127,8 +126,8 @@ export default function Navbar() {
 
             {/* Actions & Buttons */}
             <div className="flex items-center gap-2 relative z-50">
-              <button 
-                className="p-2.5 text-barak-cream/80 hover:text-barak-gold transition-colors duration-300 rounded-full hover:bg-white/5" 
+              <button
+                className="p-2.5 text-barak-cream/80 hover:text-barak-gold transition-colors duration-300 rounded-full hover:bg-white/5"
                 aria-label="Search"
               >
                 <MagnifyingGlass size={18} />
@@ -141,7 +140,7 @@ export default function Navbar() {
               >
                 <ShoppingCart size={18} />
                 {cartCount > 0 && (
-                  <motion.span 
+                  <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     className="absolute top-1 right-1 bg-barak-gold text-[#050505] text-[10px] font-black rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-gold-glow"
