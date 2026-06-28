@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import HeroCinematic from '../components/sections/HeroCinematic';
-import TextRevealStory from '../components/sections/TextRevealStory';
-import GardenWalkthrough from '../components/sections/GardenWalkthrough';
-import VelocityBento from '../components/sections/VelocityBento';
-import EditorialCarousel from '../components/sections/EditorialCarousel';
-import PeelFooterTeaser from '../components/sections/PeelFooterTeaser';
+import LuxuryHero from '../components/sections/LuxuryHero';
+import WhyBarak from '../components/sections/WhyBarak';
+import AssamStory from '../components/sections/AssamStory';
+import PremiumProducts from '../components/sections/PremiumProducts';
+import TrustSection from '../components/sections/TrustSection';
+import PremiumCTA from '../components/sections/PremiumCTA';
 
 export default function Homepage() {
   useEffect(() => {
@@ -12,14 +12,15 @@ export default function Homepage() {
   }, []);
 
   return (
-    <main className="w-full bg-[#050505] text-barak-cream">
-      <HeroCinematic />
-      <TextRevealStory />
-      <GardenWalkthrough />
-      <VelocityBento />
-      <EditorialCarousel />
-      <PeelFooterTeaser /> 
+    <main className="w-full bg-[#050505] text-barak-cream overflow-hidden">
+      <LuxuryHero />
+      <WhyBarak />
+      <AssamStory />
+      <PremiumProducts />
+      <TrustSection />
+      <PremiumCTA /> 
     </main>
   );
 }
+
 

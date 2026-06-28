@@ -41,42 +41,74 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-barak-bg border-t border-barak-border">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-12 md:py-16">
-        {/* Logo Section */}
+    <footer className="bg-[#050505] relative z-20 border-t border-white/5 overflow-hidden">
+      
+      {/* Animated Center-Out Expansion Divider Line */}
+      <div className="w-full flex justify-center">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
           viewport={{ once: true }}
-          className="mb-12"
-        >
-          <img src={logo} alt="BARAK Tea" className="h-20 w-auto object-contain" />
-        </motion.div>
+          transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
+          className="w-full max-w-7xl h-[1px] bg-gradient-to-r from-transparent via-barak-gold/30 to-transparent origin-center"
+        />
+      </div>
 
+      <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+        
+        {/* Logo and Brand tagline */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col gap-3"
+          >
+            <img src={logo} alt="BARAK Tea" className="h-12 w-auto object-contain self-start transition-transform duration-300 hover:scale-105" />
+            <p className="text-[10px] uppercase font-bold text-barak-gold tracking-[0.3em]">
+              Valley of the Golden Leaf
+            </p>
+          </motion.div>
+          
+          <div className="max-w-xs text-left md:text-right">
+            <p className="text-xs text-barak-muted font-light leading-relaxed">
+              Cultivating legacy, flavor, and luxury in every leaf. Handpicked and sealed at our private Assam estate.
+            </p>
+          </div>
+        </div>
 
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-          {footerSections.map((section, i) => (
+        {/* Main Footer Links */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+          {footerSections.map((section, idx) => (
             <motion.div
               key={section.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ delay: idx * 0.08 }}
               viewport={{ once: true }}
+              className="flex flex-col"
             >
-              <h4 className="text-sm font-bold text-barak-gold mb-4 uppercase tracking-wider">
+              <h4 className="text-xs font-bold text-barak-cream mb-4 uppercase tracking-[0.2em]">
                 {section.title}
               </h4>
-              <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link.label}>
+              <ul className="space-y-3">
+                {section.links.map((link, lIdx) => (
+                  <li key={lIdx} className="overflow-hidden">
                     {link.to ? (
-                      <Link to={link.to} className="text-sm text-barak-muted hover:text-barak-cream transition-colors">
+                      <Link 
+                        to={link.to} 
+                        className="text-xs text-barak-muted hover:text-barak-gold-light transition-colors duration-300 relative inline-block group"
+                      >
                         {link.label}
+                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-barak-gold-light scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                       </Link>
                     ) : (
-                      <a href={link.href} className="text-sm text-barak-muted hover:text-barak-cream transition-colors">
+                      <a 
+                        href={link.href} 
+                        className="text-xs text-barak-muted hover:text-barak-gold-light transition-colors duration-300 relative inline-block group"
+                      >
                         {link.label}
+                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-barak-gold-light scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                       </a>
                     )}
                   </li>
@@ -86,33 +118,37 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-barak-border pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-xs text-barak-muted">
-            © 2026 BARAK Tea. All rights reserved. Crafted with ☕ in Barak Valley.
+        {/* Bottom Bar Section */}
+        <div className="border-t border-white/5 pt-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <p className="text-[10px] text-barak-muted font-light tracking-wider">
+            © 2026 BARAK Tea. All rights reserved. Cultivated in Silchar.
           </p>
 
-          {/* Social Icons */}
+          {/* Social Icons with luxury circles */}
           <div className="flex gap-4">
             {[
               { Icon: TwitterLogo, href: 'https://twitter.com' },
               { Icon: InstagramLogo, href: 'https://instagram.com' },
               { Icon: LinkedinLogo, href: 'https://linkedin.com' },
             ].map(({ Icon, href }, i) => (
-              <a
+              <motion.a
                 key={i}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 glass rounded-full flex items-center justify-center text-barak-gold hover:text-barak-gold-light hover:shadow-gold-glow transition-all"
-                aria-label="Social link"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.9 }}
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-barak-muted hover:text-barak-gold hover:border-barak-gold/40 transition-colors duration-350 bg-white/2"
+                aria-label="Social media link"
               >
-                <Icon size={16} />
-              </a>
+                <Icon size={14} />
+              </motion.a>
             ))}
           </div>
         </div>
+
       </div>
     </footer>
   );
 }
+
