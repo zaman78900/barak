@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, ArrowRight } from 'phosphor-react';
+import { ShoppingBag, ArrowRight } from 'phosphor-react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../../utils/hooks';
 import { useCartStore } from '../../store';
@@ -27,28 +27,26 @@ export default function FeaturedProducts() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
+      transition: { staggerChildren: 0.12 },
     },
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6 },
+      transition: { duration: 0.8, ease: [0.25, 1, 0.5, 1] },
     },
   };
 
   if (loading && (!products || products.length === 0)) {
     return (
-      <section className="py-20 md:py-32 px-4 bg-barak-surface">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="py-24 md:py-36 px-4 bg-[#0a0a0a]">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="glass rounded-glass h-96 animate-pulse" />
+              <div key={i} className="glass rounded-glass h-[420px] animate-pulse border border-[rgba(250,243,224,0.05)]" />
             ))}
           </div>
         </div>
@@ -57,104 +55,106 @@ export default function FeaturedProducts() {
   }
 
   return (
+    <section className="py-24 md:py-36 px-4 bg-[#0a0a0a] relative z-10 border-t border-[rgba(250,243,224,0.03)]">
+      
+      {/* Dynamic Background Volumetric Gradients */}
+      <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] rounded-full bg-barak-gold/2 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] rounded-full bg-barak-success/2 blur-[120px] pointer-events-none" />
 
-    <section className="py-20 md:py-32 px-4 bg-barak-surface">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1200px] mx-auto relative z-10">
+        
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12 md:mb-16"
-        >
-          <p className="text-xs md:text-sm uppercase font-bold text-barak-gold tracking-widest mb-2">
-            Handpicked for You
-          </p>
-          <h2 className="text-4xl md:text-5xl font-black text-barak-cream">
-            Our Premium Selection
-          </h2>
-        </motion.div>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-24">
+          <div className="max-w-xl">
+            <p className="text-[10px] uppercase font-bold text-barak-gold tracking-[0.3em] mb-3">
+              The Collection
+            </p>
+            <h2 className="text-3xl md:text-5xl font-playfair font-bold text-barak-cream leading-tight">
+              Selected Harvest Blends
+            </h2>
+          </div>
+          <div className="h-[1px] flex-grow bg-gradient-to-r from-[rgba(200,146,42,0.15)] to-transparent mx-8 hidden md:block" />
+          <button 
+            onClick={() => navigate('/shop')}
+            className="text-[10px] uppercase font-bold text-barak-gold-light hover:text-barak-gold tracking-[0.2em] transition-colors inline-flex items-center gap-2 mt-4 md:mt-0"
+          >
+            Browse All Blends
+            <ArrowRight size={12} />
+          </button>
+        </div>
 
         {/* Products Grid */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: '-100px' }}
         >
           {products.map((product) => (
             <motion.div
               key={product.id}
               onClick={() => navigate(`/product/${product.id}`)}
               variants={cardVariants}
-              whileHover={{ y: -8 }}
-              className="glass rounded-glass overflow-hidden group cursor-pointer"
+              className="relative bg-[rgba(13,9,5,0.3)] border border-[rgba(250,243,224,0.04)] rounded-glass overflow-hidden group cursor-pointer hover:border-[rgba(200,146,42,0.2)] transition-all duration-500 hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
             >
-              {/* Product Image */}
-              <div className="w-full aspect-square bg-barak-card overflow-hidden">
+              {/* Product Visual Pedestal */}
+              <div className="relative aspect-square w-full bg-[#111111] flex items-center justify-center p-10 border-b border-[rgba(250,243,224,0.03)] overflow-hidden">
                 {product.image_url ? (
                   <img 
                     src={product.image_url} 
                     alt={product.name} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                    className="max-h-[80%] max-w-[80%] object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.65)] group-hover:scale-105 group-hover:translate-y-[-6px] transition-all duration-700 ease-out" 
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-500">
+                  <div className="text-6xl group-hover:scale-105 group-hover:translate-y-[-6px] transition-all duration-700 ease-out">
                     🍵
                   </div>
                 )}
+                
+                {/* Volumetric pedestal rim reflection */}
+                <div className="absolute bottom-6 w-[55%] h-[6px] pedestal-reflection transition-transform duration-700 group-hover:scale-105 opacity-80" />
               </div>
 
               {/* Product Info */}
-              <div className="p-6">
-                <p className="text-xs uppercase font-bold text-barak-gold mb-2 tracking-wider">
-                  {product.category}
-                </p>
-                <h3 className="text-lg font-bold text-barak-cream mb-3 line-clamp-2">
-                  {product.name}
-                </h3>
+              <div className="p-6 flex flex-col justify-between h-[200px]">
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-barak-gold tracking-[0.2em] mb-2 block">
+                    {product.category}
+                  </span>
+                  
+                  <h3 className="text-base font-playfair font-bold text-barak-cream mb-2 line-clamp-2 group-hover:text-barak-gold-light transition-colors duration-300">
+                    {product.name}
+                  </h3>
 
-                {/* Rating */}
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs text-barak-gold">★★★★★</span>
-                  <span className="text-xs text-barak-muted">{product.rating || 4.8}</span>
+                  {/* Rating */}
+                  <div className="flex items-center gap-1.5 mb-3">
+                    <span className="text-[10px] text-barak-gold tracking-widest">★★★★★</span>
+                    <span className="text-[10px] text-barak-cream text-opacity-40">({product.rating || 4.8})</span>
+                  </div>
                 </div>
 
-                {/* Price */}
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-xl font-bold text-barak-gold">₹{product.price}</span>
-                  <span className="text-sm text-barak-muted line-through">₹{product.mrp}</span>
+                <div className="flex items-center justify-between mt-auto">
+                  {/* Pricing */}
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-lg font-semibold text-barak-gold">₹{product.price}</span>
+                    {product.mrp > product.price && (
+                      <span className="text-xs text-barak-cream text-opacity-40 line-through">₹{product.mrp}</span>
+                    )}
+                  </div>
+
+                  {/* Quick Add Bag Action Button */}
+                  <button 
+                    onClick={(e) => handleAddToCart(e, product)}
+                    className="w-10 h-10 rounded-full border border-[rgba(200,146,42,0.3)] flex items-center justify-center text-barak-cream hover:bg-barak-gold hover:text-barak-bg hover:border-barak-gold transition-all duration-350"
+                    aria-label="Add to cart"
+                  >
+                    <ShoppingBag size={16} />
+                  </button>
                 </div>
-
-                {/* Add to Cart Button */}
-                <button 
-                  onClick={(e) => handleAddToCart(e, product)}
-                  className="w-full glass px-4 py-3 rounded-lg font-semibold text-barak-cream hover:text-barak-gold-light border border-barak-gold hover:border-barak-gold-light transition-all flex items-center justify-center gap-2"
-                >
-                  <ShoppingCart size={18} />
-                  Add to Cart
-                </button>
-
               </div>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* View All Button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="mt-12 text-center"
-        >
-          <button 
-            onClick={() => navigate('/shop')}
-            className="glass px-8 py-4 rounded-lg font-semibold text-barak-cream hover:text-barak-gold inline-flex items-center gap-2 group"
-          >
-            View All Products
-            <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-          </button>
         </motion.div>
       </div>
     </section>
