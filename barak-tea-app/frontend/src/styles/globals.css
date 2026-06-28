@@ -139,3 +139,100 @@ html {
 select option {
   @apply bg-barak-surface text-barak-cream;
 }
+
+/* --- BARAK Tea Premium Luxury Hero Section Styles --- */
+
+/* Luxury Dark Charcoal Base with Dark Emerald undertones */
+.luxury-hero-bg {
+  background: radial-gradient(circle at 50% 45%, rgba(10, 30, 20, 0.6) 0%, rgba(8, 8, 8, 1) 70%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Atmospheric Volumetric Emerald Glow */
+.volumetric-emerald {
+  background: radial-gradient(circle at 50% 50%, rgba(20, 120, 79, 0.15) 0%, rgba(20, 120, 79, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+  filter: blur(80px);
+  will-change: transform, opacity;
+  animation: breathe-glow 8s ease-in-out infinite;
+}
+
+/* Volumetric Gold Glow for Rim Light */
+.volumetric-gold {
+  background: radial-gradient(circle at 50% 45%, rgba(200, 146, 42, 0.12) 0%, rgba(200, 146, 42, 0.03) 40%, rgba(0, 0, 0, 0) 70%);
+  filter: blur(60px);
+  will-change: transform, opacity;
+  animation: breathe-glow 6s ease-in-out infinite alternate;
+}
+
+/* Haze Animation Layer */
+.haze-overlay {
+  background-image: radial-gradient(circle at 30% 30%, rgba(250, 243, 224, 0.03) 0%, transparent 60%),
+                    radial-gradient(circle at 70% 60%, rgba(20, 120, 79, 0.04) 0%, transparent 60%);
+  filter: blur(40px);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  animation: haze-drift 12s ease-in-out infinite;
+}
+
+/* Pedestal Reflection */
+.pedestal-reflection {
+  background: linear-gradient(to bottom, rgba(250, 243, 224, 0.03) 0%, transparent 100%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+  filter: blur(2px);
+}
+
+/* Premium Idle Float Animation */
+.premium-float-idle {
+  will-change: transform;
+  animation: premium-float 6s ease-in-out infinite;
+}
+
+/* Custom Keyframes */
+@keyframes breathe-glow {
+  0%, 100% {
+    opacity: 0.85;
+    transform: scale(1) translate3d(0,0,0);
+  }
+  50% {
+    opacity: 1.0;
+    transform: scale(1.08) translate3d(0,0,0);
+  }
+}
+
+@keyframes haze-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate3d(2%, 1%, 0) scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes premium-float {
+  0%, 100% {
+    transform: translate3d(0, 0px, 0);
+  }
+  50% {
+    transform: translate3d(0, -2.5px, 0);
+  }
+}
+
+/* Premium Navigation Highlights */
+.nav-shop-now {
+  background: linear-gradient(135deg, rgba(200, 146, 42, 0.1) 0%, rgba(200, 146, 42, 0.25) 100%);
+  border: 1px solid rgba(200, 146, 42, 0.5);
+  box-shadow: 0 0 15px rgba(200, 146, 42, 0.15), inset 0 1px 0 rgba(250, 243, 224, 0.1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-shop-now:hover {
+  background: linear-gradient(135deg, rgba(200, 146, 42, 0.2) 0%, rgba(200, 146, 42, 0.4) 100%);
+  border-color: rgba(232, 184, 75, 0.8);
+  box-shadow: 0 0 25px rgba(200, 146, 42, 0.3), inset 0 1px 0 rgba(250, 243, 224, 0.2);
+  transform: translateY(-1px);
+}
+

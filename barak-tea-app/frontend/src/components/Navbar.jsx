@@ -21,17 +21,15 @@ export default function Navbar() {
 
   const navLinks = [
     { label: 'Home', href: '/' },
-    { label: 'Shop', href: '/shop' },
-    { label: 'Brew Guide', href: '/brew-guide' },
-    { label: 'Our Story', href: '/our-story' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Wholesale', href: '/wholesale' },
+    { label: 'Products', href: '/shop' },
+    { label: 'About', href: '/our-story' },
+    { label: 'Contact', href: '#footer' },
   ];
 
   return (
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? 'glass bg-[rgba(13,9,5,0.8)]'
+          ? 'glass bg-[rgba(13,9,5,0.85)]'
           : 'bg-transparent'
         }`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -47,13 +45,23 @@ export default function Navbar() {
             {/* Desktop Navigation */}
             <div className="hidden md:flex gap-8 items-center h-full">
               {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="text-sm font-medium text-barak-cream hover:text-barak-gold transition-colors duration-300 py-2"
-                >
-                  {link.label}
-                </Link>
+                link.href.startsWith('#') ? (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="text-sm font-medium text-barak-cream hover:text-barak-gold transition-colors duration-300 py-2"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className="text-sm font-medium text-barak-cream hover:text-barak-gold transition-colors duration-300 py-2"
+                  >
+                    {link.label}
+                  </Link>
+                )
               ))}
             </div>
 
@@ -75,9 +83,12 @@ export default function Navbar() {
                 )}
               </button>
 
-              {/* WhatsApp Button - Desktop */}
-              <button className="hidden md:block glass px-4 py-2 rounded-pill text-sm font-semibold text-barak-cream hover:text-barak-gold transition-colors border border-barak-gold hover:border-barak-gold-light">
-                Order on WhatsApp
+              {/* Shop Now Button - Desktop */}
+              <button
+                onClick={() => navigate('/shop')}
+                className="hidden md:block nav-shop-now px-5 py-2 rounded-pill text-sm font-semibold text-barak-cream"
+              >
+                Shop Now
               </button>
 
               {/* Mobile Menu Toggle */}
@@ -115,22 +126,36 @@ export default function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Link
-                  to={link.href}
-                  className="text-lg font-medium text-barak-cream hover:text-barak-gold transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
+                {link.href.startsWith('#') ? (
+                  <a
+                    href={link.href}
+                    className="text-lg font-medium text-barak-cream hover:text-barak-gold transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    to={link.href}
+                    className="text-lg font-medium text-barak-cream hover:text-barak-gold transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                )}
               </motion.div>
             ))}
             <motion.button
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: navLinks.length * 0.1 }}
-              className="glass px-4 py-3 rounded-pill text-sm font-semibold text-barak-cream mt-4"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                navigate('/shop');
+              }}
+              className="nav-shop-now px-5 py-3 rounded-pill text-sm font-semibold text-barak-cream mt-4"
             >
-              Order on WhatsApp
+              Shop Now
             </motion.button>
           </div>
         </motion.div>
