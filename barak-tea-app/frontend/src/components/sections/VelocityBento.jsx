@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useSpring, useTransform, useVelocity } from 'framer-motion';
 import gardenImg from '../../assets/barak_tea_garden.png';
 import pluckingImg from '../../assets/barak_tea_plucking.png';
@@ -6,10 +6,33 @@ import brewingImg from '../../assets/blog_chai_brewing.png';
 
 export default function VelocityBento() {
   const containerRef = useRef(null);
+  const scrollRef = useRef(null);
+  const [scrollRange, setScrollRange] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (scrollRef.current) {
+        setScrollRange(scrollRef.current.scrollWidth - window.innerWidth);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    const observer = new ResizeObserver(handleResize);
+    if (scrollRef.current) {
+      observer.observe(scrollRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      observer.disconnect();
+    };
+  }, []);
   
   // Horizontal scroll
   const { scrollYProgress } = useScroll({ target: containerRef });
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
+  const x = useTransform(scrollYProgress, [0, 1], [0, -scrollRange]);
 
   // Velocity-based physical tilt
   const { scrollY } = useScroll();
@@ -29,13 +52,13 @@ export default function VelocityBento() {
   ];
 
   return (
-    <section ref={containerRef} className="h-[300vh] bg-[#050505]">
+    <section ref={containerRef} className="relative h-[300vh] bg-[#050505]">
       <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden bg-[#0a0a0a]">
         
         {/* Ambient glow */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(200,146,42,0.1),transparent_50%)] pointer-events-none" />
 
-        <motion.div style={{ x }} className="flex gap-16 px-[10vw]">
+        <motion.div ref={scrollRef} style={{ x }} className="flex gap-16 px-[10vw]">
           
           <div className="w-[80vw] md:w-[40vw] shrink-0 flex flex-col justify-center">
             <p className="text-barak-gold text-xs tracking-[0.4em] uppercase font-bold mb-4">
