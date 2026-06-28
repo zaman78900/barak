@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CaretDown } from 'phosphor-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../../assets/logo.png';
 
 // Easing functions for premium motion feel
@@ -592,7 +593,7 @@ export default function HeroSection() {
 
       {/* 5. Typography Content (Centered bottom, Fades/Translates on scroll) */}
       <div 
-        className="absolute bottom-[10vh] left-0 right-0 z-3 text-center px-4 max-w-4xl mx-auto flex flex-col items-center pointer-events-auto"
+        className="absolute bottom-[8vh] left-0 right-0 z-3 text-center px-4 max-w-5xl mx-auto flex flex-col items-center pointer-events-auto"
         style={{
           opacity: isPreloaded ? Math.max(1 - scrollProgress * 1.5, 0) : 0,
           transform: `translate3d(0, ${isReducedMotion ? 0 : scrollProgress * -40}px, 0)`,
@@ -601,34 +602,60 @@ export default function HeroSection() {
           ...getMouseParallaxStyle(-10) // Inverse parallax on content for enhanced depth
         }}
       >
-        {/* Headline */}
-        <h1 className="text-3xl md:text-5xl lg:text-[54px] font-playfair font-bold text-barak-cream tracking-tight mb-4 leading-[1.15]">
-          Experience the Essence of <br className="hidden md:inline" />
-          <span className="gradient-gold">Premium Assam Tea</span>
-        </h1>
-        
-        {/* Subheadline */}
-        <p className="text-xs md:text-sm text-barak-cream text-opacity-70 max-w-[620px] mb-8 font-light leading-relaxed tracking-wide">
-          Crafted from carefully selected CTC tea leaves to deliver rich aroma, bold flavor, and an unforgettable cup.
-        </p>
+        <AnimatePresence>
+          {isPreloaded && (
+            <motion.div
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              className="glass-panel-ultra p-8 md:p-12 w-full max-w-4xl flex flex-col items-center"
+            >
+              {/* Headline */}
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+                className="text-4xl md:text-6xl lg:text-[64px] font-playfair font-bold text-barak-cream tracking-tight mb-6 leading-[1.1] max-w-3xl"
+              >
+                Experience the Essence of <br className="hidden md:inline" />
+                <span className="gradient-gold">Premium Assam Tea</span>
+              </motion.h1>
+              
+              {/* Subheadline */}
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.6 }}
+                className="text-sm md:text-base text-barak-cream text-opacity-80 max-w-[620px] mb-10 font-light leading-relaxed tracking-wide"
+              >
+                Crafted from carefully selected CTC tea leaves to deliver rich aroma, bold flavor, and an unforgettable cup. Designed for the connoisseur.
+              </motion.p>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-md">
-          <button 
-            onClick={() => navigate('/shop')}
-            className="nav-shop-now px-8 py-3.5 rounded-pill text-sm font-semibold text-barak-cream flex items-center justify-center gap-2 group w-full sm:w-[190px]"
-          >
-            Shop Now
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
-          </button>
-          
-          <button 
-            onClick={() => navigate('/shop')}
-            className="glass bg-transparent px-8 py-3.5 rounded-pill text-sm font-medium text-barak-cream hover:bg-[rgba(250,243,224,0.04)] border border-[rgba(250,243,224,0.15)] transition-all duration-350 w-full sm:w-[190px]"
-          >
-            Explore Collection
-          </button>
-        </div>
+              {/* CTA Buttons */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.8 }}
+                className="flex flex-col sm:flex-row gap-5 items-center justify-center w-full max-w-lg"
+              >
+                <button 
+                  onClick={() => navigate('/shop')}
+                  className="nav-shop-now px-8 py-4 rounded-pill text-sm font-bold text-barak-cream flex items-center justify-center gap-3 group w-full sm:w-[220px]"
+                >
+                  Shop Now
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
+                </button>
+                
+                <button 
+                  onClick={() => navigate('/shop')}
+                  className="glass bg-transparent px-8 py-4 rounded-pill text-sm font-medium text-barak-cream hover:bg-[rgba(250,243,224,0.06)] border border-[rgba(250,243,224,0.2)] transition-all duration-350 w-full sm:w-[220px]"
+                >
+                  Explore Collection
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* 6. Cinematic Scroll Indicator */}

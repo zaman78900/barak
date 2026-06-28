@@ -22,6 +22,17 @@ body {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(250, 243, 224, 0.1);
 }
 
+.glass-panel-ultra {
+  @apply bg-[rgba(10,10,10,0.45)] backdrop-blur-[24px] border border-[rgba(255,255,255,0.08)] rounded-3xl transition-all duration-500 overflow-hidden relative;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.glass-panel-ultra::before {
+  content: '';
+  @apply absolute inset-0 rounded-3xl pointer-events-none;
+  box-shadow: inset 0 0 40px rgba(200, 146, 42, 0.05);
+}
+
 .glass:hover {
   @apply bg-[rgba(250,243,224,0.12)] border-[rgba(200,146,42,0.2)];
   box-shadow: 0 12px 48px rgba(200, 146, 42, 0.15), inset 0 1px 0 rgba(250, 243, 224, 0.15);

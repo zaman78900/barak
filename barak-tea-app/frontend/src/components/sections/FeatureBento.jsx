@@ -84,7 +84,8 @@ export default function FeatureBento() {
               <motion.div
                 key={idx}
                 variants={cardVariants}
-                className={`relative rounded-glass overflow-hidden group border border-[rgba(250,243,224,0.05)] bg-[rgba(26,17,10,0.2)] transition-all duration-700 hover:border-[rgba(200,146,42,0.25)] flex flex-col justify-end ${
+                whileHover={{ scale: 1.02, y: -5 }}
+                className={`relative rounded-3xl overflow-hidden group border border-[rgba(255,255,255,0.05)] bg-[rgba(10,10,10,0.5)] backdrop-blur-md transition-all duration-500 hover:border-[rgba(200,146,42,0.3)] hover:shadow-glass-hover flex flex-col justify-end ${
                   isLarge 
                     ? 'md:col-span-7 h-[450px] md:h-[600px]' 
                     : 'md:col-span-5 h-[450px] md:h-[600px]'

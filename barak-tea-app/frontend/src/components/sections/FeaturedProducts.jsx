@@ -96,10 +96,11 @@ export default function FeaturedProducts() {
               key={product.id}
               onClick={() => navigate(`/product/${product.id}`)}
               variants={cardVariants}
-              className="relative bg-[rgba(13,9,5,0.3)] border border-[rgba(250,243,224,0.04)] rounded-glass overflow-hidden group cursor-pointer hover:border-[rgba(200,146,42,0.2)] transition-all duration-500 hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="relative bg-[rgba(10,10,10,0.5)] border border-[rgba(255,255,255,0.05)] backdrop-blur-md rounded-3xl overflow-hidden group cursor-pointer hover:border-[rgba(200,146,42,0.3)] transition-all duration-500 hover:shadow-glass-hover"
             >
               {/* Product Visual Pedestal */}
-              <div className="relative aspect-square w-full bg-[#111111] flex items-center justify-center p-10 border-b border-[rgba(250,243,224,0.03)] overflow-hidden">
+              <div className="relative aspect-square w-full bg-[rgba(0,0,0,0.2)] flex items-center justify-center p-10 border-b border-[rgba(255,255,255,0.03)] overflow-hidden">
                 {product.image_url ? (
                   <img 
                     src={product.image_url} 
