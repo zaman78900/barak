@@ -261,7 +261,7 @@ export default function TeaLeafCanvas() {
         width: '100vw',
         height: '100vh',
         pointerEvents: 'none',
-        zIndex: 5,
+        zIndex: 35,
         willChange: 'transform',
       }}
     />

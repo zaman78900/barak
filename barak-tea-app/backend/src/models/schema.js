@@ -187,6 +187,23 @@ CREATE TABLE IF NOT EXISTS page_views (
   url TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Contact Messages Table
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  status TEXT DEFAULT 'new' CHECK (status IN ('new', 'read', 'replied', 'archived')),
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status);
+CREATE INDEX IF NOT EXISTS idx_contact_messages_created_at ON contact_messages(created_at);
 `;
 
 export default schema;

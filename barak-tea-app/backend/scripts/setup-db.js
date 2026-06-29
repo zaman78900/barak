@@ -167,6 +167,20 @@ async function setupDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );`,
 
+      // 12. Contact Messages table
+      `CREATE TABLE IF NOT EXISTS contact_messages (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT,
+        subject TEXT NOT NULL,
+        message TEXT NOT NULL,
+        status TEXT DEFAULT 'new' CHECK (status IN ('new', 'read', 'replied', 'archived')),
+        notes TEXT,
+        created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );`,
+
       // Create indexes for performance
       `CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`,
       `CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);`,
@@ -179,6 +193,8 @@ async function setupDatabase() {
       `CREATE INDEX IF NOT EXISTS idx_coupons_code ON coupons(code);`,
       `CREATE INDEX IF NOT EXISTS idx_reviews_product_id ON reviews(product_id);`,
       `CREATE INDEX IF NOT EXISTS idx_reviews_status ON reviews(status);`,
+      `CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status);`,
+      `CREATE INDEX IF NOT EXISTS idx_contact_messages_created_at ON contact_messages(created_at);`,
     ];
 
     // Execute each table creation statement

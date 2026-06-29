@@ -19,6 +19,7 @@ import settingsRoutes from './src/routes/settings.js';
 import newsletterRoutes from './src/routes/newsletter.js';
 import blogRoutes from './src/routes/blogs.js';
 import analyticsRoutes from './src/routes/analytics.js';
+import contactRoutes from './src/routes/contact.js';
 
 
 import errorHandler from './src/middleware/errorHandler.js';
@@ -90,6 +91,7 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/contact', contactRoutes);
 
 
 app.get('/health', (_req, res) => {

@@ -18,6 +18,7 @@ import Blog from './pages/Blog';
 import AdminPanel from './pages/AdminPanel';
 import AdminLogin from './pages/AdminLogin';
 import Confirmation from './pages/Confirmation';
+import Contact from './pages/Contact';
 
 // Components
 import Navbar from './components/Navbar';
@@ -164,6 +165,13 @@ function AppRoutes() {
           <>
             <Navbar />
             <Blog />
+            <Footer />
+          </>
+        } />
+        <Route path="/contact" element={
+          <>
+            <Navbar />
+            <Contact />
             <Footer />
           </>
         } />

@@ -153,19 +153,22 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-barak-bg text-barak-cream pb-24 overflow-hidden pt-28 md:pt-32">
+    <div className="min-h-screen bg-barak-bg text-barak-cream pb-24 overflow-hidden pt-28 md:pt-36">
       
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 pt-8">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 pt-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           
           {/* ─── LEFT: IMAGE GALLERY (PARALLAX & ZOOM) ──────────────────────── */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex flex-col-reverse lg:flex-row gap-4 lg:gap-6 sticky top-24 self-start"
+            className="flex flex-col-reverse lg:flex-row gap-4 lg:gap-6 lg:sticky lg:top-28 self-start w-full relative"
           >
+            {/* Volumetric background glow behind product images */}
+            <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-barak-gold/3 rounded-full blur-[100px] pointer-events-none z-0" />
+
             {/* Thumbnail Rail (Desktop left, Mobile bottom) */}
-            <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible no-scrollbar pb-2 lg:pb-0">
+            <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible no-scrollbar pb-2 lg:pb-0 w-full lg:w-auto justify-start z-10">
               {gallery.map((img, idx) => (
                 <button 
                   key={idx}
@@ -176,10 +179,10 @@ export default function ProductDetail() {
                 </button>
               ))}
             </div>
-
+ 
             {/* Main Image Viewer */}
             <div 
-              className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-black/20 cursor-zoom-in group"
+              className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-black/20 cursor-zoom-in group z-10 border border-white/5 shadow-glass"
               onMouseEnter={() => setIsZoomed(true)}
               onMouseLeave={() => setIsZoomed(false)}
               onMouseMove={handleMouseMove}
@@ -201,7 +204,7 @@ export default function ProductDetail() {
               )}
             </div>
           </motion.div>
-
+ 
           {/* ─── RIGHT: PRODUCT DETAILS ──────────────────────────────────────── */}
           <motion.div 
             variants={staggerContainer}
@@ -210,19 +213,19 @@ export default function ProductDetail() {
             className="flex flex-col"
           >
             {/* Breadcrumbs & Category */}
-            <motion.div variants={fadeUp} className="text-sm text-barak-muted mb-4 uppercase tracking-wider font-semibold">
-              <span className="cursor-pointer hover:text-barak-gold" onClick={() => navigate('/shop')}>Shop</span> 
-              <span className="mx-2">/</span> 
+            <motion.div variants={fadeUp} className="text-xs text-barak-muted mb-4 uppercase tracking-[0.2em] font-semibold">
+              <span className="cursor-pointer hover:text-barak-gold transition-colors" onClick={() => navigate('/shop')}>Shop</span> 
+              <span className="mx-2 text-white/10">/</span> 
               <span className="text-barak-gold">{product.category}</span>
             </motion.div>
-
+ 
             {/* Title & Price */}
             <motion.div variants={fadeUp}>
               <h1 className="text-4xl lg:text-5xl font-playfair font-black mb-4 leading-tight">{product.name}</h1>
               <div className="flex items-center gap-4 mb-2">
-                <span className="text-3xl font-bebas tracking-wide text-barak-gold">{fmt(mainPrice)}</span>
+                <span className="text-3xl font-playfair font-bold text-barak-gold">{fmt(mainPrice)}</span>
                 {showMrp && (
-                  <span className="text-xl text-barak-muted line-through font-bebas">{fmt(mainMrp)}</span>
+                  <span className="text-xl text-barak-muted line-through font-playfair font-light">{fmt(mainMrp)}</span>
                 )}
               </div>
               <div className="mb-6 h-6">
@@ -231,17 +234,19 @@ export default function ProductDetail() {
                 )}
               </div>
             </motion.div>
+ 
+            <div className="h-px bg-white/5 my-6" />
 
             {/* Variants Selector */}
             {product.variants && product.variants.length > 0 && (
               <motion.div variants={fadeUp} className="mb-8">
-                <h3 className="text-sm text-barak-muted mb-3 uppercase tracking-wider font-semibold">Select Size</h3>
+                <h3 className="text-xs text-barak-muted mb-3 uppercase tracking-[0.2em] font-semibold">Select Size</h3>
                 <div className="flex flex-wrap gap-3">
                   {product.variants.map(v => (
                     <button
                       key={v.id}
                       onClick={() => handleVariantSelect(v)}
-                      className={`px-5 py-3 rounded-lg border font-medium transition-all relative ${
+                      className={`px-5 py-3 rounded-lg border font-medium text-sm transition-all relative ${
                         selectedVariant?.id === v.id 
                         ? 'border-barak-gold bg-barak-gold/10 text-barak-gold shadow-[0_0_15px_rgba(200,146,42,0.1)]' 
                         : v.stock <= 0 
@@ -257,39 +262,39 @@ export default function ProductDetail() {
                 </div>
               </motion.div>
             )}
-
+ 
             {/* Quantity & CTAs */}
-            <motion.div variants={fadeUp} className="mb-12 flex flex-col gap-4">
-              <div className="flex items-center gap-4">
+            <motion.div variants={fadeUp} className="mb-10 flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                 {/* Quantity */}
-                <div className={`flex items-center bg-white/5 border border-white/10 rounded-lg p-1 h-14 ${currentStock <= 0 ? 'opacity-30 pointer-events-none' : ''}`}>
+                <div className={`flex items-center justify-between bg-white/5 border border-white/10 rounded-lg p-1 h-14 w-full sm:w-36 ${currentStock <= 0 ? 'opacity-30 pointer-events-none' : ''}`}>
                   <button 
                     onClick={() => setQuantity(Math.max(1, quantity - 1))} 
-                    className="w-10 h-full flex items-center justify-center text-white/70 hover:text-white transition-colors"
+                    className="w-12 h-full flex items-center justify-center text-white/70 hover:text-white transition-colors"
                   >
                     <FiMinus />
                   </button>
-                  <span className="w-10 text-center font-medium">{quantity}</span>
+                  <span className="w-8 text-center font-semibold text-base">{quantity}</span>
                   <button 
                     onClick={() => setQuantity(Math.min(currentStock, quantity + 1))} 
                     disabled={quantity >= currentStock}
-                    className="w-10 h-full flex items-center justify-center text-white/70 hover:text-white transition-colors disabled:opacity-20"
+                    className="w-12 h-full flex items-center justify-center text-white/70 hover:text-white transition-colors disabled:opacity-20"
                   >
                     <FiPlus />
                   </button>
                 </div>
-
+ 
                 {/* Primary CTA */}
-                <div className="flex-1 flex flex-col gap-2">
+                <div className="flex-1 flex flex-col gap-2 w-full">
                   <button 
                     onClick={handleAddToCart}
                     disabled={currentStock <= 0 || isAdded}
-                    className={`w-full h-14 font-bold rounded-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 ${
+                    className={`w-full h-14 font-bold rounded-lg transition-all duration-350 transform active:scale-[0.98] flex items-center justify-center gap-2 text-xs uppercase tracking-widest ${
                       isAdded 
                       ? 'bg-barak-success text-white' 
                       : currentStock <= 0 
                       ? 'bg-white/5 text-white/20 border border-white/10 cursor-not-allowed'
-                      : 'bg-barak-cream text-barak-bg hover:bg-barak-gold hover:text-white'
+                      : 'bg-barak-cream text-barak-bg hover:bg-barak-gold hover:text-white hover:shadow-gold-glow-large'
                     }`}
                   >
                     {isAdded ? (
@@ -300,34 +305,35 @@ export default function ProductDetail() {
                       "Add to Cart"
                     )}
                   </button>
-                  {currentStock > 0 && (
-                    <div className="text-right text-xs text-barak-muted font-bebas tracking-wider">
-                      Total: {fmt(mainPrice * quantity)}
-                    </div>
-                  )}
                 </div>
               </div>
-
+              
+              {currentStock > 0 && (
+                <div className="text-left text-xs uppercase tracking-widest text-barak-muted font-bold mt-1">
+                  Subtotal: <span className="text-barak-cream font-playfair font-black text-sm ml-1">{fmt(mainPrice * quantity)}</span>
+                </div>
+              )}
+ 
               {/* Secondary CTA: WhatsApp */}
               <button 
                 onClick={handleWhatsAppBuy}
-                className="w-full h-14 bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/30 font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-[#25D366] hover:text-white transition-all"
+                className="w-full h-14 bg-barak-whatsapp/5 text-barak-whatsapp border border-barak-whatsapp/20 font-bold rounded-lg flex items-center justify-center gap-3 hover:bg-barak-whatsapp/15 hover:border-barak-whatsapp/40 transition-all duration-350 shadow-sm"
               >
                 <FaWhatsapp className="text-xl" />
-                Buy via WhatsApp
+                <span className="text-xs uppercase tracking-widest font-black">Buy via WhatsApp</span>
               </button>
             </motion.div>
-
+ 
             {/* Accordions (Brew Snippet & Description) */}
             <motion.div variants={fadeUp} className="border-t border-white/10">
               {/* Description */}
               <div className="border-b border-white/10">
                 <button 
-                  className="w-full py-6 flex justify-between items-center text-lg font-playfair font-bold"
+                  className="w-full py-6 flex justify-between items-center text-lg font-playfair font-bold text-[#F8F6F2]"
                   onClick={() => setOpenAccordion(openAccordion === 'desc' ? null : 'desc')}
                 >
                   Description
-                  {openAccordion === 'desc' ? <FiChevronUp /> : <FiChevronDown />}
+                  {openAccordion === 'desc' ? <FiChevronUp className="text-barak-gold" /> : <FiChevronDown />}
                 </button>
                 <AnimatePresence>
                   {openAccordion === 'desc' && (
@@ -337,22 +343,22 @@ export default function ProductDetail() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-6 text-white/70 leading-relaxed">
+                      <p className="pb-6 text-white/70 leading-relaxed text-sm md:text-base font-light">
                         {product.description || 'Experience the authentic taste of Barak Valley with this premium blend. Hand-picked from the finest gardens, this tea offers a robust flavor and rich aroma that rejuvenates your senses with every sip.'}
                       </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
-
+ 
               {/* Brew Snippet */}
               <div className="border-b border-white/10">
                 <button 
-                  className="w-full py-6 flex justify-between items-center text-lg font-playfair font-bold"
+                  className="w-full py-6 flex justify-between items-center text-lg font-playfair font-bold text-[#F8F6F2]"
                   onClick={() => setOpenAccordion(openAccordion === 'brew' ? null : 'brew')}
                 >
                   How to Brew This Tea
-                  {openAccordion === 'brew' ? <FiChevronUp /> : <FiChevronDown />}
+                  {openAccordion === 'brew' ? <FiChevronUp className="text-barak-gold" /> : <FiChevronDown />}
                 </button>
                 <AnimatePresence>
                   {openAccordion === 'brew' && (
@@ -366,17 +372,17 @@ export default function ProductDetail() {
                         <div className="bg-white/5 p-4 rounded-xl border border-white/5 text-center">
                           <div className="text-2xl mb-2">🌡️</div>
                           <div className="font-bold">95°C</div>
-                          <div className="text-xs text-white/50 uppercase tracking-widest mt-1">Water Temp</div>
+                          <div className="text-[9px] text-white/50 uppercase tracking-widest mt-1">Water Temp</div>
                         </div>
                         <div className="bg-white/5 p-4 rounded-xl border border-white/5 text-center">
                           <div className="text-2xl mb-2">⚖️</div>
                           <div className="font-bold">2.5g</div>
-                          <div className="text-xs text-white/50 uppercase tracking-widest mt-1">Per Cup</div>
+                          <div className="text-[9px] text-white/50 uppercase tracking-widest mt-1">Per Cup</div>
                         </div>
                         <div className="bg-white/5 p-4 rounded-xl border border-white/5 text-center">
                           <div className="text-2xl mb-2">⏱️</div>
                           <div className="font-bold">3-4 Min</div>
-                          <div className="text-xs text-white/50 uppercase tracking-widest mt-1">Steep Time</div>
+                          <div className="text-[9px] text-white/50 uppercase tracking-widest mt-1">Steep Time</div>
                         </div>
                       </div>
                     </motion.div>
@@ -384,11 +390,11 @@ export default function ProductDetail() {
                 </AnimatePresence>
               </div>
             </motion.div>
-
+ 
           </motion.div>
         </div>
       </div>
-
+ 
       {/* ─── RELATED PRODUCTS (Horizontal Rail) ─────────────────────────── */}
       {relatedProducts && relatedProducts.length > 0 && (
         <motion.div 
@@ -398,29 +404,29 @@ export default function ProductDetail() {
           variants={fadeUp}
           className="max-w-7xl mx-auto px-4 lg:px-8 mt-32"
         >
-          <h2 className="text-3xl font-playfair font-bold mb-8">You May Also Like</h2>
-          <div className="flex gap-6 overflow-x-auto no-scrollbar pb-8">
+          <h2 className="text-3xl font-playfair font-black mb-8">You May Also Like</h2>
+          <div className="flex gap-6 overflow-x-auto no-scrollbar pb-8 snap-x snap-mandatory">
             {relatedProducts.filter(p => p.id !== product.id).slice(0, 4).map(item => (
               <div 
                 key={item.id} 
                 onClick={() => navigate(`/product/${item.id}`)}
-                className="min-w-[280px] w-[280px] group cursor-pointer"
+                className="min-w-[260px] w-[260px] sm:min-w-[280px] sm:w-[280px] group cursor-pointer snap-start"
               >
-                <div className="w-full aspect-[4/5] rounded-xl overflow-hidden bg-black/20 mb-4">
+                <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden bg-black/20 mb-4 border border-white/5 shadow-glass">
                   <img 
                     src={item.image_url} 
                     alt={item.name} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                   />
                 </div>
-                <h3 className="text-lg font-bold group-hover:text-barak-gold transition-colors">{item.name}</h3>
-                <p className="text-barak-gold font-bebas text-xl mt-1">₹{item.price}</p>
+                <h3 className="text-lg font-bold group-hover:text-barak-gold transition-colors font-playfair">{item.name}</h3>
+                <p className="text-barak-gold font-playfair font-semibold text-lg mt-1">₹{item.price}</p>
               </div>
             ))}
           </div>
         </motion.div>
       )}
-
+ 
       {/* ─── SECTION 6.3: TESTIMONIALS / SOCIAL PROOF ──────────────────── */}
       <motion.div 
         initial="hidden"
@@ -429,20 +435,20 @@ export default function ProductDetail() {
         variants={fadeUp}
         className="max-w-7xl mx-auto px-4 lg:px-8 mt-24"
       >
-        <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 lg:p-12 backdrop-blur-xl">
+        <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 lg:p-12 backdrop-blur-xl shadow-glass">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 gap-6">
             <div>
-              <h2 className="text-3xl lg:text-4xl font-playfair font-bold mb-3">Loved by tea drinkers</h2>
-              <p className="text-white/60">Real reviews from our Barak family.</p>
+              <h2 className="text-3xl lg:text-4xl font-playfair font-black mb-3">Loved by tea drinkers</h2>
+              <p className="text-white/60 text-sm">Real reviews from our Barak family.</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex text-barak-gold text-xl">
                 <FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" />
               </div>
-              <span className="font-bebas text-2xl pt-1">4.9/5</span>
+              <span className="font-playfair font-black text-2xl pt-1">4.9/5</span>
             </div>
           </div>
-
+ 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {reviews && reviews.length > 0 ? (
               reviews.slice(0, 3).map((review, i) => (
@@ -462,32 +468,32 @@ export default function ProductDetail() {
                   <div className="flex text-barak-gold text-sm mb-4">
                     <FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Perfect Morning Cup</h4>
-                  <p className="text-white/70 text-sm italic mb-6">"The flavor is robust and exact what I need to start my day. Highly recommend!"</p>
-                  <p className="text-white/50 text-xs font-semibold uppercase tracking-wider">- Riya S.</p>
+                  <h4 className="font-bold text-lg mb-2 font-playfair">Perfect Morning Cup</h4>
+                  <p className="text-white/70 text-sm italic mb-6 font-light">"The flavor is robust and exact what I need to start my day. Highly recommend!"</p>
+                  <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider">- Riya S.</p>
                 </div>
                 <div className="bg-black/20 p-6 rounded-2xl border border-white/5 hover:border-barak-gold/30 transition-colors">
                   <div className="flex text-barak-gold text-sm mb-4">
                     <FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Authentic Barak Taste</h4>
-                  <p className="text-white/70 text-sm italic mb-6">"Reminds me of home. The packaging is premium and the tea leaves are super fresh."</p>
-                  <p className="text-white/50 text-xs font-semibold uppercase tracking-wider">- Amit K.</p>
+                  <h4 className="font-bold text-lg mb-2 font-playfair">Authentic Barak Taste</h4>
+                  <p className="text-white/70 text-sm italic mb-6 font-light">"Reminds me of home. The packaging is premium and the tea leaves are super fresh."</p>
+                  <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider">- Amit K.</p>
                 </div>
                 <div className="bg-black/20 p-6 rounded-2xl border border-white/5 hover:border-barak-gold/30 transition-colors">
                   <div className="flex text-barak-gold text-sm mb-4">
                     <FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" /><FiStar className="fill-current" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Great value</h4>
-                  <p className="text-white/70 text-sm italic mb-6">"Premium quality without the crazy price tag. Delivery was fast too."</p>
-                  <p className="text-white/50 text-xs font-semibold uppercase tracking-wider">- Sneha P.</p>
+                  <h4 className="font-bold text-lg mb-2 font-playfair">Great value</h4>
+                  <p className="text-white/70 text-sm italic mb-6 font-light">"Premium quality without the crazy price tag. Delivery was fast too."</p>
+                  <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider">- Sneha P.</p>
                 </div>
               </>
             )}
           </div>
         </div>
       </motion.div>
-
+ 
     </div>
   );
 }

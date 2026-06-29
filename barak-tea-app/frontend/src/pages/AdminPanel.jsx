@@ -1510,6 +1510,132 @@ function WholesalePage() {
   );
 }
 
+// ─── PAGE: Contact Messages ──────────────────────────────────────────────────
+function ContactMessagesPage() {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('all'); // all, new, read, replied, archived
+  const [notesInput, setNotesInput] = useState({});
+
+  useEffect(() => { loadMessages(); }, [activeTab]);
+
+  const loadMessages = async () => {
+    try {
+      setLoading(true);
+      const data = await adminAPI.contact.getAll(1, 100, activeTab !== 'all' ? { status: activeTab } : {});
+      setMessages(data.messages || []);
+    } catch (err) {
+      console.error("Failed to load contact messages:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id, status) => {
+    try {
+      await adminAPI.contact.updateStatus(id, status);
+      loadMessages();
+    } catch (err) {
+      console.error("Failed to update status:", err);
+    }
+  };
+
+  const saveNotes = async (id, notesText) => {
+    try {
+      await adminAPI.contact.updateStatus(id, undefined, notesText);
+      loadMessages();
+    } catch (err) {
+      console.error("Failed to save notes:", err);
+    }
+  };
+
+  if (loading) return <div style={{textAlign:"center",padding:40,color:C.muted}}>Loading messages...</div>;
+
+  return (
+    <div>
+      <SectionHeader title="Contact Messages" sub={`${messages.filter(m=>m.status==="new").length} new messages`} />
+      
+      {/* Tabs */}
+      <div style={{display:"flex",gap:10,marginBottom:20,flexWrap:"wrap"}}>
+        {['all', 'new', 'read', 'replied', 'archived'].map(tab => (
+          <button 
+            key={tab} 
+            onClick={() => setActiveTab(tab)}
+            style={{
+              background: activeTab === tab ? C.gold : C.card,
+              border: `1px solid ${C.border}`,
+              borderRadius: 20,
+              color: activeTab === tab ? '#0D0905' : C.cream,
+              padding: "6px 16px",
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: "pointer",
+              textTransform: "capitalize",
+              outline: "none",
+              transition: "all 0.2s"
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      <div style={{display:"flex",flexDirection:"column",gap:14}}>
+        {messages.length === 0 && <div style={{textAlign:"center",padding:40,color:C.muted}}>No messages found.</div>}
+        {messages.map(m=>(
+          <div key={m.id} style={{background:C.card,border:`1px solid ${m.status==="new"?C.gold:C.border}`,borderRadius:12,padding:20}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12,flexWrap:"wrap",gap:10}}>
+              <div>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6,flexWrap:"wrap"}}>
+                  <span style={{color:C.cream,fontWeight:700,fontSize:15}}>{m.name}</span>
+                  <span style={{background:`${C.gold}20`,color:C.gold,fontSize:10,padding:"2px 8px",borderRadius:4,fontWeight:700}}>{m.subject}</span>
+                  <Badge status={m.status}/>
+                </div>
+                <div style={{color:C.muted,fontSize:12,lineHeight:1.6}}>
+                  📞 {m.phone || "No phone"} · ✉️ {m.email} · 📅 {new Date(m.created_at).toLocaleString()}
+                </div>
+              </div>
+            </div>
+            {m.message && (
+              <p style={{color:C.muted,fontSize:13,margin:"0 0 14px",background:C.bg,borderRadius:8,padding:"10px 14px",whiteSpace:"pre-wrap"}}>{m.message}</p>
+            )}
+            
+            {/* Admin Notes */}
+            <div style={{marginBottom:14,borderTop:`1px solid ${C.border}`,paddingTop:12}}>
+              <label style={{display:"block",color:C.muted,fontSize:11,fontWeight:600,textTransform:"uppercase",marginBottom:6}}>Internal Admin Notes</label>
+              <div style={{display:"flex",gap:10}}>
+                <input 
+                  type="text" 
+                  value={notesInput[m.id] !== undefined ? notesInput[m.id] : (m.notes || "")}
+                  onChange={e => setNotesInput({...notesInput, [m.id]: e.target.value})}
+                  placeholder="Add notes about correspondence..."
+                  style={{flex:1,background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.cream,padding:"8px 12px",fontSize:13,outline:"none"}}
+                />
+                <Btn size="sm" onClick={() => saveNotes(m.id, notesInput[m.id] !== undefined ? notesInput[m.id] : m.notes)}>Save Notes</Btn>
+              </div>
+            </div>
+
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {m.status === "new" && (
+                <Btn size="sm" variant="secondary" onClick={() => updateStatus(m.id, "read")}>Mark Read</Btn>
+              )}
+              {m.status === "read" && (
+                <Btn size="sm" variant="secondary" onClick={() => updateStatus(m.id, "replied")}>Mark Replied</Btn>
+              )}
+              {m.status !== "archived" && (
+                <Btn size="sm" variant="danger" onClick={() => updateStatus(m.id, "archived")}>Archive</Btn>
+              )}
+              {m.status === "archived" && (
+                <Btn size="sm" variant="secondary" onClick={() => updateStatus(m.id, "new")}>Restore</Btn>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── PAGE: Inventory ──────────────────────────────────────────────────────────
 function InventoryPage() {
   const [products, setProducts]   = useState([]);
@@ -2033,6 +2159,7 @@ const NAV = [
   { id:"blogs", label:"Blogs", icon:FileText },
   { id:"reviews", label:"Reviews", icon:Star },
   { id:"wholesale", label:"Wholesale", icon:Inbox },
+  { id:"contact_messages", label:"Messages", icon:MessageCircle },
   { id:"notification_settings", label:"Order Alerts", icon:Bell },
   { id:"settings", label:"Settings", icon:Settings },
 ];
@@ -2409,6 +2536,7 @@ export default function AdminPanel() {
     dashboard:<DashboardPage setPage={setPage}/>, products:<ProductsPage/>, orders:<OrdersPage/>,
     customers:<CustomersPage/>, inventory:<InventoryPage/>, shipments:<LiveShipmentsPage/>,
     coupons:<CouponsPage/>, reviews:<ReviewsPage/>, wholesale:<WholesalePage/>,
+    contact_messages:<ContactMessagesPage/>,
     notification_settings:<NotificationSettingsPage/>, settings:<SettingsPage/>,
     blogs:<BlogsPage/>
   };

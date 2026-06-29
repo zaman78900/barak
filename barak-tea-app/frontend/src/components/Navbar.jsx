@@ -44,7 +44,7 @@ export default function Navbar() {
     { label: 'Home', href: '/' },
     { label: 'Products', href: '/shop' },
     { label: 'About', href: '/our-story' },
-    { label: 'Contact', href: '#footer' },
+    { label: 'Contact', href: '/contact' },
   ];
 
   const handleLinkClick = (href, e) => {
@@ -74,7 +74,7 @@ export default function Navbar() {
             : 'bg-transparent border-transparent py-4 px-4'
             }`}
         >
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <Link
               to="/"
@@ -83,7 +83,7 @@ export default function Navbar() {
               <img
                 src={logo}
                 alt="BARAK Tea"
-                className="h-10 md:h-12 w-auto object-contain transition-all duration-300 hover:scale-105"
+                className="h-12 md:h-16 w-auto object-contain transition-all duration-300 hover:scale-105"
               />
             </Link>
 

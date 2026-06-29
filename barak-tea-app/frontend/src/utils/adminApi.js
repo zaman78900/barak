@@ -165,6 +165,14 @@ export const analyticsAPI = {
   getStats: () => api.get('/analytics/stats'),
 };
 
+// ─── CONTACT ──────────────────────────────────────────────────────────────
+export const contactAPI = {
+  getAll: (page = 1, limit = 20, filters = {}) =>
+    api.get('/contact', { params: { page, limit, ...filters } }),
+  updateStatus: (id, status, notes) => api.put(`/contact/${id}`, { status, notes }),
+  submit: (data) => api.post('/contact', data),
+};
+
 export default {
   products: productsAPI,
   orders: ordersAPI,
@@ -177,4 +185,5 @@ export default {
   settings: settingsAPI,
   blogs: blogsAPI,
   analytics: analyticsAPI,
+  contact: contactAPI,
 };
