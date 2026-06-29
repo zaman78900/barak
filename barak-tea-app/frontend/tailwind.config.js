@@ -43,6 +43,8 @@ export default {
       boxShadow: {
         'glass': '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(250, 243, 224, 0.1)',
         'glass-hover': '0 12px 48px rgba(200, 146, 42, 0.15), inset 0 1px 0 rgba(250, 243, 224, 0.15)',
+        'gold-glow':       '0 0 20px rgba(200, 146, 42, 0.4)',
+        'gold-glow-large': '0 0 40px rgba(200, 146, 42, 0.5), 0 0 80px rgba(200, 146, 42, 0.2)',
       },
       borderRadius: {
         'glass': '16px',

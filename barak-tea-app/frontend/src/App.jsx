@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import './styles/globals.css';
+import TeaLeafCanvas from './components/TeaLeafCanvas';
+import CustomCursor  from './components/CustomCursor';
 
 // Pages
 import Homepage from './pages/Homepage';
@@ -87,6 +89,10 @@ function AppRoutes() {
 
   return (
     <div className="min-h-screen bg-barak-bg text-barak-cream overflow-x-hidden">
+      {/* Global persistent tea-leaf particle canvas — behind all content */}
+      {!isAdminRoute && <TeaLeafCanvas />}
+      {/* Global branded custom cursor */}
+      {!isAdminRoute && <CustomCursor />}
       <Routes>
         {/* Admin Panel - Protected */}
         <Route path="/admin" element={<ProtectedAdminRoute element={<AdminPanel />} />} />
