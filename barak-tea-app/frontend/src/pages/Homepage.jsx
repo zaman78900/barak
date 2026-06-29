@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import HeroAtmospheric  from '../components/sections/HeroAtmospheric';
+import HeroCinematic     from '../components/sections/HeroCinematic';
 import OriginAndProcess from '../components/sections/OriginAndProcess';
 import ValleyStory      from '../components/sections/ValleyStory';
 import ProductReveal    from '../components/sections/ProductReveal';
@@ -23,8 +23,8 @@ export default function Homepage() {
       className="w-full overflow-hidden"
       style={{ background: '#0D0905', color: '#FAF3E0' }}
     >
-      {/* Beat 1 — Atmospheric Hero (no product image) */}
-      <HeroAtmospheric />
+      {/* Beat 1 — Cinematic Hero (no product image) */}
+      <HeroCinematic />
 
       {/* Beat 2 + 3 — Origin Reveal + CTC Process (continuous, no hard break) */}
       <OriginAndProcess />
