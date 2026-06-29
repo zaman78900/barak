@@ -63,7 +63,7 @@ const testimonials = [
     role: 'Hospitality Consultant',
   },
   {
-    quote: 'The depth of flavour from Barak Valley is unlike any Assam tea I've had before.',
+    quote: "The depth of flavour from Barak Valley is unlike any Assam tea I've had before.",
     author: 'Krishnendu Das',
     role: 'Executive Chef, Kolkata',
   },
