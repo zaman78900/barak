@@ -1,6 +1,5 @@
 # BARAK Tea — Award-Winning Creative Homepage Prompt (v2)
 
-Paste this whole brief into your AI builder (v0, Lovable, Cursor, Framer AI) or hand to a creative dev. It supersedes the previous version — this one is built for an **Awwwards-style, immersive, single-flow experience**, not a stacked-template homepage.
 
 ---
 
