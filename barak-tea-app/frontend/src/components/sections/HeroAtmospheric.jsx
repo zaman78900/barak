@@ -1,264 +1,560 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 /**
- * Beat 1 — Arrival / Hero
- * Full-viewport atmospheric scene. NO product photography.
- * Animated wordmark reveal (mask-wipe letter stagger).
- * Animated scroll-hint breathing cue.
- * Color palette shifts cool mist → warm gold as user scrolls (Beat 2 merged here via parallax).
+ * HERO — Full JS-Canvas Cinematic Experience
+ * ────────────────────────────────────────────────────────────────
+ * JS-driven effects:
+ *  1. Canvas: Animated steaming mist / vapor rising from bottom
+ *  2. Canvas: Glowing orb that follows mouse with spring physics
+ *  3. Canvas: Aurora-like shifting colour waves in background
+ *  4. Magnetic letter-by-letter 3D rotation on hover
+ *  5. Mouse-parallax depth layers (3 depth planes)
+ *  6. Scroll-linked fade+scale out
+ *  7. Breathing radial pulse rings on load
+ *  8. WebGL-style gradient orb with noise animation (pure canvas)
  */
 export default function HeroAtmospheric() {
   const sectionRef = useRef(null);
+  const bgCanvasRef = useRef(null);
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const [rawMouse, setRawMouse] = useState({ x: 0, y: 0 });
+  const navigate = useNavigate();
+
+  // Smooth spring mouse for parallax layers
+  const springConfig = { stiffness: 50, damping: 18, mass: 1 };
+  const mx = useSpring(0, springConfig);
+  const my = useSpring(0, springConfig);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
   });
 
-  // Parallax transforms on scroll
-  const yContent    = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
-  const yBg         = useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
-  const opacityHero = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  // Color shift: overlay fades from dark mist to warm gold tint
-  const warmOverlay = useTransform(scrollYProgress, [0, 0.8], [0, 0.18]);
+  const yContent    = useTransform(scrollYProgress, [0, 1], ['0%', '-22%']);
+  const opacityHero = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
+  const scaleHero   = useTransform(scrollYProgress, [0, 0.5], [1, 0.94]);
 
+  // ── Track mouse ──────────────────────────────────────────────
   useEffect(() => {
-    const handleMove = (e) => {
-      setMousePos({
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
+    const onMove = (e) => {
+      const nx = e.clientX / window.innerWidth;
+      const ny = e.clientY / window.innerHeight;
+      setMousePos({ x: nx, y: ny });
+      setRawMouse({ x: e.clientX, y: e.clientY });
+      mx.set((nx - 0.5) * 2);
+      my.set((ny - 0.5) * 2);
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [mx, my]);
+
+  // ── Background Canvas: Aurora waves + Mist + Orb ─────────────
+  useEffect(() => {
+    const canvas = bgCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animId;
+    let W = 0, H = 0;
+    let t = 0;
+
+    const resize = () => {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Mist particles — rise from bottom (atmospheric steam)
+    class MistParticle {
+      constructor() { this.reset(true); }
+      reset(init = false) {
+        this.x     = Math.random() * W;
+        this.y     = init ? H - Math.random() * H * 0.4 : H + 30;
+        this.r     = Math.random() * 80 + 40;
+        this.vy    = -(Math.random() * 0.25 + 0.08);
+        this.vx    = (Math.random() - 0.5) * 0.15;
+        this.alpha = 0;
+        this.targetAlpha = Math.random() * 0.06 + 0.015;
+        this.life  = 0;
+        this.maxLife = 300 + Math.random() * 400;
+      }
+      update() {
+        this.life++;
+        this.y += this.vy;
+        this.x += this.vx;
+        // Fade in then out
+        if (this.life < 60) {
+          this.alpha = (this.life / 60) * this.targetAlpha;
+        } else if (this.life > this.maxLife - 80) {
+          this.alpha = ((this.maxLife - this.life) / 80) * this.targetAlpha;
+        } else {
+          this.alpha = this.targetAlpha;
+        }
+        if (this.life >= this.maxLife || this.y < -100) this.reset(false);
+      }
+      draw() {
+        const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+        grad.addColorStop(0, `rgba(180,220,190,${this.alpha})`);
+        grad.addColorStop(0.4, `rgba(80,140,100,${this.alpha * 0.5})`);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const mist = Array.from({ length: 28 }, () => new MistParticle());
+
+    // Aurora wave points
+    const AURORA_LINES = 4;
+    const AURORA_POINTS = 8;
+    const auroraOffsets = Array.from({ length: AURORA_LINES }, (_, li) =>
+      Array.from({ length: AURORA_POINTS }, (__, pi) => ({
+        phase: Math.random() * Math.PI * 2,
+        freq:  0.0005 + li * 0.0002 + Math.random() * 0.0003,
+        amp:   15 + Math.random() * 25,
+        offset: (li * H * 0.18) + H * 0.35,
+      }))
+    );
+
+    const drawAurora = (time) => {
+      const auroraColors = [
+        [12, 55, 35, 0.03],
+        [20, 80, 50, 0.025],
+        [8,  40, 28, 0.02],
+        [35, 90, 55, 0.015],
+      ];
+
+      auroraOffsets.forEach((points, li) => {
+        const [r, g, b, baseA] = auroraColors[li];
+        const step = W / (AURORA_POINTS - 1);
+
+        ctx.beginPath();
+        ctx.moveTo(0, H);
+
+        // Draw wavy curve
+        const ys = points.map((p, pi) => {
+          p.phase += p.freq;
+          return p.offset + Math.sin(p.phase + pi * 0.7) * p.amp;
+        });
+
+        ctx.moveTo(0, ys[0]);
+        for (let pi = 1; pi < AURORA_POINTS - 1; pi++) {
+          const cx = (pi - 0.5) * step;
+          const cy = (ys[pi - 1] + ys[pi]) / 2;
+          ctx.quadraticCurveTo(cx, (ys[pi - 1]), pi * step, ys[pi]);
+        }
+        ctx.lineTo(W, H * 1.5);
+        ctx.lineTo(0, H * 1.5);
+        ctx.closePath();
+
+        const grad = ctx.createLinearGradient(0, H * 0.3, 0, H * 0.85);
+        grad.addColorStop(0, `rgba(${r},${g},${b},0)`);
+        grad.addColorStop(0.5, `rgba(${r},${g},${b},${baseA})`);
+        grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+        ctx.fillStyle = grad;
+        ctx.fill();
       });
     };
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
+
+    // Large breathing orb in center — like a glowing ember
+    const drawBreathOrb = (time) => {
+      const cx = W * 0.5;
+      const cy = H * 0.52;
+      const breathe = Math.sin(time * 0.0008) * 0.15 + 1;
+      const r = Math.min(W, H) * 0.32 * breathe;
+
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      grad.addColorStop(0, `rgba(18, 55, 32, 0.22)`);
+      grad.addColorStop(0.35, `rgba(12, 38, 22, 0.14)`);
+      grad.addColorStop(0.65, `rgba(8, 22, 14, 0.06)`);
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Gold rim pulse
+      const goldR = r * 0.65 * (1 + Math.sin(time * 0.0012) * 0.05);
+      const goldGrad = ctx.createRadialGradient(cx, cy, goldR * 0.7, cx, cy, goldR);
+      goldGrad.addColorStop(0, 'transparent');
+      goldGrad.addColorStop(0.7, `rgba(180, 130, 30, 0.04)`);
+      goldGrad.addColorStop(1, `rgba(200, 146, 42, 0.08)`);
+      ctx.fillStyle = goldGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, goldR, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    // Pulse rings emanating from center
+    let rings = [];
+    let ringTimer = 0;
+    const addRing = () => {
+      rings.push({ r: 60, alpha: 0.18, speed: 0.8 });
+    };
+    addRing();
+
+    const drawRings = () => {
+      const cx = W * 0.5;
+      const cy = H * 0.52;
+      rings = rings.filter(ring => ring.alpha > 0.002);
+      rings.forEach(ring => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, ring.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(200, 146, 42, ${ring.alpha})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ring.r     += ring.speed;
+        ring.alpha -= 0.0012;
+      });
+    };
+
+    const animate = (now) => {
+      animId = requestAnimationFrame(animate);
+      t = now;
+
+      ctx.clearRect(0, 0, W, H);
+
+      // Base deep dark gradient
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#050505');
+      bg.addColorStop(0.4, '#080d08');
+      bg.addColorStop(0.7, '#0a110a');
+      bg.addColorStop(1, '#050505');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      // Aurora waves
+      drawAurora(now);
+
+      // Center breathing orb
+      drawBreathOrb(now);
+
+      // Mist clouds
+      mist.forEach(p => { p.update(); p.draw(); });
+
+      // Pulse rings
+      ringTimer++;
+      if (ringTimer % 140 === 0) addRing();
+      drawRings();
+    };
+
+    animId = requestAnimationFrame(animate);
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resize);
+    };
   }, []);
 
-  const headline   = 'BARAK';
-  const subline    = ['From the', 'Mist of', 'Barak Valley'];
+  // ── Parallax depth layers ─────────────────────────────────────
+  const layer1X = useTransform(mx, [-1, 1], ['-18px', '18px']);
+  const layer1Y = useTransform(my, [-1, 1], ['-12px', '12px']);
+  const layer2X = useTransform(mx, [-1, 1], ['-8px',  '8px']);
+  const layer2Y = useTransform(my, [-1, 1], ['-5px',  '5px']);
+
+  const headline = ['B', 'A', 'R', 'A', 'K'];
 
   return (
     <section
       ref={sectionRef}
       className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center"
-      style={{ background: '#0D0905' }}
+      style={{ background: '#050505' }}
     >
-      {/* ── Parallax atmospheric background layers ── */}
-      <motion.div
-        style={{ y: yBg }}
-        className="absolute inset-0 pointer-events-none"
-      >
-        {/* Deep valley mist radial gradient — primary atmosphere */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `
-              radial-gradient(ellipse 80% 60% at ${mousePos.x * 100}% ${mousePos.y * 100}%,
-                rgba(15,40,25,0.85) 0%,
-                rgba(10,20,15,0.5) 40%,
-                rgba(8,8,8,0) 80%
-              ),
-              radial-gradient(ellipse 100% 100% at 50% 50%,
-                #0d1810 0%, #08070a 65%, #050505 100%
-              )
-            `,
-          }}
-        />
+      {/* ── BG Canvas: Aurora + Mist + Orb ──────────────────────── */}
+      <canvas
+        ref={bgCanvasRef}
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full"
+        style={{ zIndex: 1 }}
+      />
 
-        {/* Mist layer — animated slow drift */}
-        <div
-          className="absolute inset-0 opacity-60"
-          style={{
-            background: `
-              radial-gradient(ellipse 70% 50% at 30% 60%, rgba(20,80,50,0.12) 0%, transparent 70%),
-              radial-gradient(ellipse 60% 40% at 75% 30%, rgba(12,35,22,0.15) 0%, transparent 70%)
-            `,
-            animation: 'mistDrift 18s ease-in-out infinite alternate',
-            willChange: 'transform, opacity',
-          }}
-        />
-
-        {/* Warm gold horizon glow — appears via scroll (driven by JS) */}
-        <motion.div
-          style={{
-            opacity: warmOverlay,
-            background: 'linear-gradient(to top, rgba(200,146,42,0.18) 0%, transparent 60%)',
-          }}
-          className="absolute inset-0"
-        />
-        <motion.div
-          style={{
-            opacity: warmOverlay,
-            background: 'linear-gradient(to top, rgba(180,120,20,0.20) 0%, transparent 100%)',
-          }}
-          className="absolute bottom-0 left-0 right-0 h-1/3"
-        />
-      </motion.div>
-
-      {/* ── Interactive spotlight following cursor ── */}
+      {/* ── Mouse-spotlight: interactive radial light ─────────────── */}
       <div
-        className="absolute inset-0 pointer-events-none z-10"
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(700px circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(200,146,42,0.07), transparent 70%)`,
+          zIndex: 2,
+          background: `radial-gradient(600px circle at ${mousePos.x * 100}% ${mousePos.y * 100}%,
+            rgba(200,146,42,0.09) 0%,
+            rgba(20,80,45,0.05) 35%,
+            transparent 70%
+          )`,
+          transition: 'background 0.05s linear',
         }}
       />
 
-      {/* ── Decorative misty horizontal lines (depth cue) ── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20 z-10">
-        {[30, 45, 62, 78].map((pct, i) => (
+      {/* ── Depth layer 1 (far — faint gold orbs) ─────────────────── */}
+      <motion.div
+        aria-hidden="true"
+        style={{ x: layer1X, y: layer1Y, zIndex: 3 }}
+        className="absolute inset-0 pointer-events-none"
+      >
+        {[
+          { top: '15%', left: '8%',  size: 280, opacity: 0.025, color: 'rgba(200,146,42,1)' },
+          { top: '60%', right: '6%', size: 340, opacity: 0.02,  color: 'rgba(40,120,70,1)' },
+          { top: '40%', left: '60%', size: 200, opacity: 0.03,  color: 'rgba(200,146,42,1)' },
+        ].map((orb, i) => (
           <div
             key={i}
-            className="absolute left-0 right-0 h-px"
+            className="absolute rounded-full"
             style={{
-              top: `${pct}%`,
-              background: 'linear-gradient(to right, transparent, rgba(200,146,42,0.3), transparent)',
-              animation: `lineFade ${6 + i * 2}s ease-in-out infinite alternate`,
-              animationDelay: `${i * 1.2}s`,
-              willChange: 'opacity',
+              top: orb.top, left: orb.left, right: orb.right,
+              width: orb.size, height: orb.size,
+              background: `radial-gradient(circle, ${orb.color} 0%, transparent 70%)`,
+              opacity: orb.opacity,
+              filter: 'blur(40px)',
+              animation: `breathe-glow ${7 + i * 2}s ease-in-out infinite alternate`,
             }}
           />
         ))}
-      </div>
+      </motion.div>
 
-      {/* ── Main hero content ── */}
+      {/* ── Depth layer 2 (mid — fine grid lines) ─────────────────── */}
       <motion.div
-        style={{ y: yContent, opacity: opacityHero }}
-        className="relative z-20 flex flex-col items-center text-center px-6 w-full max-w-6xl mx-auto pt-20"
+        aria-hidden="true"
+        style={{ x: layer2X, y: layer2Y, zIndex: 4 }}
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
       >
-        {/* Overline label */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(200,146,42,0.4) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(200,146,42,0.4) 1px, transparent 1px)
+            `,
+            backgroundSize: '80px 80px',
+          }}
+        />
+      </motion.div>
+
+      {/* ── MAIN CONTENT ──────────────────────────────────────────── */}
+      <motion.div
+        style={{ y: yContent, opacity: opacityHero, scale: scaleHero, zIndex: 20 }}
+        className="relative flex flex-col items-center text-center px-6 w-full max-w-6xl mx-auto pt-24"
+      >
+        {/* Overline */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.3 }}
-          className="flex items-center gap-3 mb-8"
+          transition={{ duration: 1, delay: 0.2 }}
+          className="flex items-center gap-4 mb-10"
         >
-          <span className="block h-px w-10 bg-barak-gold opacity-60" />
-          <span
-            className="font-inter text-[10px] uppercase tracking-[0.45em] text-barak-gold font-bold"
-          >
+          <motion.span
+            animate={{ width: ['0px', '48px'] }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="block h-px bg-barak-gold opacity-70 overflow-hidden"
+          />
+          <span className="font-inter text-[10px] uppercase tracking-[0.55em] text-barak-gold font-bold">
             Single Origin · Barak Valley, Assam
           </span>
-          <span className="block h-px w-10 bg-barak-gold opacity-60" />
+          <motion.span
+            animate={{ width: ['0px', '48px'] }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="block h-px bg-barak-gold opacity-70 overflow-hidden"
+          />
         </motion.div>
 
-        {/* Giant masked headline — letter stagger */}
+        {/* ── GIANT WORDMARK ── each letter is an independent element */}
         <h1
-          className="font-playfair font-black text-barak-cream leading-none tracking-tighter mb-0 overflow-hidden"
-          style={{ fontSize: 'clamp(80px, 18vw, 200px)', lineHeight: 0.88 }}
-          aria-label="BARAK Tea — Premium Assam CTC Tea"
+          aria-label="BARAK Tea — Premium Assam CTC Tea from Barak Valley"
+          className="relative flex items-center justify-center gap-1 md:gap-2 mb-0 select-none overflow-visible"
+          style={{ lineHeight: 0.85 }}
         >
-          {headline.split('').map((char, i) => (
-            <motion.span
-              key={i}
-              initial={{ y: '110%', opacity: 0 }}
-              animate={{ y: '0%', opacity: 1 }}
-              transition={{
-                duration: 1.0,
-                delay: 0.5 + i * 0.09,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="inline-block origin-bottom"
-              style={{ willChange: 'transform, opacity' }}
-            >
-              {char}
-            </motion.span>
+          {headline.map((char, i) => (
+            <LetterBlock key={i} char={char} index={i} total={headline.length} mx={mx} my={my} />
           ))}
         </h1>
 
-        {/* Elegant subheadline — 3 word-lines revealed with mask */}
-        <div className="mt-6 flex flex-col items-center gap-1 overflow-hidden">
-          {subline.map((line, i) => (
-            <div key={i} className="overflow-hidden">
-              <motion.p
-                initial={{ y: '100%', opacity: 0 }}
-                animate={{ y: '0%', opacity: 1 }}
-                transition={{
-                  duration: 0.9,
-                  delay: 1.0 + i * 0.12,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="font-cormorant text-barak-cream/70 text-center"
-                style={{
-                  fontSize: 'clamp(22px, 4.5vw, 52px)',
-                  fontStyle: 'italic',
-                  letterSpacing: '0.02em',
-                  willChange: 'transform, opacity',
-                }}
-              >
-                {line}
-              </motion.p>
-            </div>
-          ))}
-        </div>
+        {/* TEA — small word nestled under BARAK */}
+        <motion.div
+          initial={{ opacity: 0, y: 10, letterSpacing: '1em' }}
+          animate={{ opacity: 1, y: 0, letterSpacing: '0.55em' }}
+          transition={{ duration: 1.4, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
+          className="font-inter font-bold text-barak-gold uppercase mt-3 mb-0"
+          style={{ fontSize: 'clamp(11px, 1.8vw, 18px)', letterSpacing: '0.55em' }}
+        >
+          Tea
+        </motion.div>
 
-        {/* Fragment tagline */}
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.1, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-10 font-cormorant text-barak-cream/65 italic text-center"
+          style={{ fontSize: 'clamp(18px, 3.5vw, 38px)', letterSpacing: '0.01em', lineHeight: 1.3 }}
+        >
+          From the mist of Barak Valley
+        </motion.p>
+
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, delay: 1.6 }}
-          className="mt-10 font-inter text-barak-muted text-xs md:text-sm tracking-[0.25em] uppercase"
+          transition={{ duration: 1, delay: 2.2 }}
+          className="mt-3 font-inter text-barak-muted text-[11px] md:text-xs tracking-[0.3em] uppercase"
         >
           Hand-plucked · Single estate · Premium CTC Tea
         </motion.p>
 
-        {/* CTA row */}
+        {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.9 }}
-          className="flex flex-col sm:flex-row gap-4 mt-12"
+          transition={{ duration: 1, delay: 2.5 }}
+          className="flex flex-col sm:flex-row gap-4 mt-14"
         >
-          <a
-            href="/shop"
+          <button
+            onClick={() => navigate('/shop')}
             data-cursor="Shop"
-            className="px-9 py-4 bg-barak-gold text-[#050505] rounded-full text-[11px] uppercase tracking-widest font-black transition-all duration-300 hover:bg-white hover:shadow-[0_0_40px_rgba(200,146,42,0.5)] hover:scale-105"
+            className="group relative px-10 py-4 rounded-full text-[11px] uppercase tracking-widest font-black overflow-hidden"
+            style={{ background: '#C8922A', color: '#050505' }}
           >
-            Shop the Collection
-          </a>
-          <a
-            href="/our-story"
+            <span className="relative z-10">Shop the Collection</span>
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ background: 'linear-gradient(135deg, #E8B84B, #C8922A)' }}
+            />
+            <div
+              className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ boxShadow: '0 0 40px rgba(200,146,42,0.6), 0 0 80px rgba(200,146,42,0.3)' }}
+            />
+          </button>
+          <button
+            onClick={() => navigate('/our-story')}
             data-cursor="Story"
-            className="px-9 py-4 border border-white/10 hover:border-barak-gold/40 bg-white/4 backdrop-blur-sm rounded-full text-[11px] uppercase tracking-widest font-bold text-barak-cream transition-all duration-300 hover:bg-white/8"
+            className="px-10 py-4 border border-white/10 hover:border-barak-gold/50 rounded-full text-[11px] uppercase tracking-widest font-bold text-barak-cream transition-all duration-400 hover:bg-white/5 backdrop-blur-sm"
           >
             Our Valley Story
-          </a>
+          </button>
         </motion.div>
       </motion.div>
 
-      {/* ── Animated scroll cue — breathing pulse, not static arrow ── */}
+      {/* ── Scroll cue ──────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 2.4 }}
-        style={{ opacity: opacityHero }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
-        aria-label="Scroll to explore"
+        transition={{ duration: 1, delay: 3 }}
+        style={{ opacity: opacityHero, zIndex: 20 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
         <motion.span
-          className="font-inter text-[9px] uppercase tracking-[0.35em] text-barak-gold/60"
-          animate={{ opacity: [0.4, 0.9, 0.4] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+          className="font-inter text-[9px] uppercase tracking-[0.45em] text-barak-gold/50"
+          animate={{ opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 2.5, repeat: Infinity }}
         >
           Scroll
         </motion.span>
-        {/* Breathing scroll pill */}
-        <div className="relative w-[1px] h-12 overflow-hidden">
+        <div className="relative w-px h-14 overflow-hidden rounded-full">
+          <div className="absolute inset-0 bg-white/5 rounded-full" />
           <motion.div
-            className="absolute top-0 left-0 w-full bg-gradient-to-b from-barak-gold to-transparent"
-            animate={{ height: ['0%', '100%', '0%'], top: ['0%', '0%', '100%'] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute left-0 w-full bg-gradient-to-b from-barak-gold to-transparent rounded-full"
+            animate={{ top: ['-100%', '100%'] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
       </motion.div>
 
-      {/* Bottom edge fade into next section */}
+      {/* ── Bottom section bleed ─────────────────────────────────── */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-20"
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
         style={{
           background: 'linear-gradient(to bottom, transparent 0%, #0D0905 100%)',
+          zIndex: 15,
         }}
       />
     </section>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────
+// LetterBlock — Each BARAK letter with 3D tilt + magnetic effect
+// ────────────────────────────────────────────────────────────────
+function LetterBlock({ char, index, total, mx, my }) {
+  const ref = useRef(null);
+  const [hovered, setHovered] = useState(false);
+
+  // Independent letter parallax (depth varies by index)
+  const depth = (index / (total - 1) - 0.5) * 2; // -1 to 1
+  const lx = useTransform(mx, [-1, 1], [`${depth * -14}px`, `${depth * 14}px`]);
+  const ly = useTransform(my, [-1, 1], [`${-6}px`, `${6}px`]);
+
+  return (
+    <div className="relative overflow-visible">
+      <motion.div
+        ref={ref}
+        style={{ x: lx, y: ly }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        className="relative cursor-default overflow-visible"
+      >
+        {/* Glow halo behind letter */}
+        <motion.div
+          animate={{
+            opacity: hovered ? 1 : 0,
+            scale: hovered ? 1 : 0.5,
+          }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, rgba(200,146,42,0.25) 0%, transparent 70%)',
+            filter: 'blur(20px)',
+            transform: 'scale(1.4)',
+          }}
+        />
+
+        {/* The letter itself */}
+        <motion.span
+          initial={{ y: '110%', opacity: 0, rotateX: 90 }}
+          animate={{ y: '0%', opacity: 1, rotateX: 0 }}
+          transition={{
+            duration: 1.1,
+            delay: 0.4 + index * 0.1,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          whileHover={{
+            y: '-6%',
+            color: '#E8B84B',
+            textShadow: '0 0 40px rgba(200,146,42,0.6), 0 0 80px rgba(200,146,42,0.3)',
+            transition: { duration: 0.3 },
+          }}
+          className="inline-block font-playfair font-black text-barak-cream origin-bottom"
+          style={{
+            fontSize: 'clamp(72px, 17vw, 190px)',
+            lineHeight: 0.88,
+            letterSpacing: '-0.02em',
+            willChange: 'transform, color',
+            display: 'block',
+          }}
+        >
+          {char}
+        </motion.span>
+
+        {/* Letter reflection (mirror below) */}
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 + index * 0.1, duration: 0.8 }}
+          aria-hidden="true"
+          className="absolute top-full left-0 font-playfair font-black text-barak-cream select-none pointer-events-none"
+          style={{
+            fontSize: 'clamp(72px, 17vw, 190px)',
+            lineHeight: 0.88,
+            letterSpacing: '-0.02em',
+            transform: 'scaleY(-1)',
+            opacity: 0.06,
+            background: 'linear-gradient(to bottom, rgba(250,243,224,0.3), transparent)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
+          {char}
+        </motion.span>
+      </motion.div>
+    </div>
   );
 }

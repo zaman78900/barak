@@ -1,11 +1,15 @@
 import React, { useRef, useEffect } from 'react';
 
 /**
- * Global persistent falling tea-leaf particle canvas.
- * Fixed behind all page content, never resets, never confined to one section.
- * Uses canvas2D for performance. GPU-accelerated via will-change.
- * Pauses on hidden tab. Reduces particle count on mobile.
- * Respects prefers-reduced-motion — leaves only fade, no movement.
+ * GLOBAL FALLING TEA LEAVES — Top to Bottom, Physics-based
+ * ─────────────────────────────────────────────────────────
+ * • Leaves spawn at the TOP and fall DOWN with gravity + wind sway
+ * • Bezier-curve swaying path (sinusoidal horizontal drift)
+ * • Tumbling rotation synced to fall speed
+ * • Varied leaf sizes, speeds, opacity, flutter frequency
+ * • Gold dust sparkles also fall (smaller, faster, glittery)
+ * • Canvas is FIXED to viewport — covers full screen at all times
+ * • Tab-hidden pause, mobile density reduction, prefers-reduced-motion
  */
 export default function TeaLeafCanvas() {
   const canvasRef = useRef(null);
@@ -13,137 +17,236 @@ export default function TeaLeafCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
+
     let animId;
     let paused = false;
+    let W = 0, H = 0;
 
-    // Respect reduced motion
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Mobile detection — reduce particle count
     const isMobile = window.innerWidth < 768;
-    const LEAF_COUNT  = isMobile ? 8  : 18;
-    const DUST_COUNT  = isMobile ? 20 : 45;
 
-    // ──── Resize ────────────────────────────────────────────────
+    const LEAF_COUNT  = isMobile ? 10 : 22;
+    const DUST_COUNT  = isMobile ? 18 : 40;
+
+    // ── Resize: match physical viewport ────────────────────────
     const resize = () => {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
     };
     resize();
     window.addEventListener('resize', resize);
 
-    // ──── Tab visibility pause ───────────────────────────────────
-    const handleVisibility = () => { paused = document.hidden; };
-    document.addEventListener('visibilitychange', handleVisibility);
+    // ── Visibility pause ────────────────────────────────────────
+    const onVisibility = () => { paused = document.hidden; };
+    document.addEventListener('visibilitychange', onVisibility);
 
-    // ──── Particle Classes ───────────────────────────────────────
-    class GoldDust {
-      constructor() { this.reset(true); }
-      reset(init = false) {
-        this.x       = Math.random() * canvas.width;
-        this.y       = init ? Math.random() * canvas.height : canvas.height + 10;
-        this.size    = Math.random() * 1.8 + 0.4;
-        this.speedY  = Math.random() * 0.5 + 0.2;
-        this.speedX  = Math.random() * 0.3 - 0.15;
-        this.alpha   = Math.random() * 0.5 + 0.05;
-        this.maxAlpha = this.alpha;
-      }
-      update() {
-        if (prefersReduced) { this.alpha = Math.max(0.05, this.alpha - 0.0005); return; }
-        this.y -= this.speedY;
-        this.x += this.speedX;
-        // fade near top
-        if (this.y < canvas.height * 0.15) this.alpha -= 0.003;
-        if (this.y < 0 || this.alpha <= 0) this.reset();
-      }
-      draw() {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200,146,42,${this.alpha})`;
-        ctx.shadowBlur  = 8;
-        ctx.shadowColor = `rgba(200,146,42,${this.alpha * 0.9})`;
-        ctx.fill();
-        ctx.restore();
-      }
-    }
+    // ── Wind system ─────────────────────────────────────────────
+    let windStrength = 0;
+    let windTarget   = 0;
+    let windTimer    = 0;
 
+    const updateWind = (dt) => {
+      windTimer -= dt;
+      if (windTimer <= 0) {
+        windTarget = (Math.random() - 0.5) * 0.6; // gentle gusts
+        windTimer  = 2000 + Math.random() * 4000;
+      }
+      windStrength += (windTarget - windStrength) * 0.001 * dt;
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // TEA LEAF  — falls from top, swaying naturally
+    // ─────────────────────────────────────────────────────────────
     class TeaLeaf {
-      constructor() { this.reset(true); }
-      reset(init = false) {
-        this.x      = Math.random() * canvas.width;
-        this.y      = init ? Math.random() * canvas.height : -30;
-        this.w      = Math.random() * 10 + 5;        // leaf half-width
-        this.h      = this.w * (Math.random() * 0.8 + 1.4); // leaf height
-        this.angle  = Math.random() * Math.PI * 2;
-        this.spin   = (Math.random() * 0.018 - 0.009) * (prefersReduced ? 0 : 1);
-        this.speedY = (Math.random() * 0.55 + 0.3) * (prefersReduced ? 0 : 1);
-        this.speedX = (Math.random() * 0.6 - 0.3)  * (prefersReduced ? 0 : 1);
-        // slight horizontal gust oscillation
-        this.gustPhase = Math.random() * Math.PI * 2;
-        this.gustFreq  = 0.003 + Math.random() * 0.004;
-        this.gustAmp   = Math.random() * 0.25;
-        this.alpha     = Math.random() * 0.35 + 0.08;
-        // warm/cool color shift per beat (approximated via alpha variation)
-        this.warm      = Math.random() > 0.5; // warm gold-tinted vs cool green
+      constructor(init = false) { this.spawn(init); }
+
+      spawn(init = false) {
+        this.x          = Math.random() * W;
+        this.y          = init ? Math.random() * H * 1.5 - H * 0.5 : -(Math.random() * 80 + 20);
+
+        // Leaf dimensions — natural variety
+        this.w          = Math.random() * 9 + 5;     // half-width 5–14px
+        this.h          = this.w * (Math.random() * 0.7 + 1.5); // h = 1.5–2.2× width
+
+        // Fall physics
+        this.vy         = Math.random() * 0.9 + 0.5; // gravity speed (px/frame)
+        this.vx         = (Math.random() - 0.5) * 0.3;
+
+        // Sway — sinusoidal oscillation for flutter feel
+        this.swayAmp    = Math.random() * 1.4 + 0.4;  // px amplitude
+        this.swayFreq   = Math.random() * 0.025 + 0.012; // oscillation rate
+        this.swayPhase  = Math.random() * Math.PI * 2;
+
+        // Rotation — tumbles with fall, gentle
+        this.angle      = Math.random() * Math.PI * 2;
+        this.spin       = (Math.random() - 0.5) * 0.025; // rad/frame
+
+        // Appearance
+        this.alpha      = Math.random() * 0.5 + 0.12;
+        this.green      = Math.floor(Math.random() * 35 + 38); // green channel 38–73
+        this.warm       = Math.random() > 0.55; // slight warm/cool tint
+
+        // Occasional golden leaf tip
+        this.golden     = Math.random() < 0.18;
       }
-      update() {
-        if (prefersReduced) { this.alpha = Math.max(0.05, this.alpha); return; }
-        this.gustPhase += this.gustFreq;
-        this.x     += this.speedX + Math.sin(this.gustPhase) * this.gustAmp;
-        this.y     += this.speedY;
+
+      update(dt, wind) {
+        if (prefersReduced) return;
+        this.swayPhase += this.swayFreq;
+        const sway = Math.sin(this.swayPhase) * this.swayAmp + wind * 12;
+
+        this.x     += this.vx + sway * 0.06;
+        this.y     += this.vy;
         this.angle += this.spin;
-        if (
-          this.y > canvas.height + 40 ||
-          this.x < -40 ||
-          this.x > canvas.width + 40
-        ) this.reset();
+
+        // Fade in softly near bottom
+        if (this.y > H * 0.85) {
+          this.alpha = Math.max(0, this.alpha - 0.006);
+        }
+
+        // Respawn from top when off-screen
+        if (this.y > H + 50 || this.x < -60 || this.x > W + 60 || this.alpha <= 0) {
+          this.spawn(false);
+        }
       }
+
       draw() {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
+
+        // Main leaf body — elongated bezier oval
         ctx.beginPath();
-        // elegant elongated leaf shape
         ctx.moveTo(0, -this.h / 2);
-        ctx.bezierCurveTo( this.w * 0.9,  -this.h * 0.1, this.w * 0.8,  this.h * 0.35, 0, this.h / 2);
-        ctx.bezierCurveTo(-this.w * 0.8,   this.h * 0.35, -this.w * 0.9, -this.h * 0.1, 0, -this.h / 2);
-        // Fill: tea-leaf green with warm glow tint
-        const fill = this.warm
-          ? `rgba(45,95,60,${this.alpha})`
-          : `rgba(28,70,45,${this.alpha})`;
-        ctx.fillStyle = fill;
+        // right curve
+        ctx.bezierCurveTo(
+          this.w * 1.0,  -this.h * 0.15,
+          this.w * 0.9,   this.h * 0.30,
+          0,              this.h / 2
+        );
+        // left curve
+        ctx.bezierCurveTo(
+          -this.w * 0.9,  this.h * 0.30,
+          -this.w * 1.0, -this.h * 0.15,
+          0,             -this.h / 2
+        );
+
+        // Fill gradient — tip darker, base lighter
+        const grad = ctx.createLinearGradient(0, -this.h / 2, 0, this.h / 2);
+        if (this.golden) {
+          grad.addColorStop(0, `rgba(${160},${110},${20},${this.alpha})`);
+          grad.addColorStop(0.5, `rgba(${42},${this.green + 15},${30},${this.alpha * 0.9})`);
+          grad.addColorStop(1, `rgba(${30},${this.green},${22},${this.alpha})`);
+        } else {
+          grad.addColorStop(0, `rgba(${20},${this.green + 10},${18},${this.alpha})`);
+          grad.addColorStop(0.5, `rgba(${32},${this.green + 20},${28},${this.alpha * 0.85})`);
+          grad.addColorStop(1, `rgba(${15},${this.green},${15},${this.alpha * 0.7})`);
+        }
+        ctx.fillStyle = grad;
         ctx.fill();
-        // Vein line — gold accent
+
+        // Midrib vein — subtle gold line
         ctx.beginPath();
-        ctx.moveTo(0, -this.h * 0.45);
-        ctx.lineTo(0,  this.h * 0.45);
-        ctx.strokeStyle = `rgba(200,146,42,${this.alpha * 0.25})`;
-        ctx.lineWidth = 0.5;
+        ctx.moveTo(0, -this.h * 0.42);
+        ctx.quadraticCurveTo(this.w * 0.08, 0, 0, this.h * 0.42);
+        ctx.strokeStyle = this.golden
+          ? `rgba(200,150,40,${this.alpha * 0.55})`
+          : `rgba(140,120,40,${this.alpha * 0.2})`;
+        ctx.lineWidth = 0.6;
         ctx.stroke();
+
+        // Tiny side veins (only for larger leaves)
+        if (this.w > 8) {
+          ctx.strokeStyle = `rgba(120,100,30,${this.alpha * 0.12})`;
+          ctx.lineWidth = 0.4;
+          for (let vi = -1; vi <= 1; vi += 2) {
+            const vy = vi * this.h * 0.18;
+            ctx.beginPath();
+            ctx.moveTo(0, vy);
+            ctx.lineTo(this.w * 0.55, vy + vi * this.h * 0.06);
+            ctx.stroke();
+          }
+        }
+
         ctx.restore();
       }
     }
 
-    // ──── Instantiate ────────────────────────────────────────────
-    const dust   = Array.from({ length: DUST_COUNT }, () => new GoldDust());
-    const leaves = Array.from({ length: LEAF_COUNT  }, () => new TeaLeaf());
+    // ─────────────────────────────────────────────────────────────
+    // GOLD DUST SPARKLE — tiny glittering particles, also fall down
+    // ─────────────────────────────────────────────────────────────
+    class GoldDust {
+      constructor(init = false) { this.spawn(init); }
 
-    // ──── Render loop ────────────────────────────────────────────
-    const animate = () => {
+      spawn(init = false) {
+        this.x      = Math.random() * W;
+        this.y      = init ? Math.random() * H : -(Math.random() * 30);
+        this.r      = Math.random() * 2.0 + 0.3;
+        this.vy     = Math.random() * 0.6 + 0.15;
+        this.vx     = (Math.random() - 0.5) * 0.2;
+        this.alpha  = Math.random() * 0.7 + 0.1;
+        // Twinkle animation
+        this.twinklePhase = Math.random() * Math.PI * 2;
+        this.twinkleFreq  = Math.random() * 0.06 + 0.02;
+      }
+
+      update(wind) {
+        if (prefersReduced) return;
+        this.twinklePhase += this.twinkleFreq;
+        this.x += this.vx + wind * 5;
+        this.y += this.vy;
+
+        // Fade near bottom
+        if (this.y > H * 0.9) this.alpha -= 0.008;
+        if (this.y > H + 20 || this.x < -20 || this.x > W + 20 || this.alpha <= 0) {
+          this.spawn(false);
+        }
+      }
+
+      draw() {
+        const twinkle = 0.6 + Math.sin(this.twinklePhase) * 0.4;
+        const a = this.alpha * twinkle;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220,170,50,${a})`;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = `rgba(200,150,40,${a * 0.8})`;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // ── Create particles ─────────────────────────────────────────
+    const leaves = Array.from({ length: LEAF_COUNT }, () => new TeaLeaf(true));
+    const dust   = Array.from({ length: DUST_COUNT  }, () => new GoldDust(true));
+
+    // ── Render loop ──────────────────────────────────────────────
+    let lastTime = performance.now();
+
+    const animate = (now) => {
       animId = requestAnimationFrame(animate);
       if (paused) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      dust.forEach(p  => { p.update(); p.draw(); });
-      leaves.forEach(p => { p.update(); p.draw(); });
+
+      const dt = Math.min(now - lastTime, 50); // cap at 50ms (20fps min)
+      lastTime = now;
+
+      updateWind(dt);
+
+      ctx.clearRect(0, 0, W, H);
+
+      dust.forEach(p   => { p.update(windStrength); p.draw(); });
+      leaves.forEach(p => { p.update(dt, windStrength); p.draw(); });
     };
-    animate();
+
+    animId = requestAnimationFrame(animate);
 
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
-      document.removeEventListener('visibilitychange', handleVisibility);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
 
@@ -153,13 +256,13 @@ export default function TeaLeafCanvas() {
       aria-hidden="true"
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        left: 0,
         width: '100vw',
         height: '100vh',
         pointerEvents: 'none',
         zIndex: 5,
         willChange: 'transform',
-        opacity: 0.7,
       }}
     />
   );
