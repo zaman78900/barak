@@ -6,6 +6,7 @@ import {
   Chats, Leaf, ArrowLeft 
 } from 'phosphor-react';
 import { contactAPI } from '../utils/adminApi';
+import contactHeroBg from '../assets/barak_tea_plucking.png';
 
 const SUBJECT_OPTIONS = [
   'General Inquiry',
@@ -90,46 +91,51 @@ export default function Contact() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-barak-bg pt-28 pb-20 px-4 text-barak-cream relative overflow-hidden"
+      className="min-h-screen bg-barak-bg text-barak-cream relative overflow-hidden"
     >
       {/* Background Graphic Accents */}
-      <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-barak-gold/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-barak-gold/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/3 left-0 w-[600px] h-[600px] bg-barak-gold/5 rounded-full blur-[140px] pointer-events-none animate-[pulseGlow_10s_ease-in-out_infinite]" />
+      <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-barak-gold/3 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto space-y-16 relative z-10">
-        
-        {/* Header Section */}
-        <section className="text-center max-w-3xl mx-auto space-y-4">
+      {/* Contact Hero Section */}
+      <section className="relative h-[60vh] min-h-[450px] flex items-center justify-center overflow-hidden">
+        {/* Background Image with Zoom & Pulse */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={contactHeroBg}
+            alt="Handpicking fresh tea leaves at Barak estate"
+            className="w-full h-full object-cover object-center scale-105 animate-[pulseGlow_14s_ease-in-out_infinite]"
+          />
+          {/* Cinematic Gradient Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/60 to-barak-bg" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#0D0905]/40 to-transparent" />
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center mt-16 space-y-6">
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center justify-center gap-2 text-xs uppercase font-bold text-barak-gold tracking-[0.3em] font-dmsans"
+            transition={{ duration: 0.8 }}
+            className="space-y-4"
           >
-            <Leaf size={14} className="text-barak-gold" />
-            Valley of the Golden Leaf
+            <span className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] text-barak-gold flex items-center justify-center gap-2 font-dmsans">
+              <Leaf size={14} className="text-barak-gold animate-bounce" />
+              Valley of the Golden Leaf
+            </span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-playfair text-barak-cream tracking-tight leading-tight">
+              Reach Our <span className="text-barak-gold-light">Assam Estate</span>
+            </h1>
+            <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-barak-gold to-transparent mx-auto mt-4" />
+            <p className="text-sm md:text-lg text-barak-cream/80 max-w-2xl mx-auto font-light leading-relaxed">
+              Whether you are inquiring about wholesale distribution, scheduling a private visit to our estate, or simply sharing feedback, we welcome your correspondence.
+            </p>
           </motion.div>
-          
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-playfair font-semibold text-barak-cream tracking-tight"
-          >
-            Connect With Our Estate
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-sm md:text-base text-barak-muted font-light leading-relaxed"
-          >
-            Whether you are curious about our seasonal harvests, interested in a bespoke B2B partnership, or wish to schedule an estate visit, we welcome your inquiry. 
-          </motion.p>
-        </section>
+        </div>
+      </section>
 
-        {/* Main Content Grid */}
+      {/* Main Grid Content Section */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 pb-24 relative z-10 -mt-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
           {/* Left Column: Contact details & Estate Coordinates */}
@@ -454,7 +460,7 @@ export default function Contact() {
 
         </div>
 
-      </div>
+      </section>
     </motion.div>
   );
 }
