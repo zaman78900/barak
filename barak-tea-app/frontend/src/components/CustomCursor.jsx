@@ -44,6 +44,9 @@ export default function CustomCursor() {
 
     // Hover detection for interactive elements
     const onMouseOver = (e) => {
+      if (!e.target || typeof e.target.closest !== 'function') {
+        return;
+      }
       const el = e.target.closest('a, button, [data-cursor]');
       if (el) {
         setIsHovering(true);
@@ -83,12 +86,12 @@ export default function CustomCursor() {
         aria-hidden="true"
         style={{
           position: 'fixed',
-          left: trailX,
-          top: trailY,
+          left: 0,
+          top: 0,
+          x: trailX,
+          y: trailY,
           zIndex: 9999,
           pointerEvents: 'none',
-          translateX: '-50%',
-          translateY: '-50%',
           opacity: isVisible ? 1 : 0,
         }}
       >
@@ -100,6 +103,11 @@ export default function CustomCursor() {
           }}
           transition={{ type: 'spring', stiffness: 250, damping: 28 }}
           style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            x: "-50%",
+            y: "-50%",
             borderRadius: '50%',
             border: '1px solid rgba(200,146,42,0.8)',
             boxShadow: '0 0 16px rgba(200,146,42,0.3)',
@@ -112,12 +120,12 @@ export default function CustomCursor() {
         aria-hidden="true"
         style={{
           position: 'fixed',
-          left: springX,
-          top: springY,
+          left: 0,
+          top: 0,
+          x: springX,
+          y: springY,
           zIndex: 10000,
           pointerEvents: 'none',
-          translateX: '-50%',
-          translateY: '-50%',
           opacity: isVisible ? 1 : 0,
         }}
       >
@@ -133,6 +141,11 @@ export default function CustomCursor() {
           }}
           transition={{ type: 'spring', stiffness: 300, damping: 28 }}
           style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            x: "-50%",
+            y: "-50%",
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',

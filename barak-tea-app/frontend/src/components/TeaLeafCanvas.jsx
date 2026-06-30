@@ -31,8 +31,12 @@ export default function TeaLeafCanvas() {
 
     // ── Resize: match physical viewport ────────────────────────
     const resize = () => {
-      W = canvas.width  = window.innerWidth;
-      H = canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.scale(dpr, dpr);
     };
     resize();
     window.addEventListener('resize', resize);
@@ -65,16 +69,19 @@ export default function TeaLeafCanvas() {
         this.x          = Math.random() * W;
         this.y          = init ? Math.random() * H * 1.5 - H * 0.5 : -(Math.random() * 80 + 20);
 
+        const scale = W > 768 ? 1.4 : 1.0;
+        const speedScale = Math.max(1, H / 800);
+
         // Leaf dimensions — natural variety
-        this.w          = Math.random() * 9 + 5;     // half-width 5–14px
+        this.w          = (Math.random() * 9 + 5) * scale;     // half-width 5–14px * scale
         this.h          = this.w * (Math.random() * 0.7 + 1.5); // h = 1.5–2.2× width
 
         // Fall physics
-        this.vy         = Math.random() * 0.9 + 0.5; // gravity speed (px/frame)
-        this.vx         = (Math.random() - 0.5) * 0.3;
+        this.vy         = (Math.random() * 1.2 + 0.8) * speedScale; // slightly faster base gravity speed
+        this.vx         = (Math.random() - 0.5) * 0.3 * scale;
 
         // Sway — sinusoidal oscillation for flutter feel
-        this.swayAmp    = Math.random() * 1.4 + 0.4;  // px amplitude
+        this.swayAmp    = (Math.random() * 1.4 + 0.4) * scale;  // px amplitude
         this.swayFreq   = Math.random() * 0.025 + 0.012; // oscillation rate
         this.swayPhase  = Math.random() * Math.PI * 2;
 
@@ -182,9 +189,13 @@ export default function TeaLeafCanvas() {
       spawn(init = false) {
         this.x      = Math.random() * W;
         this.y      = init ? Math.random() * H : -(Math.random() * 30);
-        this.r      = Math.random() * 2.0 + 0.3;
-        this.vy     = Math.random() * 0.6 + 0.15;
-        this.vx     = (Math.random() - 0.5) * 0.2;
+        
+        const scale = W > 768 ? 1.4 : 1.0;
+        const speedScale = Math.max(1, H / 800);
+        
+        this.r      = (Math.random() * 2.0 + 0.5) * scale;
+        this.vy     = (Math.random() * 0.8 + 0.3) * speedScale;
+        this.vx     = (Math.random() - 0.5) * 0.2 * scale;
         this.alpha  = Math.random() * 0.7 + 0.1;
         // Twinkle animation
         this.twinklePhase = Math.random() * Math.PI * 2;
@@ -230,7 +241,7 @@ export default function TeaLeafCanvas() {
       animId = requestAnimationFrame(animate);
       if (paused) return;
 
-      const dt = Math.min(now - lastTime, 50); // cap at 50ms (20fps min)
+      const dt = Math.max(0, Math.min(now - lastTime, 50)); // cap at 50ms, prevent negative
       lastTime = now;
 
       updateWind(dt);

@@ -64,37 +64,53 @@ export default function HeroCinematic() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationId;
-    let width = (canvas.width = canvas.offsetWidth);
-    let height = (canvas.height = canvas.offsetHeight);
+    
+    let width = canvas.offsetWidth || window.innerWidth;
+    let height = canvas.offsetHeight || window.innerHeight;
+
+    const setCanvasSize = () => {
+      width = canvas.offsetWidth || window.innerWidth;
+      height = canvas.offsetHeight || window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    
+    setCanvasSize();
 
     const handleResize = () => {
       if (!canvas) return;
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
+      setCanvasSize();
     };
     window.addEventListener('resize', handleResize);
 
     // Gold dust - glowing tiny particles rising up
     class GoldDust {
       constructor() {
-        this.reset();
+        this.reset(true);
       }
-      reset() {
+      reset(initial = false) {
         this.x = Math.random() * width;
-        this.y = height + Math.random() * 50;
-        this.size = Math.random() * 1.5 + 0.3;
-        this.speedY = Math.random() * 0.35 + 0.1;
-        this.speedX = Math.random() * 0.15 - 0.075;
-        this.opacity = Math.random() * 0.4 + 0.1;
+        // Pre-warm on screen if initial
+        this.y = initial ? Math.random() * height : height + Math.random() * 50;
+        
+        const scale = width > 768 ? 1.5 : 1;
+        const speedScale = height / 800; // normalized speed based on standard height
+        
+        this.size = (Math.random() * 1.5 + 0.5) * scale;
+        this.speedY = (Math.random() * 0.6 + 0.2) * speedScale;
+        this.speedX = (Math.random() * 0.2 - 0.1) * scale;
+        this.opacity = Math.random() * 0.4 + 0.15;
         this.wobble = Math.random() * Math.PI * 2;
         this.wobbleSpeed = Math.random() * 0.015 + 0.003;
       }
       update() {
         this.y -= this.speedY;
         this.wobble += this.wobbleSpeed;
-        this.x += this.speedX + Math.sin(this.wobble) * 0.12;
+        this.x += this.speedX + Math.sin(this.wobble) * 0.2;
         
-        if (this.y < -10 || this.x < -10 || this.x > width + 10) {
+        if (this.y < -20 || this.x < -20 || this.x > width + 20) {
           this.reset();
         }
       }
@@ -102,8 +118,8 @@ export default function HeroCinematic() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(196, 154, 68, ${this.opacity})`; // Tea Gold
-        ctx.shadowBlur = this.size * 3;
-        ctx.shadowColor = 'rgba(196, 154, 68, 0.4)';
+        ctx.shadowBlur = this.size * 2;
+        ctx.shadowColor = 'rgba(196, 154, 68, 0.5)';
         ctx.fill();
         ctx.shadowBlur = 0; // reset
       }
@@ -112,18 +128,23 @@ export default function HeroCinematic() {
     // Tea leaves - dark green silhouettes drifting/spinning
     class FloatingLeaf {
       constructor() {
-        this.reset();
+        this.reset(true);
       }
-      reset() {
+      reset(initial = false) {
         this.x = Math.random() * width;
-        this.y = -50 - Math.random() * 100;
-        this.w = Math.random() * 7 + 4;
-        this.h = this.w * 1.7;
-        this.speedY = Math.random() * 0.25 + 0.15;
-        this.speedX = Math.random() * 0.4 - 0.2;
+        // Pre-warm on screen if initial
+        this.y = initial ? Math.random() * height : -50 - Math.random() * 100;
+        
+        const scale = width > 768 ? 1.3 : 1;
+        const speedScale = height / 800;
+        
+        this.w = (Math.random() * 6 + 4) * scale;
+        this.h = this.w * 1.6;
+        this.speedY = (Math.random() * 0.4 + 0.2) * speedScale;
+        this.speedX = (Math.random() * 0.5 - 0.25) * scale;
         this.angle = Math.random() * Math.PI * 2;
-        this.spin = Math.random() * 0.012 - 0.006;
-        this.opacity = Math.random() * 0.2 + 0.08;
+        this.spin = Math.random() * 0.015 - 0.007;
+        this.opacity = Math.random() * 0.3 + 0.1;
       }
       update() {
         this.y += this.speedY;
@@ -150,8 +171,8 @@ export default function HeroCinematic() {
       }
     }
 
-    const goldDust = Array.from({ length: 35 }, () => new GoldDust());
-    const leaves = Array.from({ length: 6 }, () => new FloatingLeaf());
+    const goldDust = Array.from({ length: 45 }, () => new GoldDust());
+    const leaves = Array.from({ length: 8 }, () => new FloatingLeaf());
 
     const loop = () => {
       ctx.clearRect(0, 0, width, height);
