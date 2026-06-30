@@ -2,6 +2,7 @@ import express from 'express';
 import { supabaseAdmin } from '../utils/supabase.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import logger from '../utils/logger.js';
+import { handleNewMessage } from '../services/notificationService.js';
 
 const router = express.Router();
 
@@ -51,6 +52,14 @@ router.post('/', async (req, res) => {
     if (error) throw error;
 
     logger.info(`Contact message received from: ${name} (${email}) - Subject: ${subject}`);
+    
+    // Trigger Admin Notification Email
+    try {
+      await handleNewMessage(data);
+    } catch (err) {
+      logger.error(`Contact message admin notification failed: ${err.message}`);
+    }
+
     res.status(201).json({ success: true, message: 'Message sent successfully', data });
   } catch (error) {
     logger.error(`Create contact message error: ${error.message}`);

@@ -179,3 +179,95 @@ export const handleNewOrder = async (order) => {
     logger.error('Error in handleNewOrder notification:', error.message);
   }
 };
+
+export const handleNewMessage = async (message) => {
+  try {
+    const { data: settings, error } = await supabase.from('notification_settings').select('*').single();
+    if (error || !settings) return;
+    const { email_enabled, email_recipients } = settings;
+
+    if (email_enabled && email_recipients?.length > 0) {
+      const transporter = getEmailTransporter();
+      if (transporter) {
+        const fromName = process.env.SMTP_FROM_NAME || 'BARAK Tea Admin';
+        const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
+
+        const emailHtml = `
+          <div style="font-family: sans-serif; color: #333;">
+            <h2 style="color: #c8922a;">✉️ New Contact Message</h2>
+            <p><strong>Name:</strong> ${message.name}</p>
+            <p><strong>Email:</strong> ${message.email}</p>
+            <p><strong>Phone:</strong> ${message.phone || 'N/A'}</p>
+            <p><strong>Subject:</strong> ${message.subject || 'General Inquiry'}</p>
+            <hr />
+            <h3>Message:</h3>
+            <p>${message.message}</p>
+          </div>
+        `;
+
+        for (const recipient of email_recipients) {
+          try {
+            await transporter.sendMail({
+              from: `"${fromName}" <${fromEmail}>`,
+              to: recipient,
+              subject: `New Message: ${message.subject || 'General Inquiry'}`,
+              html: emailHtml,
+            });
+            logger.info(`Admin Email notification sent for message to ${recipient}`);
+          } catch (err) {
+            logger.error(`Failed to send admin email for message to ${recipient}: ${err.message}`);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    logger.error('Error in handleNewMessage notification:', error.message);
+  }
+};
+
+export const handleNewWholesaleInquiry = async (inquiry) => {
+  try {
+    const { data: settings, error } = await supabase.from('notification_settings').select('*').single();
+    if (error || !settings) return;
+    const { email_enabled, email_recipients } = settings;
+
+    if (email_enabled && email_recipients?.length > 0) {
+      const transporter = getEmailTransporter();
+      if (transporter) {
+        const fromName = process.env.SMTP_FROM_NAME || 'BARAK Tea Admin';
+        const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
+
+        const emailHtml = `
+          <div style="font-family: sans-serif; color: #333;">
+            <h2 style="color: #c8922a;">🏢 New Wholesale Inquiry</h2>
+            <p><strong>Business Name:</strong> ${inquiry.business_name || 'N/A'}</p>
+            <p><strong>Contact Person:</strong> ${inquiry.contact_name || 'N/A'}</p>
+            <p><strong>Email:</strong> ${inquiry.email || 'N/A'}</p>
+            <p><strong>Phone:</strong> ${inquiry.phone || 'N/A'}</p>
+            <p><strong>City:</strong> ${inquiry.city || 'N/A'}</p>
+            <p><strong>Monthly Volume (kg):</strong> ${inquiry.monthly_quantity_kg || 'N/A'}</p>
+            <hr />
+            <h3>Additional Details:</h3>
+            <p>${inquiry.message || 'No additional details provided.'}</p>
+          </div>
+        `;
+
+        for (const recipient of email_recipients) {
+          try {
+            await transporter.sendMail({
+              from: `"${fromName}" <${fromEmail}>`,
+              to: recipient,
+              subject: `New Wholesale Inquiry from ${inquiry.company_name}`,
+              html: emailHtml,
+            });
+            logger.info(`Admin Email notification sent for wholesale to ${recipient}`);
+          } catch (err) {
+            logger.error(`Failed to send admin email for wholesale to ${recipient}: ${err.message}`);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    logger.error('Error in handleNewWholesaleInquiry notification:', error.message);
+  }
+};

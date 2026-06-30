@@ -2,6 +2,7 @@ import express from 'express';
 import { supabaseAdmin } from '../utils/supabase.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import logger from '../utils/logger.js';
+import { handleNewWholesaleInquiry } from '../services/notificationService.js';
 
 const router = express.Router();
 
@@ -69,6 +70,14 @@ router.post('/', async (req, res) => {
     if (error) throw error;
 
     logger.info(`Wholesale enquiry received: ${business_name}`);
+    
+    // Trigger Admin Notification Email
+    try {
+      await handleNewWholesaleInquiry(data);
+    } catch (err) {
+      logger.error(`Wholesale admin notification failed: ${err.message}`);
+    }
+
     res.status(201).json(data);
   } catch (error) {
     logger.error(`Create wholesale enquiry error: ${error.message}`);
