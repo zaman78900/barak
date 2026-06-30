@@ -32,6 +32,7 @@ export default function ProductDetail() {
   const addItem = useCartStore(state => state.addItem);
 
   const [activeImage, setActiveImage] = useState(0);
+  const [swipeDirection, setSwipeDirection] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -172,7 +173,10 @@ export default function ProductDetail() {
               {gallery.map((img, idx) => (
                 <button 
                   key={idx}
-                  onClick={() => setActiveImage(idx)}
+                  onClick={() => {
+                    setSwipeDirection(idx > activeImage ? 1 : -1);
+                    setActiveImage(idx);
+                  }}
                   className={`relative flex-shrink-0 w-20 h-24 lg:w-24 lg:h-28 rounded-xl overflow-hidden transition-all duration-300 ${
                     activeImage === idx 
                     ? 'scale-105 opacity-100 shadow-[0_10px_20px_rgba(200,146,42,0.2)] z-10 bg-black/40' 
@@ -194,28 +198,39 @@ export default function ProductDetail() {
               onMouseLeave={() => setIsZoomed(false)}
               onMouseMove={handleMouseMove}
             >
-              <motion.img 
-                key={activeImage}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                src={gallery[activeImage]} 
-                alt={product.name}
-                className={`w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-100 lg:scale-150' : 'scale-100'} cursor-grab active:cursor-grabbing lg:cursor-auto lg:active:cursor-auto`}
-                style={isZoomed ? { transformOrigin: `${mousePos.x}% ${mousePos.y}%` } : {}}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.2}
-                onDragEnd={(e, { offset, velocity }) => {
-                  if (offset.x < -40 || velocity.x < -200) {
-                    setActiveImage((prev) => (prev + 1) % gallery.length);
-                  } else if (offset.x > 40 || velocity.x > 200) {
-                    setActiveImage((prev) => (prev - 1 + gallery.length) % gallery.length);
-                  }
-                }}
-              />
+              <AnimatePresence initial={false} custom={swipeDirection}>
+                <motion.img 
+                  key={activeImage}
+                  custom={swipeDirection}
+                  variants={{
+                    enter: (dir) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0.5 }),
+                    center: { x: 0, opacity: 1, zIndex: 1 },
+                    exit: (dir) => ({ x: dir < 0 ? '100%' : '-100%', opacity: 0.5, zIndex: 0 })
+                  }}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+                  src={gallery[activeImage]} 
+                  alt={product.name}
+                  className={`absolute inset-0 w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-100 lg:scale-150' : 'scale-100'} cursor-grab active:cursor-grabbing lg:cursor-auto lg:active:cursor-auto`}
+                  style={isZoomed ? { transformOrigin: `${mousePos.x}% ${mousePos.y}%` } : {}}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={1}
+                  onDragEnd={(e, { offset, velocity }) => {
+                    if (offset.x < -40 || velocity.x < -200) {
+                      setSwipeDirection(1);
+                      setActiveImage((prev) => (prev + 1) % gallery.length);
+                    } else if (offset.x > 40 || velocity.x > 200) {
+                      setSwipeDirection(-1);
+                      setActiveImage((prev) => (prev - 1 + gallery.length) % gallery.length);
+                    }
+                  }}
+                />
+              </AnimatePresence>
               {currentStock <= 0 && (
-                <div className="absolute top-4 left-4 bg-barak-error text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg">
+                <div className="absolute top-4 left-4 bg-barak-error text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg z-20">
                   Out of Stock
                 </div>
               )}
