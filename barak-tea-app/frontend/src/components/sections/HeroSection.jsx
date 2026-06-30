@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CaretDown } from 'phosphor-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import logo from '../../assets/logo.png';
 
 // Easing functions for premium motion feel
@@ -35,9 +35,12 @@ export default function HeroSection() {
   // State variables for interactive systems
   const [isReducedMotion, setIsReducedMotion] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0); // 0 to 1
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 }); // normalized -0.5 to 0.5
   const [isHovered, setIsHovered] = useState(false);
   const [isTabActive, setIsTabActive] = useState(true);
+
+  // Framer Motion values for smooth cursor tracking without React renders
+  const rawMouseX = useMotionValue(0);
+  const rawMouseY = useMotionValue(0);
 
   // Buffer tracking
   const loadedFramesRef = useRef(new Set());
@@ -178,6 +181,7 @@ export default function HeroSection() {
   const handleResize = useCallback(() => {
     const mainCanvas = mainCanvasRef.current;
     const particleCanvas = particleCanvasRef.current;
+    const dpr = window.devicePixelRatio || 1;
     
     if (mainCanvas) {
       mainCanvas.width = mainCanvas.parentElement.clientWidth;
@@ -185,10 +189,16 @@ export default function HeroSection() {
     }
     
     if (particleCanvas) {
-      particleCanvas.width = particleCanvas.parentElement.clientWidth;
-      particleCanvas.height = particleCanvas.parentElement.clientHeight;
-      // Initialize particles based on size
-      initParticles(particleCanvas.width, particleCanvas.height);
+      const w = particleCanvas.parentElement.clientWidth;
+      const h = particleCanvas.parentElement.clientHeight;
+      particleCanvas.width = w * dpr;
+      particleCanvas.height = h * dpr;
+      
+      const ctx = particleCanvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // cleanly scale
+      
+      // Initialize particles based on real CSS size
+      initParticles(w, h);
     }
 
     // Initialize offscreen canvas if supported
@@ -202,12 +212,15 @@ export default function HeroSection() {
     const isMobile = width < 768;
     const particleCount = isMobile ? 12 : 35; // Respect screen size and reduced CPU load
     
+    const scale = width > 768 ? 1.5 : 1.0;
+    const speedScale = Math.max(1, height / 800);
+    
     particlesRef.current = Array.from({ length: particleCount }, () => ({
       x: Math.random() * width,
-      y: height + Math.random() * 100, // Spawn below viewport
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: -(Math.random() * 0.35 + 0.15), // Slow drift upwards
-      size: Math.random() * 1.5 + 0.6,
+      y: Math.random() * height, // Pre-warm particles scattered on screen
+      vx: (Math.random() - 0.5) * 0.25 * scale,
+      vy: -(Math.random() * 0.45 + 0.25) * speedScale,
+      size: (Math.random() * 1.5 + 0.6) * scale,
       opacity: Math.random() * 0.4 + 0.1,
       targetOpacity: Math.random() * 0.4 + 0.1,
       randomXOffset: Math.random() * 100,
@@ -239,18 +252,16 @@ export default function HeroSection() {
     };
   }, [isPreloaded, handleResize]);
 
-  // Track Mouse Parallax
+  // Track Mouse Parallax without triggering re-renders
   const handleMouseMove = (e) => {
     if (isReducedMotion || window.innerWidth < 768) return;
     
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
     
-    // Normalize coordinates to -0.5 -> 0.5
-    setMousePos({
-      x: (clientX / innerWidth) - 0.5,
-      y: (clientY / innerHeight) - 0.5,
-    });
+    // Normalize coordinates to -0.5 -> 0.5 and save immediately
+    rawMouseX.set((clientX / innerWidth) - 0.5);
+    rawMouseY.set((clientY / innerHeight) - 0.5);
   };
 
   // Rendering Helper: Centers and fits image maintaining aspect ratio (contain)
@@ -399,8 +410,8 @@ export default function HeroSection() {
             ctx.restore();
           }
 
-          const mouseX = (mousePos.x + 0.5) * particleCanvas.width;
-          const mouseY = (mousePos.y + 0.5) * particleCanvas.height;
+          const mouseX = (rawMouseX.get() + 0.5) * particleCanvas.width;
+          const mouseY = (rawMouseY.get() + 0.5) * particleCanvas.height;
 
           particlesRef.current.forEach((p) => {
             // Floating drift
@@ -460,7 +471,7 @@ export default function HeroSection() {
         cancelAnimationFrame(animationFrameIdRef.current);
       }
     };
-  }, [isPreloaded, isReducedMotion, isTabActive, renderFrame, mousePos, isHovered, showFrameOneUnderlay, canvasOpacity]);
+  }, [isPreloaded, isReducedMotion, isTabActive, renderFrame, isHovered, showFrameOneUnderlay, canvasOpacity]);
 
   // Compute scroll transformations for Apple-level scroll effect
   const getScrollStyles = () => {
@@ -481,12 +492,16 @@ export default function HeroSection() {
   };
 
   // Subtle Mouse Parallax offsets
+  const parallaxX = useTransform(rawMouseX, [-0.5, 0.5], [-10, 10]);
+  const parallaxY = useTransform(rawMouseY, [-0.5, 0.5], [-10, 10]);
+  
   const getMouseParallaxStyle = (factor) => {
     if (isReducedMotion || window.innerWidth < 768) return {};
-    const tx = mousePos.x * factor;
-    const ty = mousePos.y * factor;
+    // Fallback for non-motion divs: use .get() directly if called during render
+    // However, this won't animate smoothly without re-rendering, so we use 
+    // framer-motion values directly in style props for motion.divs when possible.
     return {
-      transform: `translate3d(${tx}px, ${ty}px, 0)`,
+      transform: `translate3d(${rawMouseX.get() * factor}px, ${rawMouseY.get() * factor}px, 0)`,
     };
   };
 
@@ -497,7 +512,8 @@ export default function HeroSection() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
-        setMousePos({ x: 0, y: 0 }); // Smoothly recenter
+        rawMouseX.set(0); // Smoothly recenter
+        rawMouseY.set(0);
       }}
       className="relative w-full h-screen bg-[#080808] flex items-center justify-center overflow-hidden z-10"
     >

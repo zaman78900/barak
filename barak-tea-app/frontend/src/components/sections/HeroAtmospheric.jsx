@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 /**
@@ -18,8 +18,11 @@ import { useNavigate } from 'react-router-dom';
 export default function HeroAtmospheric() {
   const sectionRef = useRef(null);
   const bgCanvasRef = useRef(null);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const [rawMouse, setRawMouse] = useState({ x: 0, y: 0 });
+  
+  // Use MotionValues to bypass React re-renders on mousemove
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+  
   const navigate = useNavigate();
 
   // Smooth spring mouse for parallax layers
@@ -41,14 +44,14 @@ export default function HeroAtmospheric() {
     const onMove = (e) => {
       const nx = e.clientX / window.innerWidth;
       const ny = e.clientY / window.innerHeight;
-      setMousePos({ x: nx, y: ny });
-      setRawMouse({ x: e.clientX, y: e.clientY });
+      mouseX.set(nx);
+      mouseY.set(ny);
       mx.set((nx - 0.5) * 2);
       my.set((ny - 0.5) * 2);
     };
     window.addEventListener('mousemove', onMove);
     return () => window.removeEventListener('mousemove', onMove);
-  }, [mx, my]);
+  }, [mx, my, mouseX, mouseY]);
 
   // ── Background Canvas: Aurora waves + Mist + Orb ─────────────
   useEffect(() => {
@@ -60,8 +63,12 @@ export default function HeroAtmospheric() {
     let t = 0;
 
     const resize = () => {
-      W = canvas.width  = canvas.offsetWidth;
-      H = canvas.height = canvas.offsetHeight;
+      const dpr = window.devicePixelRatio || 1;
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.scale(dpr, dpr);
     };
     resize();
     window.addEventListener('resize', resize);
@@ -72,9 +79,13 @@ export default function HeroAtmospheric() {
       reset(init = false) {
         this.x     = Math.random() * W;
         this.y     = init ? H - Math.random() * H * 0.4 : H + 30;
-        this.r     = Math.random() * 80 + 40;
-        this.vy    = -(Math.random() * 0.25 + 0.08);
-        this.vx    = (Math.random() - 0.5) * 0.15;
+        
+        const scale = W > 768 ? 1.5 : 1.0;
+        const speedScale = Math.max(1, H / 800);
+        
+        this.r     = (Math.random() * 80 + 40) * scale;
+        this.vy    = -(Math.random() * 0.35 + 0.15) * speedScale;
+        this.vx    = (Math.random() - 0.5) * 0.2 * scale;
         this.alpha = 0;
         this.targetAlpha = Math.random() * 0.06 + 0.015;
         this.life  = 0;
@@ -257,6 +268,13 @@ export default function HeroAtmospheric() {
 
   const headline = ['B', 'A', 'R', 'A', 'K'];
 
+  // Motion template for the radial gradient spotlight so it updates without React renders
+  const radialSpotlight = useMotionTemplate`radial-gradient(600px circle at ${useTransform(mouseX, x => x * 100)}% ${useTransform(mouseY, y => y * 100)}%,
+    rgba(200,146,42,0.09) 0%,
+    rgba(20,80,45,0.05) 35%,
+    transparent 70%
+  )`;
+
   return (
     <section
       ref={sectionRef}
@@ -272,17 +290,12 @@ export default function HeroAtmospheric() {
       />
 
       {/* ── Mouse-spotlight: interactive radial light ─────────────── */}
-      <div
+      <motion.div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           zIndex: 2,
-          background: `radial-gradient(600px circle at ${mousePos.x * 100}% ${mousePos.y * 100}%,
-            rgba(200,146,42,0.09) 0%,
-            rgba(20,80,45,0.05) 35%,
-            transparent 70%
-          )`,
-          transition: 'background 0.05s linear',
+          background: radialSpotlight,
         }}
       />
 

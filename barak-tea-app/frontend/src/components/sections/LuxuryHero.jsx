@@ -1,11 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
 import productPacketImg from '../../assets/product_packet.png';
 
 export default function LuxuryHero() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  // Motion values to avoid heavy React state updates on mousemove
+  const rawMouseX = useMotionValue(0);
+  const rawMouseY = useMotionValue(0);
 
   // Spring animation values for cursor-based parallax
   const mouseXSpring = useSpring(0, { stiffness: 60, damping: 15 });
@@ -25,13 +28,14 @@ export default function LuxuryHero() {
     const handleMouseMove = (e) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
-      const y = (e.clientY - rect.top) / rect.height - 0.5; // -0.5 to 0.5
+      const clientX = e.clientX - rect.left;
+      const clientY = e.clientY - rect.top;
       
-      setMousePosition({ 
-        x: e.clientX - rect.left, 
-        y: e.clientY - rect.top 
-      });
+      const x = clientX / rect.width - 0.5; // -0.5 to 0.5
+      const y = clientY / rect.height - 0.5; // -0.5 to 0.5
+      
+      rawMouseX.set(clientX);
+      rawMouseY.set(clientY);
 
       mouseXSpring.set(x);
       mouseYSpring.set(y);
@@ -42,7 +46,7 @@ export default function LuxuryHero() {
     return () => {
       container.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [mouseXSpring, mouseYSpring]);
+  }, [mouseXSpring, mouseYSpring, rawMouseX, rawMouseY]);
 
   // Canvas particle logic (Tea leaves, golden dust, aroma smoke)
   useEffect(() => {
@@ -50,11 +54,16 @@ export default function LuxuryHero() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
+    let W = 0, H = 0;
 
     // Resize canvas
     const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      const dpr = window.devicePixelRatio || 1;
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.scale(dpr, dpr);
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
@@ -62,15 +71,19 @@ export default function LuxuryHero() {
     // Particle Classes
     class GoldDust {
       constructor() {
-        this.reset();
+        this.reset(true);
       }
 
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = canvas.height + Math.random() * 50;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedY = Math.random() * 0.8 + 0.3;
-        this.speedX = Math.random() * 0.4 - 0.2;
+      reset(init = false) {
+        this.x = Math.random() * W;
+        this.y = init ? Math.random() * H : H + Math.random() * 50;
+        
+        const scale = W > 768 ? 1.5 : 1.0;
+        const speedScale = Math.max(1, H / 800);
+        
+        this.size = (Math.random() * 2 + 0.5) * scale;
+        this.speedY = (Math.random() * 1.0 + 0.4) * speedScale;
+        this.speedX = (Math.random() * 0.4 - 0.2) * scale;
         this.opacity = Math.random() * 0.6 + 0.1;
         this.fadeSpeed = 0.002;
       }
@@ -80,7 +93,7 @@ export default function LuxuryHero() {
         this.x += this.speedX;
         
         // Dissolve as it rises
-        if (this.y < canvas.height * 0.1) {
+        if (this.y < H * 0.1) {
           this.opacity -= this.fadeSpeed;
         }
 
@@ -106,14 +119,18 @@ export default function LuxuryHero() {
       }
 
       reset(init = false) {
-        this.x = Math.random() * canvas.width;
-        this.y = init ? Math.random() * canvas.height : -20;
-        this.width = Math.random() * 12 + 6;
+        this.x = Math.random() * W;
+        this.y = init ? Math.random() * H : -20;
+        
+        const scale = W > 768 ? 1.3 : 1.0;
+        const speedScale = Math.max(1, H / 800);
+        
+        this.width = (Math.random() * 12 + 6) * scale;
         this.height = this.width * 1.8;
         this.angle = Math.random() * Math.PI * 2;
         this.spin = Math.random() * 0.02 - 0.01;
-        this.speedY = Math.random() * 0.6 + 0.4;
-        this.speedX = Math.random() * 0.8 - 0.4;
+        this.speedY = (Math.random() * 0.8 + 0.5) * speedScale;
+        this.speedX = (Math.random() * 0.8 - 0.4) * scale;
         this.opacity = Math.random() * 0.4 + 0.1;
       }
 
@@ -122,7 +139,7 @@ export default function LuxuryHero() {
         this.x += this.speedX;
         this.angle += this.spin;
 
-        if (this.y > canvas.height + 20 || this.x < -20 || this.x > canvas.width + 20) {
+        if (this.y > H + 20 || this.x < -20 || this.x > W + 20) {
           this.reset();
         }
       }
@@ -158,7 +175,7 @@ export default function LuxuryHero() {
 
     // Loop
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, W, H);
       
       // Update & Draw
       dustParticles.forEach(p => {
@@ -184,6 +201,9 @@ export default function LuxuryHero() {
   const headingText = "BARAK";
   const subheadingText = "VALLEY OF THE GOLDEN LEAF";
 
+  // Framer motion template to offload re-renders
+  const spotlightStyle = useMotionTemplate`radial-gradient(600px circle at ${rawMouseX}px ${rawMouseY}px, rgba(200, 146, 42, 0.12), transparent 80%)`;
+
   return (
     <section 
       ref={containerRef}
@@ -201,10 +221,10 @@ export default function LuxuryHero() {
       />
 
       {/* Interactive Cursor light spotlight overlay */}
-      <div 
+      <motion.div 
         className="absolute inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen"
         style={{
-          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(200, 146, 42, 0.12), transparent 80%)`
+          background: spotlightStyle
         }}
       />
 
