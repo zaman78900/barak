@@ -287,9 +287,30 @@ select option {
 }
 
 /* Cormorant Garamond — Google Fonts (added here for reference; import is in index.html) */
-/* Ensure no cursor shows on non-touch devices when CustomCursor is active */
+/* Ensure no cursor shows on non-touch devices when CustomCursor is active, except in admin panel */
 @media (hover: hover) and (pointer: fine) {
   * { cursor: none !important; }
+  
+  /* Restore system cursors for admin panel */
+  .admin-panel-container, .admin-panel-container * {
+    cursor: auto !important;
+  }
+  .admin-panel-container a, 
+  .admin-panel-container button,
+  .admin-panel-container [role="button"] {
+    cursor: pointer !important;
+  }
+  .admin-panel-container input,
+  .admin-panel-container textarea {
+    cursor: text !important;
+  }
+  .admin-panel-container input[type="button"],
+  .admin-panel-container input[type="submit"],
+  .admin-panel-container input[type="checkbox"],
+  .admin-panel-container input[type="radio"],
+  .admin-panel-container select {
+    cursor: pointer !important;
+  }
 }
 
 /* Restore cursor on touch devices */

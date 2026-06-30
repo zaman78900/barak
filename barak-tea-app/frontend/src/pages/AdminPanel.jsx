@@ -2544,7 +2544,7 @@ export default function AdminPanel() {
   const SIDEBAR_W = collapsed ? 64 : 220;
 
   return (
-    <div style={{ display:"flex", height:"100vh", background:C.bg, fontFamily:"'DM Sans', system-ui, sans-serif", color:C.cream, overflow:"hidden" }}>
+    <div className="admin-panel-container" style={{ display:"flex", height:"100vh", background:C.bg, fontFamily:"'DM Sans', system-ui, sans-serif", color:C.cream, overflow:"hidden" }}>
       {/* Sidebar */}
       <div style={{ width:SIDEBAR_W, background:C.surface, borderRight:`1px solid ${C.border}`, display:"flex", flexDirection:"column", transition:"width 0.25s ease", overflow:"hidden", flexShrink:0, position:"sticky", top:0, height:"100vh", overflowY:"auto" }}>
         {/* Logo */}
