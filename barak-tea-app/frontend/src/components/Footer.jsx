@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { InstagramLogo, TwitterLogo, LinkedinLogo } from 'phosphor-react';
+import { InstagramLogo, TwitterLogo, LinkedinLogo, Leaf } from 'phosphor-react';
 import { motion } from 'framer-motion';
+import { useSettingsStore } from '../store';
 import logo from '../assets/logo.png';
 
 export default function Footer() {
+  const { leafAnimationEnabled, toggleLeafAnimation } = useSettingsStore();
+
   const footerSections = [
     {
       title: 'Brand',
@@ -125,7 +128,23 @@ export default function Footer() {
           </p>
 
           {/* Social Icons with luxury circles */}
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
+            {/* Animation Toggle */}
+            <button
+              onClick={toggleLeafAnimation}
+              title={leafAnimationEnabled ? "Disable background leaves" : "Enable background leaves"}
+              className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-350 ${
+                leafAnimationEnabled 
+                  ? 'border-green-400/50 text-green-400 bg-green-400/10 shadow-[0_0_12px_rgba(74,222,128,0.4)]' 
+                  : 'border-white/10 text-barak-muted hover:text-green-400 hover:border-green-400/50 hover:shadow-[0_0_8px_rgba(74,222,128,0.2)] bg-white/2'
+              }`}
+              aria-label="Toggle leaf animation"
+            >
+              <Leaf size={14} weight={leafAnimationEnabled ? "fill" : "regular"} />
+            </button>
+            
+            <div className="w-[1px] h-4 bg-white/10 mx-1"></div>
+
             {[
               { Icon: TwitterLogo, href: 'https://twitter.com' },
               { Icon: InstagramLogo, href: 'https://instagram.com' },

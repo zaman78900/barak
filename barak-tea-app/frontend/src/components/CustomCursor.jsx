@@ -17,13 +17,13 @@ export default function CustomCursor() {
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
-  // spring-physics lag for premium weighted feel
-  const springX = useSpring(mouseX, { stiffness: 180, damping: 22, mass: 0.6 });
-  const springY = useSpring(mouseY, { stiffness: 180, damping: 22, mass: 0.6 });
+  // Fast, responsive tracking for the core dot
+  const springX = useSpring(mouseX, { stiffness: 2000, damping: 50, mass: 0.05 });
+  const springY = useSpring(mouseY, { stiffness: 2000, damping: 50, mass: 0.05 });
 
-  // Trailing ring is slightly slower
-  const trailX = useSpring(mouseX, { stiffness: 80,  damping: 18, mass: 1.2 });
-  const trailY = useSpring(mouseY, { stiffness: 80,  damping: 18, mass: 1.2 });
+  // Trailing ring moves slower for a smooth following effect
+  const trailX = useSpring(mouseX, { stiffness: 150, damping: 20, mass: 0.8 });
+  const trailY = useSpring(mouseY, { stiffness: 150, damping: 20, mass: 0.8 });
 
   useEffect(() => {
     // Detect touch device — disable cursor

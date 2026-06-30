@@ -94,3 +94,13 @@ export const useProductStore = create((set) => ({
     });
   },
 }));
+
+// Settings store
+export const useSettingsStore = create((set) => ({
+  leafAnimationEnabled: JSON.parse(localStorage.getItem('leafAnimationEnabled') ?? 'true'),
+  toggleLeafAnimation: () => set((state) => {
+    const newState = !state.leafAnimationEnabled;
+    localStorage.setItem('leafAnimationEnabled', JSON.stringify(newState));
+    return { leafAnimationEnabled: newState };
+  }),
+}));

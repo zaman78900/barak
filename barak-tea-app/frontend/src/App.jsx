@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 import './styles/globals.css';
 import TeaLeafCanvas from './components/TeaLeafCanvas';
 import CustomCursor  from './components/CustomCursor';
+import { useSettingsStore } from './store';
 
 // Pages
 import Homepage from './pages/Homepage';
@@ -40,6 +41,7 @@ function AppRoutes() {
   const location = useLocation();
   const lenisRef = useRef(null);
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const leafAnimationEnabled = useSettingsStore(s => s.leafAnimationEnabled);
 
   useEffect(() => {
     if (!isAdminRoute) {
@@ -91,7 +93,7 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-barak-bg text-barak-cream overflow-x-hidden">
       {/* Global persistent tea-leaf particle canvas — behind all content */}
-      {!isAdminRoute && <TeaLeafCanvas />}
+      {!isAdminRoute && leafAnimationEnabled && <TeaLeafCanvas />}
       {/* Global branded custom cursor */}
       {!isAdminRoute && <CustomCursor />}
       <Routes>
