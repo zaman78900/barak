@@ -251,9 +251,11 @@ router.post('/guest', async (req, res) => {
     logger.info(`[Guest Order] Created: ${orderNum} | ₹${total_amount}`);
 
     // Trigger Admin Notifications
-    handleNewOrder({ ...order, order_items: orderItems }).catch(err => 
-      logger.error(`Guest order admin notification failed: ${err.message}`)
-    );
+    try {
+      await handleNewOrder({ ...order, order_items: orderItems });
+    } catch (err) {
+      logger.error(`Guest order admin notification failed: ${err.message}`);
+    }
 
 
     res.status(201).json({
@@ -399,9 +401,11 @@ router.post('/', authenticate, async (req, res) => {
     logger.info(`Order created: ${orderNumber}`);
 
     // Trigger Admin Notifications
-    handleNewOrder({ ...order, order_items: orderItems }).catch(err => 
-      logger.error(`Order admin notification failed: ${err.message}`)
-    );
+    try {
+      await handleNewOrder({ ...order, order_items: orderItems });
+    } catch (err) {
+      logger.error(`Order admin notification failed: ${err.message}`);
+    }
 
 
     res.status(201).json(order);
