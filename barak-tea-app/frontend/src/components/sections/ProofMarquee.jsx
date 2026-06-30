@@ -10,30 +10,46 @@ import { motion, useAnimationFrame, useMotionValue } from 'framer-motion';
 // ──── Marquee primitive ────────────────────────────────────────
 function InfiniteMarquee({ items, speed = 40, direction = 1 }) {
   const x = useMotionValue(0);
-  const baseWidth = useRef(0);
-  const trackRef  = useRef(null);
+  const trackRef = useRef(null);
+  const initialized = useRef(false);
 
   useAnimationFrame((_, delta) => {
-    const next = x.get() + (delta / 1000) * speed * -direction;
-    if (trackRef.current) {
-      baseWidth.current = trackRef.current.scrollWidth / 2;
+    if (!trackRef.current) return;
+    
+    // Total width is 3 * W, so W is scrollWidth / 3
+    const W = trackRef.current.scrollWidth / 3;
+    if (W === 0) return;
+
+    // Initialize position to the middle set to allow scrolling in both directions smoothly
+    if (!initialized.current) {
+      x.set(-W);
+      initialized.current = true;
+      return;
     }
-    if (baseWidth.current > 0 && Math.abs(next) >= baseWidth.current) {
-      x.set(next + baseWidth.current);
-    } else {
-      x.set(next);
+
+    let next = x.get() + (delta / 1000) * speed * -direction;
+
+    if (direction === 1) { // Moving LEFT
+      if (next <= -2 * W) {
+        next += W;
+      }
+    } else { // Moving RIGHT
+      if (next >= 0) {
+        next -= W;
+      }
     }
+    x.set(next);
   });
 
   return (
-    <div className="overflow-hidden w-full" aria-hidden="true">
+    <div className="overflow-hidden w-full flex" aria-hidden="true">
       <motion.div
         ref={trackRef}
         style={{ x, willChange: 'transform' }}
-        className="flex gap-0 whitespace-nowrap"
+        className="flex gap-0 whitespace-nowrap w-max"
       >
-        {/* Duplicate for seamless loop */}
-        {[...items, ...items].map((item, i) => (
+        {/* Triplicate for seamless bidirectional loop */}
+        {[...items, ...items, ...items].map((item, i) => (
           <div
             key={i}
             className="flex-shrink-0 flex items-center gap-8 px-8"
@@ -89,7 +105,7 @@ const statsMarqueeItems = stats.map((s, i) => (
 const testimonialsMarqueeItems = testimonials.map((t, i) => (
   <div
     key={i}
-    className="flex-shrink-0 w-[360px] md:w-[440px] bg-white/2 border border-white/5 rounded-2xl p-7 flex flex-col gap-4"
+    className="flex-shrink-0 w-[360px] md:w-[440px] bg-white/2 border border-white/5 rounded-2xl p-7 flex flex-col gap-4 whitespace-normal"
     style={{ backdropFilter: 'blur(8px)' }}
   >
     <div className="flex gap-0.5 text-barak-gold text-xs">{'★★★★★'}</div>
@@ -121,7 +137,7 @@ export default function ProofMarquee() {
 
       {/* Left/right fade masks on marquees */}
       <div
-        className="absolute inset-0 pointer-events-none z-10"
+        className="absolute inset-0 pointer-events-none z-30"
         style={{
           background: 'linear-gradient(to right, #0D0905 0%, transparent 8%, transparent 92%, #0D0905 100%)',
         }}
@@ -148,20 +164,20 @@ export default function ProofMarquee() {
 
       {/* Stats marquee — moving right */}
       <div className="relative z-20 mb-14">
-        <div className="flex items-center mb-4 px-6">
-          <div className="h-px flex-grow bg-white/5" />
-          <span className="font-inter text-[9px] uppercase tracking-[0.4em] text-barak-cream/20 mx-4">The Numbers</span>
-          <div className="h-px flex-grow bg-white/5" />
+        <div className="flex items-center justify-center mb-6 px-6 w-full">
+          <div className="h-px flex-grow bg-white/10" />
+          <span className="font-inter text-[10px] uppercase tracking-[0.4em] text-barak-gold/40 mx-6 whitespace-nowrap">The Numbers</span>
+          <div className="h-px flex-grow bg-white/10" />
         </div>
         <InfiniteMarquee items={statsMarqueeItems} speed={35} direction={1} />
       </div>
 
       {/* Testimonials marquee — moving left */}
       <div className="relative z-20">
-        <div className="flex items-center mb-6 px-6">
-          <div className="h-px flex-grow bg-white/5" />
-          <span className="font-inter text-[9px] uppercase tracking-[0.4em] text-barak-cream/20 mx-4">The People</span>
-          <div className="h-px flex-grow bg-white/5" />
+        <div className="flex items-center justify-center mb-8 px-6 w-full">
+          <div className="h-px flex-grow bg-white/10" />
+          <span className="font-inter text-[10px] uppercase tracking-[0.4em] text-barak-gold/40 mx-6 whitespace-nowrap">The People</span>
+          <div className="h-px flex-grow bg-white/10" />
         </div>
         <InfiniteMarquee items={testimonialsMarqueeItems} speed={28} direction={-1} />
       </div>

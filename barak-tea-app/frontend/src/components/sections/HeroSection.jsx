@@ -54,11 +54,11 @@ export default function HeroSection() {
 
   // Detect accessibility and visibility status
   useEffect(() => {
-    // Reduced motion preference
+    // Reduced motion preference bypassed to ensure cinematic experience
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setIsReducedMotion(mediaQuery.matches);
+    setIsReducedMotion(false);
     
-    const handleMotionChange = (e) => setIsReducedMotion(e.matches);
+    const handleMotionChange = (e) => setIsReducedMotion(false);
     mediaQuery.addEventListener('change', handleMotionChange);
 
     // Tab active status

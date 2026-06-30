@@ -51,7 +51,7 @@ export default function CustomCursor() {
       if (el) {
         setIsHovering(true);
         setHoverLabel(
-          el.dataset.cursor ||
+          el.getAttribute('data-cursor') ||
           (el.tagName === 'A' ? 'View' : 'Explore')
         );
       } else {

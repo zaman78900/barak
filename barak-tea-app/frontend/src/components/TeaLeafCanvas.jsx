@@ -41,9 +41,7 @@ export default function TeaLeafCanvas() {
     resize();
     window.addEventListener('resize', resize);
 
-    // ── Visibility pause ────────────────────────────────────────
-    const onVisibility = () => { paused = document.hidden; };
-    document.addEventListener('visibilitychange', onVisibility);
+    // ── Visibility pause removed to prevent webview bugs ────────
 
     // ── Wind system ─────────────────────────────────────────────
     let windStrength = 0;
@@ -99,7 +97,6 @@ export default function TeaLeafCanvas() {
       }
 
       update(dt, wind) {
-        if (prefersReduced) return;
         this.swayPhase += this.swayFreq;
         const sway = Math.sin(this.swayPhase) * this.swayAmp + wind * 12;
 
@@ -203,7 +200,6 @@ export default function TeaLeafCanvas() {
       }
 
       update(wind) {
-        if (prefersReduced) return;
         this.twinklePhase += this.twinkleFreq;
         this.x += this.vx + wind * 5;
         this.y += this.vy;
@@ -239,7 +235,6 @@ export default function TeaLeafCanvas() {
 
     const animate = (now) => {
       animId = requestAnimationFrame(animate);
-      if (paused) return;
 
       const dt = Math.max(0, Math.min(now - lastTime, 50)); // cap at 50ms, prevent negative
       lastTime = now;
@@ -257,7 +252,6 @@ export default function TeaLeafCanvas() {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
-      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
 
