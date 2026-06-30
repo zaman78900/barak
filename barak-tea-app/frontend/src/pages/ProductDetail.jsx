@@ -153,7 +153,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-barak-bg text-barak-cream pb-24 overflow-hidden pt-28 md:pt-36">
+    <div className="min-h-screen bg-barak-bg text-barak-cream pb-24 overflow-x-hidden pt-28 md:pt-36">
       
       <div className="max-w-7xl mx-auto px-4 lg:px-8 pt-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
@@ -194,7 +194,7 @@ export default function ProductDetail() {
                 transition={{ duration: 0.3 }}
                 src={gallery[activeImage]} 
                 alt={product.name}
-                className={`w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-150' : 'scale-100'}`}
+                className={`w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-100 lg:scale-150' : 'scale-100'}`}
                 style={isZoomed ? { transformOrigin: `${mousePos.x}% ${mousePos.y}%` } : {}}
               />
               {currentStock <= 0 && (
@@ -368,21 +368,21 @@ export default function ProductDetail() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="pb-6 grid grid-cols-3 gap-4">
-                        <div className="bg-white/5 p-4 rounded-xl border border-white/5 text-center">
-                          <div className="text-2xl mb-2">🌡️</div>
-                          <div className="font-bold">95°C</div>
-                          <div className="text-[9px] text-white/50 uppercase tracking-widest mt-1">Water Temp</div>
+                      <div className="pb-6 grid grid-cols-3 gap-3 sm:gap-4">
+                        <div className="bg-white/5 p-2 sm:p-4 rounded-xl border border-white/5 text-center">
+                          <div className="text-xl sm:text-2xl mb-1 sm:mb-2">🌡️</div>
+                          <div className="font-bold text-sm sm:text-base">95°C</div>
+                          <div className="text-[8px] sm:text-[9px] text-white/50 uppercase tracking-widest mt-1">Water Temp</div>
                         </div>
-                        <div className="bg-white/5 p-4 rounded-xl border border-white/5 text-center">
-                          <div className="text-2xl mb-2">⚖️</div>
-                          <div className="font-bold">2.5g</div>
-                          <div className="text-[9px] text-white/50 uppercase tracking-widest mt-1">Per Cup</div>
+                        <div className="bg-white/5 p-2 sm:p-4 rounded-xl border border-white/5 text-center">
+                          <div className="text-xl sm:text-2xl mb-1 sm:mb-2">⚖️</div>
+                          <div className="font-bold text-sm sm:text-base">2.5g</div>
+                          <div className="text-[8px] sm:text-[9px] text-white/50 uppercase tracking-widest mt-1">Per Cup</div>
                         </div>
-                        <div className="bg-white/5 p-4 rounded-xl border border-white/5 text-center">
-                          <div className="text-2xl mb-2">⏱️</div>
-                          <div className="font-bold">3-4 Min</div>
-                          <div className="text-[9px] text-white/50 uppercase tracking-widest mt-1">Steep Time</div>
+                        <div className="bg-white/5 p-2 sm:p-4 rounded-xl border border-white/5 text-center">
+                          <div className="text-xl sm:text-2xl mb-1 sm:mb-2">⏱️</div>
+                          <div className="font-bold text-sm sm:text-base">3-4 Min</div>
+                          <div className="text-[8px] sm:text-[9px] text-white/50 uppercase tracking-widest mt-1">Steep Time</div>
                         </div>
                       </div>
                     </motion.div>
