@@ -44,6 +44,8 @@ export default function Navbar() {
     { label: 'Home', href: '/' },
     { label: 'Products', href: '/shop' },
     { label: 'About', href: '/our-story' },
+    { label: 'Wholesale', href: '/wholesale' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Contact', href: '/contact' },
   ];
 
@@ -66,12 +68,12 @@ export default function Navbar() {
           opacity: isVisible ? 1 : 0
         }}
         transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
-        className="fixed top-0 left-0 right-0 z-50 w-full px-4 sm:px-6 lg:px-8 py-2 md:py-3 pointer-events-none"
+        className="fixed top-0 left-0 right-0 z-50 w-full px-4 sm:px-6 lg:px-8 py-1 pointer-events-none"
       >
         <div
           className={`mx-auto max-w-7xl w-full transition-all duration-500 pointer-events-auto rounded-full border ${isScrolled
-            ? 'bg-[#050505]/75 backdrop-blur-xl border-barak-gold/15 shadow-[0_12px_40px_rgba(0,0,0,0.5)] py-1.5 px-6'
-            : 'bg-transparent border-transparent py-2 px-4'
+            ? 'bg-[#050505]/75 backdrop-blur-xl border-barak-gold/15 shadow-[0_12px_40px_rgba(0,0,0,0.5)] py-1 px-6'
+            : 'bg-transparent border-transparent py-1 px-4'
             }`}
         >
           <div className="flex items-center justify-between h-16 md:h-[72px]">

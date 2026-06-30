@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Envelope, Phone, MapPin, Clock, 
-  CaretDown, Check, PaperPlaneTilt, 
-  Chats, Leaf, ArrowLeft 
+import {
+  Envelope, Phone, MapPin, Clock,
+  CaretDown, Check, PaperPlaneTilt,
+  Chats, Leaf, ArrowLeft
 } from 'phosphor-react';
 import { contactAPI } from '../utils/adminApi';
 import contactHeroBg from '../assets/barak_tea_plucking.png';
@@ -11,7 +11,7 @@ import contactHeroBg from '../assets/barak_tea_plucking.png';
 const SUBJECT_OPTIONS = [
   'General Inquiry',
   'Customer Support',
-  'Tea Estate Visit',
+  'Sample Collection',
   'Wholesale & Partnerships',
   'Feedback & Reviews',
   'Other'
@@ -60,7 +60,7 @@ export default function Contact() {
     try {
       setLoading(true);
       setError('');
-      
+
       const payload = {
         name: form.name,
         email: form.email,
@@ -137,10 +137,10 @@ export default function Contact() {
       {/* Main Grid Content Section */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 pb-24 relative z-10 -mt-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
+
           {/* Left Column: Contact details & Estate Coordinates */}
           <div className="lg:col-span-5 space-y-8">
-            
+
             {/* Coordinates Card */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -149,14 +149,14 @@ export default function Contact() {
               className="bg-barak-surface/60 border border-barak-border/50 rounded-glass p-8 relative overflow-hidden backdrop-blur-glass shadow-glass"
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-barak-gold/10 rounded-full blur-2xl" />
-              
+
               <div className="space-y-4">
                 <div className="text-[10px] uppercase font-bold text-barak-gold tracking-[0.2em]">Geographic Estate Location</div>
                 <div className="text-3xl font-cormorant font-bold text-barak-cream tracking-wider">24°49'N &nbsp; 92°48'E</div>
                 <p className="text-xs text-barak-muted font-light leading-relaxed">
                   Cultivated in the pristine valleys of Cachar, Silchar, Assam. Our private estate sits along the fertile banks of the Barak River, enjoying optimal rain patterns and natural shade.
                 </p>
-                
+
                 {/* Visual coordinate graphics */}
                 <div className="pt-4 border-t border-barak-border/30 flex items-center justify-between text-[11px] text-barak-muted">
                   <span>Elevation: 45m MSL</span>
@@ -177,7 +177,7 @@ export default function Contact() {
               </h3>
 
               <div className="space-y-6">
-                
+
                 {/* Email Address */}
                 <div className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-full border border-barak-gold/20 flex items-center justify-center text-barak-gold bg-barak-gold/5 flex-shrink-0">
@@ -186,7 +186,7 @@ export default function Contact() {
                   <div>
                     <h4 className="text-xs font-bold text-barak-cream tracking-wider uppercase mb-1">Estate Correspondence</h4>
                     <a href="mailto:hello@barak.tea" className="text-sm text-barak-muted hover:text-barak-gold transition-colors duration-300">
-                      hello@barak.tea
+                      mantrading890@gmail.com
                     </a>
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export default function Contact() {
                   <div>
                     <h4 className="text-xs font-bold text-barak-cream tracking-wider uppercase mb-1">Concierge & Sales</h4>
                     <p className="text-sm text-barak-muted">
-                      +91 99999 99999
+                      +91 60000 34182
                     </p>
                   </div>
                 </div>
@@ -211,13 +211,13 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-barak-cream tracking-wider uppercase mb-1">WhatsApp Hotline</h4>
-                    <a 
-                      href="https://wa.me/919999999999?text=Hello%20BARAK%20Tea%20estate" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <a
+                      href="https://wa.me/916000034182?text=Hello%20BARAK%20Tea%20estate"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-xs text-[#25D366] hover:underline font-medium tracking-wide flex items-center gap-1.5 mt-1"
                     >
-                      Chat with Estate Representative &rarr;
+                      Chat with BARAK Representative &rarr;
                     </a>
                   </div>
                 </div>
@@ -274,7 +274,7 @@ export default function Contact() {
                     )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      
+
                       {/* Name */}
                       <div className="flex flex-col gap-2">
                         <label htmlFor="name" className="text-[11px] uppercase font-bold text-barak-cream tracking-wider">
@@ -312,7 +312,7 @@ export default function Contact() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      
+
                       {/* Phone */}
                       <div className="flex flex-col gap-2">
                         <label htmlFor="phone" className="text-[11px] uppercase font-bold text-barak-cream tracking-wider">
@@ -334,7 +334,7 @@ export default function Contact() {
                         <span className="text-[11px] uppercase font-bold text-barak-cream tracking-wider">
                           Inquiry Subject *
                         </span>
-                        
+
                         <button
                           type="button"
                           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
