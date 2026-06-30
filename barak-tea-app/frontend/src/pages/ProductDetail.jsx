@@ -168,14 +168,21 @@ export default function ProductDetail() {
             <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-barak-gold/3 rounded-full blur-[100px] pointer-events-none z-0" />
 
             {/* Thumbnail Rail (Desktop left, Mobile bottom) */}
-            <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible no-scrollbar pb-2 lg:pb-0 w-full lg:w-auto justify-start z-10">
+            <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible no-scrollbar pb-4 lg:pb-0 w-full lg:w-auto justify-start z-10 px-2 lg:px-0 pt-2 lg:pt-0">
               {gallery.map((img, idx) => (
                 <button 
                   key={idx}
                   onClick={() => setActiveImage(idx)}
-                  className={`relative flex-shrink-0 w-20 h-24 lg:w-24 lg:h-28 rounded-xl overflow-hidden transition-all duration-300 ${activeImage === idx ? 'ring-2 ring-barak-gold ring-offset-2 ring-offset-barak-bg' : 'opacity-60 hover:opacity-100'}`}
+                  className={`relative flex-shrink-0 w-20 h-24 lg:w-24 lg:h-28 rounded-xl overflow-hidden transition-all duration-300 ${
+                    activeImage === idx 
+                    ? 'scale-105 opacity-100 shadow-[0_10px_20px_rgba(200,146,42,0.2)] z-10 bg-black/40' 
+                    : 'opacity-40 hover:opacity-80 scale-95 hover:scale-100'
+                  }`}
                 >
                   <img src={img} alt={`Thumb ${idx}`} className="w-full h-full object-cover" />
+                  {activeImage === idx && (
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-barak-gold" />
+                  )}
                 </button>
               ))}
             </div>
@@ -189,13 +196,23 @@ export default function ProductDetail() {
             >
               <motion.img 
                 key={activeImage}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}
                 src={gallery[activeImage]} 
                 alt={product.name}
-                className={`w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-100 lg:scale-150' : 'scale-100'}`}
+                className={`w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-100 lg:scale-150' : 'scale-100'} cursor-grab active:cursor-grabbing lg:cursor-auto lg:active:cursor-auto`}
                 style={isZoomed ? { transformOrigin: `${mousePos.x}% ${mousePos.y}%` } : {}}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(e, { offset, velocity }) => {
+                  if (offset.x < -40 || velocity.x < -200) {
+                    setActiveImage((prev) => (prev + 1) % gallery.length);
+                  } else if (offset.x > 40 || velocity.x > 200) {
+                    setActiveImage((prev) => (prev - 1 + gallery.length) % gallery.length);
+                  }
+                }}
               />
               {currentStock <= 0 && (
                 <div className="absolute top-4 left-4 bg-barak-error text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg">
