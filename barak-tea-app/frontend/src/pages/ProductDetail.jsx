@@ -125,7 +125,7 @@ export default function ProductDetail() {
     const variantLabel = selectedVariant ? selectedVariant.variant_name : 'Standard';
     const price = selectedVariant ? selectedVariant.price : product.price;
     const msg = `Hi, I would like to order:\n\n*${product.name}*\nVariant: ${variantLabel}\nQuantity: ${quantity}\nTotal: ${fmt(price * quantity)}\n\nPlease let me know how to proceed.`;
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(msg)}`;
+    const whatsappUrl = `https://wa.me/916000034182?text=${encodeURIComponent(msg)}`;
     window.open(whatsappUrl, '_blank');
   };
 
