@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { InstagramLogo, TwitterLogo, LinkedinLogo, Leaf } from 'phosphor-react';
+import { InstagramLogo, TwitterLogo, LinkedinLogo, FacebookLogo, Leaf } from 'phosphor-react';
 import { motion } from 'framer-motion';
 import { useSettingsStore } from '../store';
 import logo from '../assets/logo.png';
@@ -36,19 +36,19 @@ export default function Footer() {
     {
       title: 'Contact',
       links: [
-        { label: 'Email: hello@barak.tea', href: 'mailto:hello@barak.tea' },
-        { label: 'WhatsApp', href: 'https://wa.me/919999999999?text=Hello%20BARAK%20Tea' },
-        { label: 'Support', href: 'mailto:hello@barak.tea' },
+        { label: 'Email: mantrading890@gmail.com', href: 'mailto:mantrading890@gmail.com' },
+        { label: 'WhatsApp', href: 'https://wa.me/916000034182?text=Hello%20BARAK%20Tea' },
+        { label: 'Support', href: 'mailto:mantrading890@gmail.com' },
       ],
     },
   ];
 
   return (
     <footer className="bg-[#050505] relative z-20 border-t border-white/5 overflow-hidden">
-      
+
       {/* Animated Center-Out Expansion Divider Line */}
       <div className="w-full flex justify-center">
-        <motion.div 
+        <motion.div
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
           viewport={{ once: true }}
@@ -58,10 +58,10 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
-        
+
         {/* Logo and Brand tagline */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -72,7 +72,7 @@ export default function Footer() {
               Valley of the Golden Leaf
             </p>
           </motion.div>
-          
+
           <div className="max-w-xs text-left md:text-right">
             <p className="text-xs text-barak-muted font-light leading-relaxed">
               Cultivating legacy, flavor, and luxury in every leaf. Handpicked and sealed at our private Assam estate.
@@ -98,16 +98,16 @@ export default function Footer() {
                 {section.links.map((link, lIdx) => (
                   <li key={lIdx} className="overflow-hidden">
                     {link.to ? (
-                      <Link 
-                        to={link.to} 
+                      <Link
+                        to={link.to}
                         className="text-xs text-barak-muted hover:text-barak-gold-light transition-colors duration-300 relative inline-block group"
                       >
                         {link.label}
                         <span className="absolute bottom-0 left-0 w-full h-[1px] bg-barak-gold-light scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                       </Link>
                     ) : (
-                      <a 
-                        href={link.href} 
+                      <a
+                        href={link.href}
                         className="text-xs text-barak-muted hover:text-barak-gold-light transition-colors duration-300 relative inline-block group"
                       >
                         {link.label}
@@ -133,19 +133,19 @@ export default function Footer() {
             <button
               onClick={toggleLeafAnimation}
               title={leafAnimationEnabled ? "Disable background leaves" : "Enable background leaves"}
-              className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-350 ${
-                leafAnimationEnabled 
-                  ? 'border-green-400/50 text-green-400 bg-green-400/10 shadow-[0_0_12px_rgba(74,222,128,0.4)]' 
-                  : 'border-white/10 text-barak-muted hover:text-green-400 hover:border-green-400/50 hover:shadow-[0_0_8px_rgba(74,222,128,0.2)] bg-white/2'
-              }`}
+              className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-350 ${leafAnimationEnabled
+                ? 'border-green-400/50 text-green-400 bg-green-400/10 shadow-[0_0_12px_rgba(74,222,128,0.4)]'
+                : 'border-white/10 text-barak-muted hover:text-green-400 hover:border-green-400/50 hover:shadow-[0_0_8px_rgba(74,222,128,0.2)] bg-white/2'
+                }`}
               aria-label="Toggle leaf animation"
             >
               <Leaf size={14} weight={leafAnimationEnabled ? "fill" : "regular"} />
             </button>
-            
+
             <div className="w-[1px] h-4 bg-white/10 mx-1"></div>
 
             {[
+              { Icon: FacebookLogo, href: 'https://facebook.com' },
               { Icon: TwitterLogo, href: 'https://twitter.com' },
               { Icon: InstagramLogo, href: 'https://instagram.com' },
               { Icon: LinkedinLogo, href: 'https://linkedin.com' },
