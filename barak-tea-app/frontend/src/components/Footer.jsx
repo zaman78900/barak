@@ -145,9 +145,9 @@ export default function Footer() {
             <div className="w-[1px] h-4 bg-white/10 mx-1"></div>
 
             {[
-              { Icon: FacebookLogo, href: 'https://facebook.com' },
+              { Icon: FacebookLogo, href: 'https://www.facebook.com/BarakTeaAssam' },
               { Icon: TwitterLogo, href: 'https://twitter.com' },
-              { Icon: InstagramLogo, href: 'https://instagram.com' },
+              { Icon: InstagramLogo, href: 'https://www.instagram.com/baraktastytea' },
               { Icon: LinkedinLogo, href: 'https://linkedin.com' },
             ].map(({ Icon, href }, i) => (
               <motion.a
